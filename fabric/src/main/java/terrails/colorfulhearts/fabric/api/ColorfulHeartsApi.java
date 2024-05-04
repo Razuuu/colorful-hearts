@@ -1,4 +1,4 @@
-package terrails.colorfulhearts.fabric.api.event;
+package terrails.colorfulhearts.fabric.api;
 
 import terrails.colorfulhearts.api.event.HeartRegistry;
 
