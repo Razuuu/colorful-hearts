@@ -16,7 +16,7 @@ public class StatusEffectHeart {
     private final Predicate<Player> condition;
     private final List<HeartDrawing> healthDrawings, absorptionDrawings;
 
-    public StatusEffectHeart(ResourceLocation id, Predicate<Player> condition, HeartDrawing h1, HeartDrawing h2, HeartDrawing a1, HeartDrawing a2) {
+    StatusEffectHeart(ResourceLocation id, Predicate<Player> condition, HeartDrawing h1, HeartDrawing h2, HeartDrawing a1, HeartDrawing a2) {
         this.id = id;
         this.condition = condition;
         this.healthDrawings = List.of(h1, h2);
