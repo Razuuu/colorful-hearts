@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import terrails.colorfulhearts.heart.CHeartType;
+import terrails.colorfulhearts.config.screen.HeartType;
 
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -21,25 +21,23 @@ public class HeartColorEditBox extends EditBox {
 
     private boolean invalidRGBHex;
 
-    private final CHeartType heartType;
     private ResourceLocation spriteLocation;
 
     private final Consumer<String> defaultResponder;
 
-    public HeartColorEditBox(Font font, int x, int y, int width, int height, CHeartType heartType) {
+    public HeartColorEditBox(Font font, int x, int y, int width, int height, HeartType heartType) {
         this(font, x, y, width, height, null, heartType);
     }
 
-    public HeartColorEditBox(Font font, int x, int y, int width, int height, @Nullable EditBox editBox, CHeartType heartType) {
+    public HeartColorEditBox(Font font, int x, int y, int width, int height, @Nullable EditBox editBox, HeartType heartType) {
         super(font, x, y, width, height, editBox, Component.empty());
         this.setResponder((str) -> {});
         this.setFilter((str) -> HEX_FORMAT.matcher(str).matches());
         this.setMaxLength(7);
-        this.heartType = heartType;
         this.defaultResponder = (str) -> {
             this.invalidRGBHex = !HEX_MATCH.matcher(str).matches();
             if (!this.invalidRGBHex) {
-                ResourceLocation spriteLocation = this.heartType.getSprite(false, false, false, this.getColor(), false);
+                ResourceLocation spriteLocation = heartType.getSprite(false, false, false, this.getColor());
                 TextureAtlasSprite sprite = Minecraft.getInstance().getGuiSprites().getSprite(spriteLocation);
                 if (!sprite.contents().name().equals(MissingTextureAtlasSprite.getLocation())) {
                     this.spriteLocation = spriteLocation;

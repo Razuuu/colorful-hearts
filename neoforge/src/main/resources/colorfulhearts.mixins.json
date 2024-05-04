@@ -3,7 +3,7 @@
   "package": "terrails.colorfulhearts.neoforge.mixin",
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
-  "plugin": "terrails.colorfulhearts.neoforge.ForgeMixinPlugin",
+  "plugin": "terrails.colorfulhearts.neoforge.NeoMixinPlugin",
   "client": [
     "compat.appleskin.HUDOverlayHandlerAccessor"
   ],

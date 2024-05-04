@@ -3,9 +3,7 @@ package terrails.colorfulhearts.fabric;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ObjectShare;
-import terrails.colorfulhearts.fabric.api.event.FabHeartChangeEvent;
-import terrails.colorfulhearts.render.HeartRenderer;
-import terrails.colorfulhearts.render.TabHeartRenderer;
+import terrails.colorfulhearts.fabric.config.FabConfig;
 
 public class ColorfulHearts implements ClientModInitializer {
 
@@ -15,11 +13,6 @@ public class ColorfulHearts implements ClientModInitializer {
     public void onInitializeClient() {
         CONFIG = new FabConfig();
         this.setupObjectShare();
-        FabHeartChangeEvent.EVENT.register(() -> {
-            // force an update to heart colors when config GUI is updated
-            HeartRenderer.INSTANCE.lastHealthType = null;
-            TabHeartRenderer.INSTANCE.lastHealth = 0;
-        });
     }
 
     private void setupObjectShare() {

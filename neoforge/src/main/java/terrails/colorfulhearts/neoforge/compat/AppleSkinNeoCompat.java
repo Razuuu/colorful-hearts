@@ -14,14 +14,14 @@ import squeek.appleskin.api.food.FoodValues;
 import squeek.appleskin.client.HUDOverlayHandler;
 import squeek.appleskin.helpers.FoodHelper;
 import terrails.colorfulhearts.compat.AppleSkinCompat;
-import terrails.colorfulhearts.heart.CHeartType;
-import terrails.colorfulhearts.neoforge.api.event.ForgeHeartChangeEvent;
-import terrails.colorfulhearts.neoforge.api.event.ForgeHeartRenderEvent;
+import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
+import terrails.colorfulhearts.neoforge.api.event.NeoHeartUpdateEvent;
+import terrails.colorfulhearts.neoforge.api.event.NeoHeartRenderEvent;
 import terrails.colorfulhearts.neoforge.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
-public class AppleSkinForgeCompat extends AppleSkinCompat {
+public class AppleSkinNeoCompat extends AppleSkinCompat {
 
-    public AppleSkinForgeCompat() {
+    public AppleSkinNeoCompat() {
         NeoForge.EVENT_BUS.addListener(this::onDefaultRender);
         NeoForge.EVENT_BUS.addListener(this::onPostRender);
         NeoForge.EVENT_BUS.addListener(this::heartChanged);
@@ -39,11 +39,11 @@ public class AppleSkinForgeCompat extends AppleSkinCompat {
         event.setCanceled(true);
     }
 
-    private void onPostRender(ForgeHeartRenderEvent.Post event) {
+    private void onPostRender(NeoHeartRenderEvent.Post event) {
         Player player = client.player;
         assert player != null;
 
-        if (!shouldDrawOverlay(event.getHealthType(), player)) {
+        if (!shouldDrawOverlay(event.getEffectHeart().orElse(null), player)) {
             return;
         }
 
@@ -82,12 +82,12 @@ public class AppleSkinForgeCompat extends AppleSkinCompat {
         drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), absorbing, health, modifiedHealth, alpha, event.isHardcore());
     }
 
-    private void heartChanged(ForgeHeartChangeEvent event) {
+    private void heartChanged(NeoHeartUpdateEvent event) {
         this.lastHealth = 0;
     }
 
-    public boolean shouldDrawOverlay(CHeartType heartType, Player player) {
-        if (heartType != CHeartType.HEALTH) {
+    public boolean shouldDrawOverlay(StatusEffectHeart effectHeart, Player player) {
+        if (effectHeart != null) {
             return false; // AppleSkin usually checks the effect, but we'll do it this way
         }
 

@@ -6,8 +6,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import org.lwjgl.opengl.GL11;
-import terrails.colorfulhearts.heart.CHeartType;
-import terrails.colorfulhearts.heart.Heart;
+import terrails.colorfulhearts.api.heart.Hearts;
+import terrails.colorfulhearts.api.heart.drawing.Heart;
+import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
+
+import java.util.List;
 
 public abstract class AppleSkinCompat {
 
@@ -51,15 +54,14 @@ public abstract class AppleSkinCompat {
     }
 
     private Heart[] calculateHearts(int health, int modifiedHealth) {
-        Integer[] healthColors = CHeartType.HEALTH.getColors();
-        assert healthColors != null;
+        List<HeartDrawing> healthDrawings = Hearts.COLORED_HEALTH_HEARTS;
 
         int healthDiff = modifiedHealth - health;
         final int topHealth = modifiedHealth > 20 ? modifiedHealth % 20 : 0;
-        final int bottomIndex = Math.max(0, Mth.floor(modifiedHealth / 20.0) - 1) % healthColors.length;
-        healthColors = new Integer[]{
-                healthColors[(bottomIndex + 1) % healthColors.length],
-                healthColors[bottomIndex]
+        final int bottomIndex = Math.max(0, Mth.floor(modifiedHealth / 20.0) - 1) % healthDrawings.size();
+        HeartDrawing[] healthColors = new HeartDrawing[]{
+                healthDrawings.get((bottomIndex + 1) % healthDrawings.size()),
+                healthDrawings.get(bottomIndex)
         };
 
         int currentTopHealth = healthDiff >= 20 ? 0 : Math.max(0, health % 20);
@@ -76,13 +78,13 @@ public abstract class AppleSkinCompat {
             if (value < topHealth) {
                 boolean half = (value + 1) == topHealth;
                 boolean includeBackground = value > currentTopHealth;
-                Heart background = includeBackground ? Heart.full(CHeartType.HEALTH, healthColors[1], false, Heart.CONTAINER_NONE) : Heart.CONTAINER_NONE;
+                Heart background = includeBackground ? Heart.full(healthColors[1], false, Heart.CONTAINER_NONE) : Heart.CONTAINER_NONE;
 
                 if (half) {
-                    hearts[i] = Heart.full(CHeartType.HEALTH, healthColors[0], background);
+                    hearts[i] = Heart.full(healthColors[0], background);
                 } else {
                     // full heart with another colored background in order to mix colors correctly
-                    hearts[i] = Heart.full(CHeartType.HEALTH, healthColors[0], false, background);
+                    hearts[i] = Heart.full(healthColors[0], false, background);
                 }
             } else if (value < currentTopHealth) {
                 // skips constructing any hearts that do not need to be
@@ -91,9 +93,9 @@ public abstract class AppleSkinCompat {
                 boolean half = (value + 1) == bottomHealth;
 
                 if (half) {
-                    hearts[i] = Heart.full(CHeartType.HEALTH, healthColors[1], true, Heart.CONTAINER_NONE);
+                    hearts[i] = Heart.full(healthColors[1], true, Heart.CONTAINER_NONE);
                 } else {
-                    hearts[i] = Heart.full(CHeartType.HEALTH, healthColors[1], false, Heart.CONTAINER_NONE);
+                    hearts[i] = Heart.full(healthColors[1], false, Heart.CONTAINER_NONE);
                 }
             }
         }

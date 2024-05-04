@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ForgeMixinPlugin implements IMixinConfigPlugin {
+public class NeoMixinPlugin implements IMixinConfigPlugin {
 
     private static final Pattern MOD_ID_PATTERN = Pattern.compile("^terrails\\.colorfulhearts\\.neoforge\\.mixin\\.compat\\.([a-z0-9_-]+)\\.([a-zA-Z]+)$");
 

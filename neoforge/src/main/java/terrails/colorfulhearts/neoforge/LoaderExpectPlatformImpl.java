@@ -1,12 +1,15 @@
 package terrails.colorfulhearts.neoforge;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
-import terrails.colorfulhearts.heart.CHeartType;
-import terrails.colorfulhearts.neoforge.api.event.ForgeHeartChangeEvent;
-import terrails.colorfulhearts.neoforge.api.event.ForgeHeartRenderEvent;
+import terrails.colorfulhearts.api.event.HeartRegistry;
+import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
+import terrails.colorfulhearts.neoforge.api.event.NeoHeartUpdateEvent;
+import terrails.colorfulhearts.neoforge.api.event.NeoHeartRegistryEvent;
+import terrails.colorfulhearts.neoforge.api.event.NeoHeartRenderEvent;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
 
@@ -25,26 +28,21 @@ public class LoaderExpectPlatformImpl {
         return false;
     }
 
-    public static HeartRenderEvent.Pre preRenderEvent(
-            GuiGraphics guiGraphics, int x, int y,
-            boolean blinking, boolean hardcore,
-            CHeartType healthType, CHeartType absorbingType
-    ) {
-        ForgeHeartRenderEvent.Pre event = new ForgeHeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, healthType, absorbingType);
+    public static HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
+        NeoHeartRenderEvent.Pre event = new NeoHeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, effectHeart);
         NeoForge.EVENT_BUS.post(event);
         return event.getEvent();
     }
 
-    public static void postRenderEvent(
-            GuiGraphics guiGraphics, int x, int y,
-            boolean blinking, boolean hardcore,
-            CHeartType healthType, CHeartType absorbingType
-    ) {
-        ForgeHeartRenderEvent.Post event = new ForgeHeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, healthType, absorbingType);
-        NeoForge.EVENT_BUS.post(event);
+    public static void postRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
+        NeoForge.EVENT_BUS.post(new NeoHeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, effectHeart));
     }
 
-    public static void heartChangeEvent() {
-        NeoForge.EVENT_BUS.post(new ForgeHeartChangeEvent());
+    public static void heartRegistryEvent(HeartRegistry registry) {
+        ModLoader.get().postEvent(new NeoHeartRegistryEvent(registry));
+    }
+
+    public static void heartUpdateEvent() {
+        NeoForge.EVENT_BUS.post(new NeoHeartUpdateEvent());
     }
 }

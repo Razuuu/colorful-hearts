@@ -1,36 +1,25 @@
-package terrails.colorfulhearts.forge.api.event;
+package terrails.colorfulhearts.neoforge.api.event;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
 
 import java.util.Optional;
 
-public class ForgeHeartRenderEvent<E extends HeartRenderEvent> extends Event {
+public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
 
-    public static class Pre extends ForgeHeartRenderEvent<HeartRenderEvent.Pre> {
+    public static class Pre extends NeoHeartRenderEvent<HeartRenderEvent.Pre> {
 
         public Pre(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
             super(new HeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, effectHeart));
         }
 
-        @Override
-        public boolean isCancelable() {
-            return true;
+        public void cancel() {
+            event.cancel();
         }
-
-        @Override
-        public boolean isCanceled() {
+        public boolean isCancelled() {
             return event.isCancelled();
-        }
-
-        @Override
-        public void setCanceled(boolean cancel) {
-            if (cancel) {
-                event.cancel();
-            }
-            super.setCanceled(cancel);
         }
 
         public void setX(int x) {
@@ -51,21 +40,21 @@ public class ForgeHeartRenderEvent<E extends HeartRenderEvent> extends Event {
         }
     }
 
-    public static class Post extends ForgeHeartRenderEvent<HeartRenderEvent.Post> {
+    public static class Post extends NeoHeartRenderEvent<HeartRenderEvent.Post> {
 
         public Post(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
             super(new HeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, effectHeart));
         }
     }
 
-    protected final E event;
+    final E event;
 
-    public ForgeHeartRenderEvent(E event) {
+    public NeoHeartRenderEvent(E event) {
         this.event = event;
     }
 
     public E getEvent() {
-        return event;
+        return this.event;
     }
 
     public GuiGraphics getGuiGraphics() {
@@ -88,10 +77,5 @@ public class ForgeHeartRenderEvent<E extends HeartRenderEvent> extends Event {
 
     public Optional<StatusEffectHeart> getEffectHeart() {
         return event.getEffectHeart();
-    }
-
-    @Override
-    public boolean isCancelable() {
-        return false;
     }
 }

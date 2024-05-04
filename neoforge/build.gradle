@@ -37,7 +37,8 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 
     // Optional Dependencies
-    modCompileOnly("maven.modrinth:appleskin:${neoforge_appleskin_version}")
+    modImplementation("maven.modrinth:appleskin:${neoforge_appleskin_version}")
+    modImplementation("maven.modrinth:the-undergarden:${neoforge_undergarden_version}")
 }
 
 processResources {

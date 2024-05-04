@@ -14,10 +14,10 @@ import squeek.appleskin.api.food.FoodValues;
 import squeek.appleskin.client.HUDOverlayHandler;
 import squeek.appleskin.helpers.FoodHelper;
 import terrails.colorfulhearts.compat.AppleSkinCompat;
-import terrails.colorfulhearts.forge.api.event.ForgeHeartChangeEvent;
+import terrails.colorfulhearts.forge.api.event.ForgeHeartUpdateEvent;
 import terrails.colorfulhearts.forge.api.event.ForgeHeartRenderEvent;
 import terrails.colorfulhearts.forge.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
-import terrails.colorfulhearts.heart.CHeartType;
+import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
 
 public class AppleSkinForgeCompat extends AppleSkinCompat {
 
@@ -43,7 +43,7 @@ public class AppleSkinForgeCompat extends AppleSkinCompat {
         Player player = client.player;
         assert player != null;
 
-        if (!shouldDrawOverlay(event.getHealthType(), player)) {
+        if (!shouldDrawOverlay(event.getEffectHeart().orElse(null), player)) {
             return;
         }
 
@@ -82,12 +82,12 @@ public class AppleSkinForgeCompat extends AppleSkinCompat {
         drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), absorbing, health, modifiedHealth, alpha, event.isHardcore());
     }
 
-    private void heartChanged(ForgeHeartChangeEvent event) {
+    private void heartChanged(ForgeHeartUpdateEvent event) {
         this.lastHealth = 0;
     }
 
-    public boolean shouldDrawOverlay(CHeartType heartType, Player player) {
-        if (heartType != CHeartType.HEALTH) {
+    public boolean shouldDrawOverlay(StatusEffectHeart effectHeart, Player player) {
+        if (effectHeart != null) {
             return false; // AppleSkin usually checks the effect, but we'll do it this way
         }
 
