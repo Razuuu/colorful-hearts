@@ -13,7 +13,7 @@ import terrails.colorfulhearts.neoforge.api.event.NeoHeartRegistryEvent;
 
 public class UndergardenCompat {
 
-    private static final SpriteHeartDrawing VIRULENCE_SPRITE_DRAWING = SpriteHeartDrawing.build(new ResourceLocation(Undergarden.MODID, "vanilla_virulence")).finish(
+    private static final SpriteHeartDrawing VIRULENCE_SPRITE_DRAWING = SpriteHeartDrawing.build(new ResourceLocation(Undergarden.MODID, "virulence_hearts")).finish(
             new ResourceLocation(Undergarden.MODID, "virulence_hearts/normal"),
             new ResourceLocation(Undergarden.MODID, "virulence_hearts/normal_blinking"),
             new ResourceLocation(Undergarden.MODID, "virulence_hearts/half"),
@@ -36,9 +36,10 @@ public class UndergardenCompat {
     }
 
     public void registerEffectHeart(final NeoHeartRegistryEvent event) {
+        CColorfulHearts.LOGGER.info("Registering custom hearts for virulence from mod undergarden");
         event.registerStatusEffectHeart(StatusEffectHeart.build(new ResourceLocation(CColorfulHearts.MOD_ID, "virulence"), player -> player.hasEffect(UGEffects.VIRULENCE.get()))
                 .addHealth(VIRULENCE_SPRITE_DRAWING, 0.6f, 0.6f, 0.6f).addAbsorption(VIRULENCE_SPRITE_DRAWING, 0.6f, 0.6f, 0.6f).finish()
         );
+        CColorfulHearts.LOGGER.debug("Registered custom hearts for virulence from mod undergarden");
     }
-
 }
