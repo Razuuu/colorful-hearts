@@ -11,8 +11,7 @@ import java.util.Set;
 public class Heart {
 
     /**
-     * Set with all created {@link Heart} objects
-     * in order to avoid creating multiple objects with same values
+     * Set with all created {@link Heart} objects in order to avoid creating multiple objects with same values
      */
     private static final Set<Heart> CACHE = new HashSet<>();
 
@@ -72,8 +71,7 @@ public class Heart {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Heart heart = (Heart) o;
-        return this.half == heart.half && this.drawing == heart.drawing
-                && this.backgroundHeart == heart.backgroundHeart;
+        return this.half == heart.half && this.drawing == heart.drawing && this.backgroundHeart == heart.backgroundHeart;
     }
 
     @Override

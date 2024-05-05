@@ -22,8 +22,8 @@ public class HeartRenderEvent {
             super(guiGraphics, x, y, blinking, hardcore, effectHeart);
         }
 
-        public void cancel() {
-            this.cancelled = true;
+        public void setCancelled(boolean cancel) {
+            this.cancelled = cancel;
         }
         public boolean isCancelled() {
             return this.cancelled;

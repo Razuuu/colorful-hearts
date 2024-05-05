@@ -48,6 +48,11 @@ public class StatusEffectHeart {
                 '}';
     }
 
+    /**
+     * Creates an instance of {@link Builder} to create an instance of {@link StatusEffectHeart}
+     * @param id easily distinguishable ID useful for debugging
+     * @param condition for this heart type to be active
+     */
     public static Builder build(ResourceLocation id, Predicate<Player> condition) {
         return new Builder(id, condition);
     }
@@ -58,7 +63,6 @@ public class StatusEffectHeart {
         final Predicate<Player> condition;
 
         HeartDrawing healthFirst, healthSecond;
-
         HeartDrawing absorptionFirst, absorptionSecond;
 
         Builder(ResourceLocation id, Predicate<Player> condition) {
@@ -68,12 +72,14 @@ public class StatusEffectHeart {
 
         /**
          * Uses the provided {@link HeartDrawing} object for the first heart color and colors the same texture using the provided rgb values for the second heart color
-         * Makes it easy for mods that do not want to provide their own alternate texture
          */
         public Builder addHealth(HeartDrawing drawing, float r, float g, float b) {
             return this.addHealth(drawing, r, g, b, 1.0f, GL11.GL_ONE, GL11.GL_SRC_COLOR);
         }
 
+        /**
+         * Uses the provided {@link HeartDrawing} object for the first heart color and colors the same texture using the provided rgba values and blending modes
+         */
         public Builder addHealth(HeartDrawing drawing, float r, float g, float b, float alpha, int sourceFactor, int destinationFactor) {
             ResourceLocation secondId = drawing.getId().withSuffix("_2");
             HeartDrawing second = new HeartDrawing() {
@@ -97,16 +103,25 @@ public class StatusEffectHeart {
             return this;
         }
 
+        /**
+         * Uses the provided {@link HeartDrawing} for both health icons
+         */
         public Builder addHealth(HeartDrawing first, HeartDrawing second) {
             this.healthFirst = first;
             this.healthSecond = second;
             return this;
         }
 
+        /**
+         * Uses the provided {@link HeartDrawing} object for the first heart color and colors the same texture using the provided rgb values for the second heart color
+         */
         public Builder addAbsorption(HeartDrawing drawing, float r, float g, float b) {
             return this.addAbsorption(drawing, r, g, b, 1.0f, GL11.GL_ONE, GL11.GL_SRC_COLOR);
         }
 
+        /**
+         * Uses the provided {@link HeartDrawing} object for the first heart color and colors the same texture using the provided rgba values and blending modes
+         */
         public Builder addAbsorption(HeartDrawing drawing, float r, float g, float b, float alpha, int sourceFactor, int destinationFactor) {
             ResourceLocation secondId = drawing.getId().withSuffix("_2");
             HeartDrawing second = new HeartDrawing() {
@@ -130,18 +145,27 @@ public class StatusEffectHeart {
             return this;
         }
 
+        /**
+         * Uses the provided {@link HeartDrawing} object for the first heart color and colors the same texture using the provided rgb values for the second heart color
+         */
         public Builder addAbsorption(HeartDrawing first, HeartDrawing second) {
             this.absorptionFirst = first;
             this.absorptionSecond = second;
             return this;
         }
 
+        /**
+         * Makes it so that absorption is replaced by empty containers when under effect
+         */
         public Builder blankAbsorption() {
             this.absorptionFirst = Hearts.CONTAINER;
             this.absorptionSecond = Hearts.CONTAINER;
             return this;
         }
 
+        /**
+         * Finishes building the final effect heart
+         */
         public StatusEffectHeart finish() {
             if (this.healthFirst == null || this.healthSecond == null) {
                 throw new IllegalArgumentException("Health hearts were not defined");

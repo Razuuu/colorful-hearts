@@ -27,10 +27,7 @@ public class ForgeHeartRenderEvent<E extends HeartRenderEvent> extends Event {
 
         @Override
         public void setCanceled(boolean cancel) {
-            if (cancel) {
-                event.cancel();
-            }
-            super.setCanceled(cancel);
+            event.setCancelled(cancel);
         }
 
         public void setX(int x) {

@@ -12,7 +12,7 @@ import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
 
 import java.util.List;
 
-public abstract class AppleSkinCompat {
+public abstract class AppleSkinCommonCompat {
 
     public final Minecraft client = Minecraft.getInstance();
     private final RandomSource random = RandomSource.create();

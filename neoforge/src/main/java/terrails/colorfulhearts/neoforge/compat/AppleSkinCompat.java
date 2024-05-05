@@ -13,15 +13,15 @@ import squeek.appleskin.api.event.HUDOverlayEvent;
 import squeek.appleskin.api.food.FoodValues;
 import squeek.appleskin.client.HUDOverlayHandler;
 import squeek.appleskin.helpers.FoodHelper;
-import terrails.colorfulhearts.compat.AppleSkinCompat;
+import terrails.colorfulhearts.compat.AppleSkinCommonCompat;
 import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
 import terrails.colorfulhearts.neoforge.api.event.NeoHeartUpdateEvent;
 import terrails.colorfulhearts.neoforge.api.event.NeoHeartRenderEvent;
 import terrails.colorfulhearts.neoforge.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
-public class AppleSkinNeoCompat extends AppleSkinCompat {
+public class AppleSkinCompat extends AppleSkinCommonCompat {
 
-    public AppleSkinNeoCompat() {
+    public AppleSkinCompat() {
         NeoForge.EVENT_BUS.addListener(this::onDefaultRender);
         NeoForge.EVENT_BUS.addListener(this::onPostRender);
         NeoForge.EVENT_BUS.addListener(this::heartChanged);

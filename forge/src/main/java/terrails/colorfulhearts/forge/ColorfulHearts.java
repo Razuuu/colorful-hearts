@@ -43,7 +43,7 @@ public class ColorfulHearts {
     private static final List<ConfigOption<?, ?>> CONFIG_OPTIONS = new ArrayList<>();
 
     private static final Map<String, String> COMPAT = Map.of(
-            "appleskin", "AppleSkinForgeCompat"
+            "appleskin", "AppleSkinCompat"
     );
 
     public ColorfulHearts() {

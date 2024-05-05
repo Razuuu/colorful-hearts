@@ -15,8 +15,8 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
             super(new HeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, effectHeart));
         }
 
-        public void cancel() {
-            event.cancel();
+        public void setCancelled(boolean cancel) {
+            event.setCancelled(cancel);
         }
         public boolean isCancelled() {
             return event.isCancelled();

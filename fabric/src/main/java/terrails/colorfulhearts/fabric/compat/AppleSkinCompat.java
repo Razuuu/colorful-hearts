@@ -5,11 +5,11 @@ import net.minecraft.world.entity.player.Player;
 import squeek.appleskin.api.AppleSkinApi;
 import squeek.appleskin.api.event.HUDOverlayEvent;
 import squeek.appleskin.client.HUDOverlayHandler;
-import terrails.colorfulhearts.compat.AppleSkinCompat;
+import terrails.colorfulhearts.compat.AppleSkinCommonCompat;
 import terrails.colorfulhearts.fabric.api.event.FabHeartEvents;
 import terrails.colorfulhearts.fabric.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
-public class AppleSkinFabCompat extends AppleSkinCompat implements AppleSkinApi {
+public class AppleSkinCompat extends AppleSkinCommonCompat implements AppleSkinApi {
 
     private int modifiedHealth;
 
