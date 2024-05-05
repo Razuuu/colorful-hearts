@@ -2,7 +2,7 @@ package terrails.colorfulhearts.neoforge.compat;
 
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import quek.undergarden.Undergarden;
 import quek.undergarden.registry.UGEffects;
@@ -29,15 +29,15 @@ public class UndergardenCompat {
         bus.addListener(this::registerEffectHeart);
     }
 
-    private void cancelOverlay(RenderGuiOverlayEvent.Pre event) {
-        if (event.getOverlay().id().equals(new ResourceLocation(Undergarden.MODID, "virulence_hearts"))) {
+    private void cancelOverlay(RenderGuiLayerEvent.Pre event) {
+        if (event.getName().equals(new ResourceLocation(Undergarden.MODID, "virulence_hearts"))) {
             event.setCanceled(true);
         }
     }
 
     public void registerEffectHeart(final NeoHeartRegistryEvent event) {
         CColorfulHearts.LOGGER.info("Registering custom hearts for virulence from mod undergarden");
-        event.registerStatusEffectHeart(StatusEffectHeart.build(new ResourceLocation(CColorfulHearts.MOD_ID, "virulence"), player -> player.hasEffect(UGEffects.VIRULENCE.get()))
+        event.registerStatusEffectHeart(StatusEffectHeart.build(new ResourceLocation(CColorfulHearts.MOD_ID, "virulence"), player -> player.hasEffect(UGEffects.VIRULENCE))
                 .addHealth(VIRULENCE_SPRITE_DRAWING, 0.6f, 0.6f, 0.6f).addAbsorption(VIRULENCE_SPRITE_DRAWING, 0.6f, 0.6f, 0.6f).finish()
         );
         CColorfulHearts.LOGGER.debug("Registered custom hearts for virulence from mod undergarden");

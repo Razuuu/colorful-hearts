@@ -66,10 +66,6 @@ public class ColorSelectionScreen extends Screen {
         // create scrollable list widget and add it to this screen's children
         this.colorSelectionList = this.addRenderableWidget(new ScrollableWidgetList(Minecraft.getInstance(), width, height - marginY * 2, marginY, Button.DEFAULT_HEIGHT + 6));
 
-        // set background type
-        assert this.minecraft != null;
-        this.colorSelectionList.setRenderBackground(this.minecraft.level == null);
-
         // add elements to the scrollable widget
         this.addColorElements();
 

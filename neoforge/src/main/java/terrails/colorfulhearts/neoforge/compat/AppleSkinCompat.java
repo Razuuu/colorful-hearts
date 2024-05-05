@@ -5,12 +5,9 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;
 import squeek.appleskin.ModConfig;
-import squeek.appleskin.api.event.FoodValuesEvent;
 import squeek.appleskin.api.event.HUDOverlayEvent;
-import squeek.appleskin.api.food.FoodValues;
 import squeek.appleskin.client.HUDOverlayHandler;
 import squeek.appleskin.helpers.FoodHelper;
 import terrails.colorfulhearts.compat.AppleSkinCommonCompat;
@@ -48,38 +45,25 @@ public class AppleSkinCompat extends AppleSkinCommonCompat {
         }
 
         /* copied from HUDOverlayHandler */
-
-        // try to get the item stack in the player hand
-        ItemStack heldItem = player.getMainHandItem();
-        if (ModConfig.SHOW_FOOD_VALUES_OVERLAY_WHEN_OFFHAND.get() && !FoodHelper.canConsume(heldItem, player))
-            heldItem = player.getOffhandItem();
-
-        boolean shouldRenderHeldItemValues = !heldItem.isEmpty() && FoodHelper.canConsume(heldItem, player);
-        if (!shouldRenderHeldItemValues) {
+        FoodHelper.QueriedFoodResult result = HUDOverlayHandlerAccessor.getHeldFood().result(client.gui.getGuiTicks(), player);
+        if (result == null) {
             HUDOverlayHandler.resetFlash();
             return;
         }
-        int health = Mth.ceil(player.getHealth());
 
-        FoodValues modifiedFoodValues = FoodHelper.getModifiedFoodValues(heldItem, player);
-        FoodValuesEvent foodValuesEvent = new FoodValuesEvent(player, heldItem, FoodHelper.getDefaultFoodValues(heldItem, player), modifiedFoodValues);
-        NeoForge.EVENT_BUS.post(foodValuesEvent);
-        modifiedFoodValues = foodValuesEvent.modifiedFoodValues;
+        float foodHealthIncrement = FoodHelper.getEstimatedHealthIncrement(player, result.modifiedFoodProperties);
+        float currentHealth = player.getHealth();
+        float modifiedHealth = Math.min(currentHealth + foodHealthIncrement, player.getMaxHealth());
 
-        float foodHealthIncrement = FoodHelper.getEstimatedHealthIncrement(heldItem, modifiedFoodValues, player);
-        int modifiedHealth = Mth.ceil(Math.min(health + foodHealthIncrement, player.getMaxHealth()));
-
-        if (modifiedHealth <= health) {
+        if (modifiedHealth <= currentHealth) {
             return;
         }
-
-        int absorbing = Mth.ceil(player.getAbsorptionAmount());
 
         // this value never reaches 1.0, so the health colors will always be somewhat mixed
         // I'll leave this behaviour as is at it makes the differentiation easier
         float alpha = HUDOverlayHandlerAccessor.getFlashAlpha();
 
-        drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), absorbing, health, modifiedHealth, alpha, event.isHardcore());
+        drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), Mth.ceil(player.getAbsorptionAmount()), Mth.ceil(currentHealth), Mth.ceil(modifiedHealth), alpha, event.isHardcore());
     }
 
     private void heartChanged(NeoHeartUpdateEvent event) {

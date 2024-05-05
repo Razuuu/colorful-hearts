@@ -1,5 +1,6 @@
 package terrails.colorfulhearts.config;
 
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
@@ -76,7 +77,7 @@ public class ConfigUtils {
         LoaderExpectPlatform.heartRegistryEvent(registry);
     }
 
-    private static StatusEffectHeart buildEffectHearts(List<String> healthColors, List<String> absorptionColors, String effectName, MobEffect effect, ResourceLocation id) {
+    private static StatusEffectHeart buildEffectHearts(List<String> healthColors, List<String> absorptionColors, String effectName, Holder<MobEffect> effect, ResourceLocation id) {
         return buildEffectHearts(healthColors, absorptionColors, effectName, player -> player.hasEffect(effect), id);
     }
 

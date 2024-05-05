@@ -6,7 +6,6 @@
   "plugin": "terrails.colorfulhearts.fabric.FabMixinPlugin",
   "client": [
     "GuiMixin",
-    "SpriteSourcesMixin",
     "compat.appleskin.HUDOverlayHandlerAccessor"
   ],
   "injectors": {

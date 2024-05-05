@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 
 public class ColoredHearts implements SpriteSource {
 
-    public static SpriteSourceType COLORED_HEARTS;
+    public static SpriteSourceType TYPE;
 
     private static final Codec<Boolean> IS_HEALTH = Codec.STRING.comapFlatMap(
             s -> {
@@ -45,9 +46,9 @@ public class ColoredHearts implements SpriteSource {
             bool -> bool ? "HEALTH" : "ABSORPTION"
     );
 
-    public static final Codec<ColoredHearts> CODEC = RecordCodecBuilder.create(
+    public static final MapCodec<ColoredHearts> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
-                    ColoredHearts.IS_HEALTH.fieldOf("heart").forGetter(codec -> codec.isHealth)
+                    ColoredHearts.IS_HEALTH.fieldOf("heart").forGetter(source -> source.isHealth)
             ).apply(instance, ColoredHearts::new)
     );
 
@@ -178,7 +179,7 @@ public class ColoredHearts implements SpriteSource {
 
     @Override
     public @NotNull SpriteSourceType type() {
-        return ColoredHearts.COLORED_HEARTS;
+        return ColoredHearts.TYPE;
     }
 
     private record ColoredHeartsSupplier(

@@ -9,6 +9,11 @@ import squeek.appleskin.client.HUDOverlayHandler;
 public interface HUDOverlayHandlerAccessor {
 
     @Contract
+    @Accessor static HUDOverlayHandler.HeldFoodCache getHeldFood() {
+        throw new AssertionError();
+    }
+
+    @Contract
     @Accessor static float getFlashAlpha() {
         throw new AssertionError();
     }

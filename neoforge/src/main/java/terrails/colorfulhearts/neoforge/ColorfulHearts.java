@@ -8,14 +8,14 @@ import com.electronwill.nightconfig.core.io.WritingMode;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.neoforge.client.ConfigScreenHandler;
 import net.neoforged.neoforge.client.event.RegisterSpriteSourceTypesEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
 import terrails.colorfulhearts.CColorfulHearts;
@@ -36,6 +36,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
 
@@ -49,16 +50,11 @@ public class ColorfulHearts {
             "undergarden", "UndergardenCompat"
     );
 
-    public ColorfulHearts(final IEventBus bus) {
+    public ColorfulHearts(final IEventBus bus, final ModContainer container) {
         final String fileName = CColorfulHearts.MOD_ID + ".toml";
         CONFIG_SPEC = this.setupConfig(fileName);
-
-        final ModLoadingContext context = ModLoadingContext.get();
-        context.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, fileName);
-        context.registerExtensionPoint(
-                ConfigScreenHandler.ConfigScreenFactory.class,
-                () -> new ConfigScreenHandler.ConfigScreenFactory((mc, lastScreen) -> new ConfigurationScreen(lastScreen))
-        );
+        container.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, fileName);
+        container.registerExtensionPoint(IConfigScreenFactory.class, (Supplier<IConfigScreenFactory>) () -> (mc, lastScreen) -> new ConfigurationScreen(lastScreen));
 
         bus.addListener(this::setup);
         bus.addListener(this::registerSprite);
@@ -72,7 +68,7 @@ public class ColorfulHearts {
     }
 
     private void registerSprite(final RegisterSpriteSourceTypesEvent event) {
-        event.register(new ResourceLocation(CColorfulHearts.MOD_ID, "colored_hearts"), ColoredHearts.CODEC);
+        ColoredHearts.TYPE = event.register(new ResourceLocation(CColorfulHearts.MOD_ID, "colored_hearts"), ColoredHearts.CODEC);
     }
 
     private void loadConfig(final ModConfigEvent.Loading event) {

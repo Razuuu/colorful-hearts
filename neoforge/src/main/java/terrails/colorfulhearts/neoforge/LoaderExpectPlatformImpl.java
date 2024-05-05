@@ -39,7 +39,7 @@ public class LoaderExpectPlatformImpl {
     }
 
     public static void heartRegistryEvent(HeartRegistry registry) {
-        ModLoader.get().postEvent(new NeoHeartRegistryEvent(registry));
+        ModLoader.postEvent(new NeoHeartRegistryEvent(registry));
     }
 
     public static void heartUpdateEvent() {

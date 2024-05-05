@@ -1,9 +1,14 @@
 package terrails.colorfulhearts.fabric;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.AtlasSourceTypeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ObjectShare;
+import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
+import net.minecraft.resources.ResourceLocation;
+import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.fabric.config.FabConfig;
+import terrails.colorfulhearts.render.atlas.sources.ColoredHearts;
 
 public class ColorfulHearts implements ClientModInitializer {
 
@@ -12,7 +17,13 @@ public class ColorfulHearts implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         CONFIG = new FabConfig();
+        this.setupSpriteSource();
         this.setupObjectShare();
+    }
+
+    private void setupSpriteSource() {
+        ColoredHearts.TYPE = new SpriteSourceType(ColoredHearts.CODEC);
+        AtlasSourceTypeRegistry.register(new ResourceLocation(CColorfulHearts.MOD_ID, "colored_hearts"), ColoredHearts.TYPE);
     }
 
     private void setupObjectShare() {

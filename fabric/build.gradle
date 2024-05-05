@@ -49,7 +49,7 @@ dependencies {
     modImplementation("maven.modrinth:modmenu:${fabric_modmenu_version}")
     modImplementation("maven.modrinth:appleskin:${fabric_appleskin_version}")
     modRuntimeOnly("maven.modrinth:cloth-config:${fabric_clothconfig_version}")
-    modRuntimeOnly("maven.modrinth:raised:${fabric_raised_version}")
+//    modRuntimeOnly("maven.modrinth:raised:${fabric_raised_version}")
 }
 
 processResources {

@@ -2,13 +2,15 @@ package terrails.colorfulhearts.neoforge.render;
 
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
-import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
-import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import terrails.colorfulhearts.render.HeartRenderer;
+
+import java.util.Objects;
 
 public class RenderEventHandler {
 
@@ -18,12 +20,8 @@ public class RenderEventHandler {
     private long lastHealthTime, healthBlinkTime;
     private int displayHealth, lastHealth;
 
-    public void renderHearts(RenderGuiOverlayEvent.Pre event) {
-        if (event.isCanceled()
-                || client.options.hideGui
-                || !event.getOverlay().id().equals(VanillaGuiOverlay.PLAYER_HEALTH.id())
-                || !((ExtendedGui) client.gui).shouldDrawSurvivalElements()
-                || !(client.getCameraEntity() instanceof Player player)) {
+    public void renderHearts(RenderGuiLayerEvent.Pre event) {
+        if (event.isCanceled() || client.options.hideGui || !event.getName().equals(VanillaGuiLayers.PLAYER_HEALTH) || !Objects.requireNonNull(client.gameMode).canHurtPlayer() || !(client.getCameraEntity() instanceof Player player)) {
             return;
         }
 
@@ -51,18 +49,18 @@ public class RenderEventHandler {
         this.lastHealth = health;
         int maxHealth = Mth.ceil(Math.max((float) player.getAttributeValue(Attributes.MAX_HEALTH), Math.max(this.displayHealth, health)));
 
-        ExtendedGui gui = (ExtendedGui) client.gui;
-        int width = event.getWindow().getGuiScaledWidth();
-        int height = event.getWindow().getGuiScaledHeight();
+        GuiGraphics guiGraphics = event.getGuiGraphics();
+        int width = guiGraphics.guiWidth();
+        int height = guiGraphics.guiHeight();
         int left = width / 2 - 91;
-        int top = height - gui.leftHeight;
+        int top = height - client.gui.leftHeight;
 
         // handle half heart requiring absorption to move one row up
         boolean hasAbsorptionRow = (absorption + Math.min(20, maxHealth == 19 ? 20 : maxHealth)) > 20;
         int offset = 10 + (hasAbsorptionRow ? 10 : 0);
-        gui.leftHeight += offset;
+        client.gui.leftHeight += offset;
 
-        HeartRenderer.INSTANCE.renderPlayerHearts(event.getGuiGraphics(), player, left, top, maxHealth, health, this.displayHealth, absorption, highlight);
+        HeartRenderer.INSTANCE.renderPlayerHearts(guiGraphics, player, left, top, maxHealth, health, this.displayHealth, absorption, highlight);
 
         client.getProfiler().pop();
 
