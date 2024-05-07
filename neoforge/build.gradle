@@ -38,7 +38,7 @@ dependencies {
 
     // Optional Dependencies
     modCompileOnly("maven.modrinth:appleskin:${neoforge_appleskin_version}")
-    modCompileOnly("maven.modrinth:the-undergarden:${neoforge_undergarden_version}")
+    modImplementation("maven.modrinth:the-undergarden:${neoforge_undergarden_version}")
 }
 
 processResources {
