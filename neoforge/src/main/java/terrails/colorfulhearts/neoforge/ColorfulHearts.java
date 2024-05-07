@@ -3,13 +3,14 @@ package terrails.colorfulhearts.neoforge;
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.file.FileNotFoundAction;
-import com.electronwill.nightconfig.core.io.ParsingException;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -26,13 +27,8 @@ import terrails.colorfulhearts.config.screen.ConfigurationScreen;
 import terrails.colorfulhearts.neoforge.render.RenderEventHandler;
 import terrails.colorfulhearts.render.atlas.sources.ColoredHearts;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +36,7 @@ import java.util.function.Supplier;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
 
+@Mod(value = CColorfulHearts.MOD_ID, dist = Dist.CLIENT)
 public class ColorfulHearts {
 
     public static ModConfigSpec CONFIG_SPEC;
@@ -115,32 +112,13 @@ public class ColorfulHearts {
 
         ModConfigSpec spec = specBuilder.build();
 
-        Path filePath = FMLPaths.CONFIGDIR.get().resolve(fileName);
-        CommentedFileConfig config = CommentedFileConfig.builder(filePath)
+        spec.setConfig(CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(fileName))
                 .onFileNotFound(FileNotFoundAction.CREATE_EMPTY)
                 .writingMode(WritingMode.REPLACE)
                 .autoreload()
                 .sync()
-                .build();
-
-        while (true) {
-            try {
-                LOGGER.info("Loading {} config file", config.getFile().getName());
-                config.load();
-                break;
-            } catch (ParsingException e) {
-                LOGGER.error("Failed to load {} due to a parsing error", config.getFile().getName(), e);
-                String deformedFile = CColorfulHearts.MOD_ID + "-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss")) + "-deformed.toml";
-                try {
-                    Files.move(config.getNioPath(), FMLPaths.CONFIGDIR.get().resolve(deformedFile));
-                    LOGGER.error("Deformed config file renamed to {}", deformedFile);
-                } catch (IOException ee) {
-                    LOGGER.error("Moving deformed config file failed", ee);
-                    throw new RuntimeException("Moving deformed config file failed: " + e);
-                }
-            }
-        }
-        spec.setConfig(config);
+                .build()
+        );
 
         return spec;
     }
