@@ -1,15 +1,23 @@
 package terrails.colorfulhearts.fabric;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.gui.GuiGraphics;
 import terrails.colorfulhearts.CColorfulHearts;
-
-import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
+import terrails.colorfulhearts.api.event.HeartRegistry;
+import terrails.colorfulhearts.api.event.HeartRenderEvent;
+import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
+import terrails.colorfulhearts.fabric.api.ColorfulHeartsApi;
+import terrails.colorfulhearts.fabric.api.event.FabHeartEvents;
 
 public class LoaderExpectPlatformImpl {
 
+
+    public static String getLoader() {
+        return "fabric";
+    }
+
     public static void applyConfig() {
-        ColorfulHearts.FILE_CONFIG.save();
-        LOGGER.debug("Successfully saved changes to {} config file.", CColorfulHearts.MOD_ID + ".toml");
+        ColorfulHearts.CONFIG.save();
     }
 
     public static boolean forcedHardcoreHearts() {
@@ -18,7 +26,34 @@ public class LoaderExpectPlatformImpl {
         } else return false;
     }
 
-    public static boolean inDevEnvironment() {
-        return FabricLoader.getInstance().isDevelopmentEnvironment();
+    public static HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
+        HeartRenderEvent.Pre event = new HeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, effectHeart);
+        FabHeartEvents.PRE_RENDER.invoker().accept(event);
+        return event;
+    }
+
+    public static void postRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
+        HeartRenderEvent.Post event = new HeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, effectHeart);
+        FabHeartEvents.POST_RENDER.invoker().accept(event);
+    }
+
+    public static void heartRegistryEvent(HeartRegistry registry) {
+        FabricLoader.getInstance().getEntrypointContainers("colorfulhearts", ColorfulHeartsApi.class).forEach(entryPoint -> {
+            String modId = entryPoint.getProvider().getMetadata().getId();
+            try {
+                CColorfulHearts.LOGGER.info("Loading ColorfulHeartsApi implementation of mod {}", modId);
+                ColorfulHeartsApi api = entryPoint.getEntrypoint();
+                api.registerHearts(registry);
+                CColorfulHearts.LOGGER.debug("Loaded ColorfulHeartsApi implementation of mod {}", modId);
+            } catch (Throwable e) {
+                CColorfulHearts.LOGGER.error("Could not load ColorfulHeartsApi implementation of mod {}", modId, e);
+            }
+        });
+
+        FabHeartEvents.HEART_REGISTRY.invoker().accept(registry);
+    }
+
+    public static void heartUpdateEvent() {
+        FabHeartEvents.UPDATE.invoker().run();
     }
 }

@@ -22,7 +22,7 @@ public class PlayerTabOverlayMixin {
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void renderTablistHearts(int y, int x, int offset, UUID playerUuid, GuiGraphics guiGraphics, int scoreValue, CallbackInfo ci, PlayerTabOverlay.HealthState healthState) {
         // this handles just 2 rows and then uses vanilla NNhp format (default behaviour)
-        TabHeartRenderer.INSTANCE.renderPlayerListHud(y, x, offset, guiGraphics.pose(), scoreValue, healthState);
+        TabHeartRenderer.INSTANCE.renderPlayerListHud(y, x, offset, guiGraphics, scoreValue, healthState);
         ci.cancel();
     }
 }

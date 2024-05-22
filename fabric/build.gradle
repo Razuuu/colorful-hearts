@@ -43,7 +43,9 @@ dependencies {
     api(include("com.electronwill.night-config:toml:${nightconfig_version}"))
     
     // Optional Dependencies
-    modImplementation "com.terraformersmc:modmenu:${modmenu_version}"
+    modImplementation("maven.modrinth:modmenu:${fabric_modmenu_version}")
+    modImplementation("maven.modrinth:appleskin:${fabric_appleskin_version}")
+    modRuntimeOnly("maven.modrinth:cloth-config:${fabric_clothconfig_version}")
 }
 
 processResources {

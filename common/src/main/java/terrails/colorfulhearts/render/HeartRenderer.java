@@ -1,100 +1,105 @@
 package terrails.colorfulhearts.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
-import terrails.colorfulhearts.config.Configuration;
-import terrails.colorfulhearts.heart.Heart;
-import terrails.colorfulhearts.heart.HeartPiece;
-import terrails.colorfulhearts.heart.HeartType;
+import terrails.colorfulhearts.LoaderExpectPlatform;
+import terrails.colorfulhearts.api.event.HeartRenderEvent;
+import terrails.colorfulhearts.api.heart.Hearts;
+import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
+import terrails.colorfulhearts.api.heart.drawing.Heart;
+import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
-
-import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
 
 public class HeartRenderer {
 
     public static final HeartRenderer INSTANCE = new HeartRenderer();
 
     private final Minecraft client = Minecraft.getInstance();
-    private final Random random = new Random();
+    private final RandomSource random = RandomSource.create();
 
-    private int lastHealth, lastMaxHealth, lastAbsorption;
-    public HeartType lastHeartType;
+    private boolean lastHardcore;
+    public int lastHealth, lastMaxHealth, lastAbsorption;
+    private StatusEffectHeart lastHeartType;
     private Heart[] hearts;
 
-    public void renderPlayerHearts(
-            GuiGraphics guiGraphics,
-            Player player,
-            int x,
-            int y,
-            int maxHealth,
-            int currentHealth,
-            int displayHealth,
-            int absorption,
-            boolean renderHighlight) {
+    public void renderPlayerHearts(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking) {
+        long tickCount = this.client.gui.getGuiTicks();
+        // synchronize random with vanilla
+        this.random.setSeed(tickCount * 312871);
 
         int healthHearts = Mth.ceil(Math.min(maxHealth, 20) / 2.0);
         int displayHealthHearts = Mth.ceil(Math.min(displayHealth, 20) / 2.0);
 
-        boolean absorptionSameRow = Configuration.ABSORPTION.renderOverHealth.get();
+        boolean hardcore = LoaderExpectPlatform.forcedHardcoreHearts() || player.level().getLevelData().isHardcore();
 
         int regenIndex = -1;
         if (player.hasEffect(MobEffects.REGENERATION)) {
-            long tickCount = this.client.gui.getGuiTicks();
-            // Count absorption into the index if in same row and if (health + absorption) > maxHealth
-            if (absorptionSameRow && (absorption + Math.max(currentHealth, displayHealth)) > maxHealth) {
-                // limit regeneration to 20 when in same row
-                int value = Math.min(20, Math.max(currentHealth, displayHealth) + absorption);
-                regenIndex = (int) tickCount % Mth.ceil(value + 5);
-            } else {
-                regenIndex = (int) tickCount % Mth.ceil(Math.min(maxHealth, 20) + 5);
-            }
+            regenIndex = (int) tickCount % Mth.ceil(Math.min(maxHealth, 20) + 5);
         }
 
-        HeartType heartType = HeartType.forPlayer(player);
-        if (this.lastHealth != currentHealth || this.lastMaxHealth != maxHealth || this.lastAbsorption != absorption || this.lastHeartType != heartType || this.hearts == null) {
-            List<HeartPiece> healthColors = HeartPiece.getHeartPiecesForType(heartType, false);
-            List<HeartPiece> absorptionColors = HeartPiece.getHeartPiecesForType(heartType, true);
-            this.hearts = Heart.calculateHearts(absorption, currentHealth, maxHealth, healthColors, absorptionColors, absorptionSameRow);
+        StatusEffectHeart heartType = Hearts.getEffectHeartForPlayer(player).orElse(null);
+
+        HeartRenderEvent.Pre event = LoaderExpectPlatform.preRenderEvent(guiGraphics, x, y, blinking, hardcore, heartType);
+        if (event.isCancelled()) {
+            return;
+        }
+
+        x = event.getX();
+        y = event.getY();
+        blinking = event.isBlinking();
+        hardcore = event.isHardcore();
+        heartType = event.getEffectHeart().orElse(null);
+
+        if (this.lastHardcore != hardcore || this.lastHealth != currentHealth || this.lastMaxHealth != maxHealth || this.lastAbsorption != absorption
+                || this.lastHeartType != heartType || this.hearts == null) {
+
+            final List<HeartDrawing> healthDrawings, absorptionDrawings;
+            if (heartType == null) {
+                healthDrawings = Hearts.COLORED_HEALTH_HEARTS;
+                absorptionDrawings = Hearts.COLORED_ABSORPTION_HEARTS;
+            } else {
+                healthDrawings = heartType.getHealthDrawings();
+                absorptionDrawings = heartType.getAbsorptionDrawings();
+            }
+
+            this.hearts = HeartUtils.calculateHearts(healthDrawings, absorptionDrawings, currentHealth, maxHealth, absorption);
+            this.lastHardcore = hardcore;
             this.lastHealth = currentHealth;
             this.lastMaxHealth = maxHealth;
             this.lastAbsorption = absorption;
             this.lastHeartType = heartType;
-            LOGGER.debug("Successfully updated hearts.\n{}", Arrays.toString(this.hearts));
         }
 
-        RenderSystem.enableBlend();
         for (int index = 0; index < this.hearts.length; index++) {
             Heart heart = this.hearts[index];
-            if (heart == null) continue;
-
             int xPos = x + (index % 10) * 8;
             int yPos = y - (index > 9 ? 10 : 0);
 
-            // Low health "shakiness"
+            // low health "shakiness"
             if (currentHealth + absorption <= 4) {
                 yPos += this.random.nextInt(2);
             }
 
-            // Only health hearts should move up and down while under regeneration status effect.
-            // This behavior is applied to absorption ONLY when absorptionSameRow is enabled
-            if ((index < healthHearts || absorptionSameRow) && index == regenIndex) {
+            if (heart == null) continue;
+
+            // move up and down while under regeneration status effect.
+            if (index < healthHearts && index == regenIndex) {
                 yPos -= 2;
             }
 
-            // Vanilla seems to highlight all background borders and only some hearts,
+            // vanilla seems to highlight all background borders and only some hearts,
             // therefore both should be passed through to draw
-            boolean highlightHeart = renderHighlight && index < displayHealthHearts;
+            boolean blinkingHeart = blinking && index < displayHealthHearts;
 
-            heart.draw(guiGraphics.pose(), xPos, yPos, renderHighlight, highlightHeart, heartType);
+            heart.draw(guiGraphics, xPos, yPos, hardcore, blinking, blinkingHeart);
         }
-        RenderSystem.disableBlend();
+
+        LoaderExpectPlatform.postRenderEvent(guiGraphics, x, y, blinking, hardcore, heartType);
     }
 }

@@ -1,5 +1,6 @@
 package terrails.colorfulhearts.forge;
 
+import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.file.FileNotFoundAction;
 import com.electronwill.nightconfig.core.io.WritingMode;
@@ -7,106 +8,142 @@ import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.config.ConfigOption;
+import terrails.colorfulhearts.config.ConfigUtils;
 import terrails.colorfulhearts.config.Configuration;
 import terrails.colorfulhearts.config.screen.ConfigurationScreen;
+import terrails.colorfulhearts.forge.render.RenderEventHandler;
 
 import java.lang.reflect.Field;
-import java.nio.file.Path;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
 
 public class ColorfulHearts {
 
     public static ForgeConfigSpec CONFIG_SPEC;
+    private static final List<ConfigOption<?, ?>> CONFIG_OPTIONS = new ArrayList<>();
 
-    private static final String CONFIG_FILE = CColorfulHearts.MOD_ID + ".toml";
+    private static final Map<String, String> COMPAT = Map.of(
+            "appleskin", "AppleSkinCompat",
+            "undergarden", "UndergardenCompat",
+            "farmersdelight", "FarmersDelightCompat"
+    );
 
-    static void initialize() {
-        final ColorfulHearts instance = new ColorfulHearts();
-
-        instance.setupConfig();
+    public ColorfulHearts() {
         final ModLoadingContext context = ModLoadingContext.get();
-        context.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, CONFIG_FILE);
-        context.registerExtensionPoint(
-                ConfigScreenHandler.ConfigScreenFactory.class,
-                () -> new ConfigScreenHandler.ConfigScreenFactory((mc, lastScreen) -> new ConfigurationScreen(lastScreen))
-        );
 
+        final String fileName = CColorfulHearts.MOD_ID + ".toml";
+        CONFIG_SPEC = this.setupConfig(fileName);
+        context.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, fileName);
+        context.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, lastScreen) -> new ConfigurationScreen(lastScreen)));
+
+        CColorfulHearts.setupCommon();
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(instance::setup);
-
-        MinecraftForge.EVENT_BUS.register(new RenderEventHandler());
+        bus.addListener(this::setup);
+        bus.addListener(this::loadConfig);
+        bus.addListener(this::reloadConfig);
+        this.setupCompat(bus);
     }
 
     private void setup(final FMLClientSetupEvent event) {
-        CColorfulHearts.setupCommon();
+        MinecraftForge.EVENT_BUS.addListener(RenderEventHandler.INSTANCE::renderHearts);
     }
 
-    private void setupConfig() {
-        final Object[] configObjects = { Configuration.HEALTH, Configuration.ABSORPTION };
+    private void loadConfig(final ModConfigEvent.Loading event) {
+        LOGGER.info("Loading {} config file", event.getConfig().getFileName());
+        final CommentedConfig config = event.getConfig().getConfigData();
+        for (ConfigOption<?, ?> option : CONFIG_OPTIONS) {
+            option.initialize(() -> config.get(option.getPath()), v -> config.set(option.getPath(), v));
+            option.reload();
+        }
+        ConfigUtils.loadColoredHearts();
+        ConfigUtils.loadStatusEffectHearts();
+        LOGGER.debug("Loaded {} config file", event.getConfig().getFileName());
+    }
 
-        final ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
-        for (Object object : configObjects) {
-            for (Field field : object.getClass().getDeclaredFields()) {
+    private void reloadConfig(final ModConfigEvent.Reloading event) {
+        LOGGER.info("Reloading {} config file", event.getConfig().getFileName());
+        CONFIG_OPTIONS.forEach(ConfigOption::reload);
+        ConfigUtils.loadColoredHearts();
+        ConfigUtils.loadStatusEffectHearts();
+        LOGGER.debug("Reloaded {} config file", event.getConfig().getFileName());
+    }
+
+    private ForgeConfigSpec setupConfig(String fileName) {
+        ForgeConfigSpec.Builder specBuilder = new ForgeConfigSpec.Builder();
+        for (Object instance : new Object[]{Configuration.HEALTH, Configuration.ABSORPTION}) {
+            for (Field field : instance.getClass().getDeclaredFields()) {
                 try {
-                    field.setAccessible(true);
+                    if (field.get(instance) instanceof ConfigOption<?, ?> option) {
+                        CONFIG_OPTIONS.add(option);
 
-                    if (field.get(object) instanceof ConfigOption<?> option) {
-
-                        if (option.getDefault() instanceof List<?> list) {
-                            String listStr = list.stream().map(Object::toString).collect(Collectors.joining(", "));
-                            builder.comment(option.getComment() + "\nDefault: [" + listStr + "]").defineList(option.getPath(), list, option.getOptionValidator());
+                        if (option.getRawDefault() instanceof List<?> list) {
+                            specBuilder.comment(option.getComment()).defineList(option.getPath(), list, option.getOptionValidator());
                         } else {
-                            builder.comment(option.getComment() + "\nDefault: " + option.getDefault().toString()).define(option.getPath(), option.getDefault(), option.getOptionValidator());
+                            specBuilder.comment(option.getComment()).define(option.getPath(), option.getRawDefault(), option.getOptionValidator());
                         }
+                    } else {
+                        LOGGER.debug("Skipping {} field in {} as it is not a ConfigOption", field.getName(), instance.getClass().getName());
                     }
-
-                } catch (Exception e) {
-                    LOGGER.error("Could not process {} in {}", field.getName(), configObjects);
-                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    LOGGER.error("Could not process {} field in {}", field.getName(), instance.getClass().getName(), e);
                 }
             }
         }
-        CONFIG_SPEC = builder.build();
 
-        final Path path = FMLPaths.CONFIGDIR.get().resolve(CONFIG_FILE);
-        LOGGER.debug("Loading config file {}", path);
+        ForgeConfigSpec spec = specBuilder.build();
 
-        final CommentedFileConfig config = CommentedFileConfig.builder(path)
-                .sync()
-                .autoreload()
+        spec.setConfig(CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(fileName))
                 .onFileNotFound(FileNotFoundAction.CREATE_EMPTY)
                 .writingMode(WritingMode.REPLACE)
-                .build();
+                .autoreload()
+                .sync()
+                .build()
+        );
 
-        LOGGER.debug("Built TOML config {}", path);
-        config.load();
-        LOGGER.debug("Loaded TOML config {}", path);
-        CONFIG_SPEC.setConfig(config);
+        return spec;
+    }
 
-        // Initialize values from ConfigOption objects
-        for (Object object : configObjects) {
-            for (Field field : object.getClass().getDeclaredFields()) {
+    private void setupCompat(final IEventBus bus) {
+        final String basePackage = "terrails.colorfulhearts.forge.compat";
+
+        for (Map.Entry<String, String> entry : COMPAT.entrySet()) {
+            String id = entry.getKey();
+            if (ModList.get().isLoaded(id)) {
+                String className = basePackage + "." + entry.getValue();
+                LOGGER.info("Loading compat for mod {}", id);
                 try {
-                    field.setAccessible(true);
-
-                    if (field.get(object) instanceof ConfigOption<?> option) {
-                        option.initialize(() -> config.get(option.getPath()), (val) -> config.set(option.getPath(), val));
+                    Class<?> compatClass = Class.forName(className);
+                    try {
+                        compatClass.getDeclaredConstructor(IEventBus.class).newInstance(bus);
+                    } catch (NoSuchMethodException ignored) {
+                        compatClass.getDeclaredConstructor().newInstance();
                     }
-
-                } catch (Exception e) {
-                    LOGGER.error("Could not process {} in {}", field.getName(), configObjects);
-                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    LOGGER.error("Failed to load compat as {} does not exist", className, e);
+                } catch (NoSuchMethodException e) {
+                    LOGGER.error("Failed to load compat as {} does not have a valid constructor", className, e);
+                } catch (IllegalAccessException e) {
+                    LOGGER.error("Failed to load compat as {} does not have a valid public constructor", className, e);
+                } catch (InstantiationException e) {
+                    LOGGER.error("Failed to load compat as {} is an abstract class", className, e);
+                } catch (InvocationTargetException e) {
+                    LOGGER.error("Failed to load compat {} as an unknown error was thrown", className, e);
                 }
+            } else {
+                LOGGER.debug("Skipped loading compat for missing mod {}", id);
             }
         }
     }

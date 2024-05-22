@@ -10,7 +10,7 @@ public class ColorfulHeartsCommon {
 
     public ColorfulHeartsCommon() {
         if (FMLLoader.getDist() == Dist.CLIENT) {
-            ColorfulHearts.initialize();
+            new ColorfulHearts();
         }
     }
 }

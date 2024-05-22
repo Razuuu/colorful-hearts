@@ -39,6 +39,11 @@ dependencies {
     // Common
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+
+    // Optional Dependencies
+    modImplementation("maven.modrinth:appleskin:${forge_appleskin_version}")
+    modRuntimeOnly("maven.modrinth:cloth-config:${forge_clothconfig_version}")
+    modImplementation("maven.modrinth:the-undergarden:${forge_undergarden_version}")
 }
 
 processResources {

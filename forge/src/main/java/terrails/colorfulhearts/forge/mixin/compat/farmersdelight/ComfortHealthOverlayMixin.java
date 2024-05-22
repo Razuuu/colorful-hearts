@@ -1,4 +1,4 @@
-package terrails.colorfulhearts.forge.mixin;
+package terrails.colorfulhearts.forge.mixin.compat.farmersdelight;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

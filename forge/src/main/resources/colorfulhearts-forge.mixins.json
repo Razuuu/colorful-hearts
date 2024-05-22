@@ -3,9 +3,12 @@
   "package": "terrails.colorfulhearts.forge.mixin",
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
-  "plugin": "terrails.colorfulhearts.forge.mixin.MixinPlugin",
+  "plugin": "terrails.colorfulhearts.forge.ForgeMixinPlugin",
   "client": [
-    "ComfortHealthOverlayMixin"
+    "compat.appleskin.HUDOverlayHandlerAccessor",
+    "compat.farmersdelight.ComfortHealthOverlayMixin"
   ],
-  "injectors": { "defaultRequire": 1 }
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

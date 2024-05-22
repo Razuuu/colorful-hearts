@@ -1,34 +1,28 @@
-package terrails.colorfulhearts.forge;
+package terrails.colorfulhearts.forge.render;
 
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import terrails.colorfulhearts.config.Configuration;
 import terrails.colorfulhearts.render.HeartRenderer;
+
+import java.util.Objects;
 
 public class RenderEventHandler {
 
-    private final Minecraft client = Minecraft.getInstance();
+    public static final RenderEventHandler INSTANCE = new RenderEventHandler();
 
+    private final Minecraft client = Minecraft.getInstance();
     private long lastHealthTime, healthBlinkTime;
     private int displayHealth, lastHealth;
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void renderHearts(RenderGuiOverlayEvent.Pre event) {
-        if (event.isCanceled()
-                || client.options.hideGui
-                || !event.getOverlay().id().equals(VanillaGuiOverlay.PLAYER_HEALTH.id())
-                || !((ForgeGui) client.gui).shouldDrawSurvivalElements()
-                || !(client.getCameraEntity() instanceof Player player)) {
+        if (event.isCanceled() || client.options.hideGui || !event.getOverlay().id().equals(VanillaGuiOverlay.PLAYER_HEALTH.id()) || !Objects.requireNonNull(client.gameMode).canHurtPlayer() || !(client.getCameraEntity() instanceof Player player)) {
             return;
         }
 
@@ -54,27 +48,24 @@ public class RenderEventHandler {
         }
 
         this.lastHealth = health;
-
-        AttributeInstance attrMaxHealth = player.getAttribute(Attributes.MAX_HEALTH);
-        assert attrMaxHealth != null;
-        int healthMax = Mth.ceil(Math.max((float) attrMaxHealth.getValue(), Math.max(this.displayHealth, health)));
+        int maxHealth = Mth.ceil(Math.max((float) player.getAttributeValue(Attributes.MAX_HEALTH), Math.max(this.displayHealth, health)));
 
         final ForgeGui gui = (ForgeGui) client.gui;
-        int width = event.getWindow().getGuiScaledWidth();
-        int height = event.getWindow().getGuiScaledHeight();
+        GuiGraphics guiGraphics = event.getGuiGraphics();
+        int width = guiGraphics.guiWidth();
+        int height = guiGraphics.guiHeight();
         int left = width / 2 - 91;
         int top = height - gui.leftHeight;
 
-        int offset = 10 + (absorption > 0 && !Configuration.ABSORPTION.renderOverHealth.get() ? 10 : 0);
+        // handle half heart requiring absorption to move one row up
+        boolean hasAbsorptionRow = (absorption + Math.min(20, maxHealth == 19 ? 20 : maxHealth)) > 20;
+        int offset = 10 + (hasAbsorptionRow ? 10 : 0);
         gui.leftHeight += offset;
 
-        HeartRenderer.INSTANCE.renderPlayerHearts(event.getGuiGraphics(), player, left, top, healthMax, health, this.displayHealth, absorption, highlight);
+        HeartRenderer.INSTANCE.renderPlayerHearts(guiGraphics, player, left, top, maxHealth, health, this.displayHealth, absorption, highlight);
 
         client.getProfiler().pop();
 
         event.setCanceled(true);
-
-        // fire the post event for mod compatibility
-        MinecraftForge.EVENT_BUS.post(new RenderGuiOverlayEvent.Post(event.getWindow(), event.getGuiGraphics(), event.getPartialTick(), event.getOverlay()));
     }
 }
