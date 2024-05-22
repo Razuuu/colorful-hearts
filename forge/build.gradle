@@ -49,8 +49,8 @@ dependencies {
     // Optional Dependencies
     modImplementation "curse.maven:farmers-delight-398521:${rootProject.forge_farmersdelight_version}"
     modImplementation("maven.modrinth:appleskin:${forge_appleskin_version}")
+    modRuntimeOnly("maven.modrinth:raised:${forge_raised_version}")
     modRuntimeOnly("maven.modrinth:cloth-config:${forge_clothconfig_version}")
-    modImplementation("maven.modrinth:the-undergarden:${forge_undergarden_version}")
 }
 
 processResources {
