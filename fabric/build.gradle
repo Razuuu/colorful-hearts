@@ -2,6 +2,9 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
+apply plugin: "com.modrinth.minotaur"
+apply plugin: "net.darkhax.curseforgegradle"
+
 architectury {
     platformSetupLoomIde()
     fabric()
@@ -85,4 +88,37 @@ components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
         skip()
     }
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "${rootProject.modrinth_id}"
+    versionNumber = "${project.version}"
+    versionName = "[Fabric] ${rootProject.minecraft_version}-v${project.version}"
+    uploadFile = remapJar
+    gameVersions = ["1.20", rootProject.minecraft_version]
+    loaders = ["fabric", "quilt"]
+    dependencies {
+        required.project "fabric-api"
+        incompatible.project "overflowing-bars"
+    }
+    changelog = fetchChangelog()
+    additionalFiles = [tasks.sourcesJar]
+}
+
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+tasks.register('publishCurseForge', TaskPublishCurseForge) {
+    apiToken = System.getenv("CURSEFORGE_TOKEN")
+    disableVersionDetection()
+
+    def mainFile = upload(rootProject.curseforge_id, remapJar)
+    mainFile.displayName = "[Fabric] ${rootProject.minecraft_version}-v${project.version}"
+    mainFile.releaseType = "release"
+    mainFile.changelog = fetchChangelog()
+    mainFile.changelogType = "markdown"
+    mainFile.addGameVersion("Client", "1.20", rootProject.minecraft_version)
+    mainFile.addRequirement("fabric-api")
+    mainFile.addModLoader("fabric", "quilt")
+    mainFile.addIncompatibility("overflowing-bars")
+    mainFile.withAdditionalFile(tasks.sourcesJar)
 }
