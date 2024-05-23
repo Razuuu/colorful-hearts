@@ -17,13 +17,15 @@ import terrails.colorfulhearts.forge.api.event.ForgeHeartRegistryEvent;
 
 public class UndergardenCompat {
 
+    private static final ResourceLocation VIRULENCE_OVERLAY = new ResourceLocation("undergarden", "virulence_hearts");
+
     public UndergardenCompat(IEventBus bus) {
         MinecraftForge.EVENT_BUS.addListener(this::cancelOverlay);
         bus.addListener(this::registerEffectHeart);
     }
 
     private void cancelOverlay(RenderGuiOverlayEvent.Pre event) {
-        if (event.getOverlay().id().equals(new ResourceLocation("undergarden", "virulence_hearts"))) {
+        if (event.getOverlay().id().equals(VIRULENCE_OVERLAY)) {
             event.setCanceled(true);
         }
     }
