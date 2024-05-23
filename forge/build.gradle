@@ -1,9 +1,8 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'com.github.johnrengelman.shadow'
+    id 'com.modrinth.minotaur'
+    id 'net.darkhax.curseforgegradle'
 }
-
-apply plugin: "com.modrinth.minotaur"
-apply plugin: "net.darkhax.curseforgegradle"
 
 architectury {
     platformSetupLoomIde()
@@ -14,6 +13,9 @@ loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 
     forge {
+        convertAccessWideners = true
+        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+
         mixinConfig "colorfulhearts-common.mixins.json"
         mixinConfig "colorfulhearts.mixins.json"
     }
@@ -23,27 +25,32 @@ loom {
 }
 
 configurations {
-    common
-    shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files.
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentForge.extendsFrom common
+
+    // Files in this configuration will be bundled into your mod using the Shadow plugin.
+    // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
+    shadowBundle {
+        canBeResolved = true
+        canBeConsumed = false
+    }
 }
 
 dependencies {
-    // Forge
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 
-    // Common
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+    common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+    shadowBundle project(path: ':common', configuration: 'transformProductionForge')
 
     // Optional Dependencies
-    modImplementation("squeek.appleskin:appleskin-forge:${rootProject.forge_appleskin_version}") {
-        exclude module: 'modmenu'
-    }
+    modImplementation("maven.modrinth:appleskin:${forge_appleskin_version}-forge")
+    modRuntimeOnly("maven.modrinth:raised:${forge_raised_version}")
     modRuntimeOnly("me.shedaniel.cloth:cloth-config-forge:${rootProject.forge_clothconfig_version}")
-    modRuntimeOnly("maven.modrinth:raised:${rootProject.forge_raised_version}")
 }
 
 processResources {
@@ -58,26 +65,13 @@ shadowJar {
     exclude "fabric.mod.json"
     exclude "architectury.common.json"
 
-    configurations = [project.configurations.shadowCommon]
+    configurations = [project.configurations.shadowBundle]
     archiveClassifier = "dev-shadow"
 }
 
 remapJar {
     input.set shadowJar.archiveFile
-    dependsOn shadowJar
     atAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
-}
-
-sourcesJar {
-    def commonSources = project(":common").sourcesJar
-    dependsOn commonSources
-    from commonSources.archiveFile.map { zipTree(it) }
-}
-
-components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
-    }
 }
 
 modrinth {

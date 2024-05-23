@@ -32,7 +32,6 @@ public class FabMixinPlugin implements IMixinConfigPlugin {
         return true;
     }
 
-    // unneeded
     @Override
     public void onLoad(String mixinPackage) { }
 

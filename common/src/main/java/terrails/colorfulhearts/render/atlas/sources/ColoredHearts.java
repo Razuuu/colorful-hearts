@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader;
@@ -17,8 +18,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceMetadata;
 import org.jetbrains.annotations.NotNull;
 import terrails.colorfulhearts.CColorfulHearts;
-import terrails.colorfulhearts.Utils;
-import terrails.colorfulhearts.heart.CHeartType;
+import terrails.colorfulhearts.config.Configuration;
 import terrails.colorfulhearts.render.ImageUtils;
 
 import java.io.IOException;
@@ -30,72 +30,77 @@ import java.util.stream.Collectors;
 
 public class ColoredHearts implements SpriteSource {
 
-    public static SpriteSourceType COLORED_HEARTS;
+    public static SpriteSourceType TYPE;
 
-    private static final Codec<CHeartType> HEART_TYPE = Codec.STRING.comapFlatMap(
+    private static final Codec<Boolean> IS_HEALTH = Codec.STRING.comapFlatMap(
             s -> {
-                try {
-                    CHeartType type = CHeartType.valueOf(s);
-                    if (type == CHeartType.CONTAINER) {
-                        return DataResult.error(() -> "Container is not a heart type");
-                    } else {
-                        return DataResult.success(type);
-                    }
-                } catch (IllegalArgumentException e) {
-                    return DataResult.error(() -> "Unknown heart type " + s + " " + e.getMessage());
+                String lc = s.toLowerCase(Locale.ROOT);
+                if (lc.equals("health")) {
+                    return DataResult.success(true);
+                } else if (lc.equals("absorption")) {
+                    return DataResult.success(false);
+                } else {
+                    return DataResult.error(() -> "Unknown heart type " + s);
                 }
             },
-            Enum::name
+            bool -> bool ? "HEALTH" : "ABSORPTION"
     );
 
     public static final Codec<ColoredHearts> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                    ColoredHearts.HEART_TYPE.fieldOf("heart").forGetter(codec -> codec.heartType)
+                    ColoredHearts.IS_HEALTH.fieldOf("heart").forGetter(source -> source.isHealth)
             ).apply(instance, ColoredHearts::new)
     );
 
-    private final CHeartType heartType;
+    private final boolean isHealth;
 
-    public ColoredHearts(CHeartType heartType) {
-        this.heartType = heartType;
+    public ColoredHearts(boolean isHealth) {
+        this.isHealth = isHealth;
     }
 
     @Override
     public void run(ResourceManager resourceManager, Output output) {
-        Integer[] configColors = this.heartType.getColors();
-        assert configColors != null;
+        if (this.isHealth) {
+            this.processColors(resourceManager, output, Configuration.HEALTH.colors.get(), "health");
+            this.processColors(resourceManager, output, Configuration.HEALTH.poisonedColors.get(), "health/poisoned");
+            this.processColors(resourceManager, output, Configuration.HEALTH.witheredColors.get(), "health/withered");
+            this.processColors(resourceManager, output, Configuration.HEALTH.frozenColors.get(), "health/frozen");
+        } else {
+            this.processColors(resourceManager, output, Configuration.ABSORPTION.colors.get(), "absorbing");
+            this.processColors(resourceManager, output, Configuration.ABSORPTION.poisonedColors.get(), "absorbing/poisoned");
+            this.processColors(resourceManager, output, Configuration.ABSORPTION.witheredColors.get(), "absorbing/withered");
+            this.processColors(resourceManager, output, Configuration.ABSORPTION.frozenColors.get(), "absorbing/frozen");
+        }
+    }
 
-        final Map<Integer, IntUnaryOperator> map = Arrays.stream(configColors)
-                .filter(Objects::nonNull)
-                .map(rgb -> {
+    private void processColors(ResourceManager resMgr, Output out, List<String> colors, String prefix) {
+        final Map<Integer, IntUnaryOperator> map = colors.stream()
+                .map(s -> {
+                    int rgb = Integer.decode(s) & 0xFFFFFF;
                     int r = (rgb >> 16) & 0xFF;
                     int g = (rgb >> 8) & 0xFF;
                     int b = rgb & 0xFF;
                     return Map.entry(rgb, ImageUtils.getColorOverlayOperator(r, g, b));
-                })
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        this.processType(resourceManager, output, this.heartType, map, false, false, false);
-        this.processType(resourceManager, output, this.heartType, map, false, false, true);
-        this.processType(resourceManager, output, this.heartType, map, false, true, false);
-        this.processType(resourceManager, output, this.heartType, map, false, true, true);
-
-        this.processType(resourceManager, output, this.heartType, map, true, false, false);
-        this.processType(resourceManager, output, this.heartType, map, true, false, true);
-        this.processType(resourceManager, output, this.heartType, map, true, true, false);
-        this.processType(resourceManager, output, this.heartType, map, true, true, true);
+        this.processType(resMgr, out, map, prefix, false, false, false);
+        this.processType(resMgr, out, map, prefix, false, true, false);
+        this.processType(resMgr, out, map, prefix, false, false, true);
+        this.processType(resMgr, out, map, prefix, false, true, true);
+        this.processType(resMgr, out, map, prefix, true, false, false);
+        this.processType(resMgr, out, map, prefix, true, true, false);
+        this.processType(resMgr, out, map, prefix, true, false, true);
+        this.processType(resMgr, out, map, prefix, true, true, true);
     }
 
-    private void processType(
-            ResourceManager resourceManager, Output output,
-            CHeartType heartType, Map<Integer, IntUnaryOperator> hexARGBs,
-            boolean hardcore, boolean blinking, boolean half
-    ) {
-        ResourceLocation baseLocation = Utils.location(heartType.getSprite(hardcore, blinking, half, null, false).getPath());
-        Supplier<Consumer<NativeImage>> blendApplier = Suppliers.memoize(() -> this.getBlendApplier(resourceManager, baseLocation, hexARGBs.size()));
+    private void processType(ResourceManager resMgr, Output out, Map<Integer, IntUnaryOperator> hexARGBs, String prefix, boolean hardcore, boolean highlight, boolean half) {
+        String suffix = (hardcore ? "hardcore_" : "") + (half ? "half" : "full") + (highlight ? "_blinking" : "");
+        ResourceLocation baseLocation = CColorfulHearts.location("heart/" + prefix + "/" + suffix);
+
+        Supplier<Consumer<NativeImage>> blendApplier = Suppliers.memoize(() -> this.getBlendApplier(resMgr, baseLocation, hexARGBs.size()));
 
         ResourceLocation textureLocation = TEXTURE_ID_CONVERTER.idToFile(baseLocation);
-        Optional<Resource> optional = resourceManager.getResource(textureLocation);
+        Optional<Resource> optional = resMgr.getResource(textureLocation);
         if (optional.isEmpty()) {
             CColorfulHearts.LOGGER.warn("Missing texture: {}", textureLocation);
             return;
@@ -103,8 +108,8 @@ public class ColoredHearts implements SpriteSource {
 
         LazyLoadedImage lazyImage = new LazyLoadedImage(textureLocation, optional.get(), hexARGBs.size());
         for (Map.Entry<Integer, IntUnaryOperator> entry : hexARGBs.entrySet()) {
-            ResourceLocation spriteLocation = heartType.getSprite(hardcore, blinking, half, entry.getKey(), false);
-            output.add(spriteLocation, new ColoredHeartsSupplier(lazyImage, entry.getValue(), blendApplier, spriteLocation));
+            ResourceLocation spriteLocation = baseLocation.withSuffix("_" + entry.getKey());
+            out.add(spriteLocation, new ColoredHeartsSupplier(lazyImage, entry.getValue(), blendApplier, spriteLocation));
         }
     }
 
@@ -137,7 +142,7 @@ public class ColoredHearts implements SpriteSource {
                 } finally {
                     normal.release();
                 }
-            }, () -> CColorfulHearts.LOGGER.debug("Texture not found: {}", normalLocation));
+            }, () -> CColorfulHearts.LOGGER.debug("Normal blend texture not found: {}", normalLocation));
             multiplyOptional.ifPresentOrElse(multiply -> {
                 try {
                     ImageUtils.blendMultiply(image, multiply.get());
@@ -147,7 +152,7 @@ public class ColoredHearts implements SpriteSource {
                 } finally {
                     multiply.release();
                 }
-            }, () -> CColorfulHearts.LOGGER.debug("Texture not found: {}", multiplyLocation));
+            }, () -> CColorfulHearts.LOGGER.debug("Multiply blend texture not found: {}", multiplyLocation));
             screenOptional.ifPresentOrElse(screen -> {
                 try {
                     NativeImage screenImg = screen.get();
@@ -158,7 +163,7 @@ public class ColoredHearts implements SpriteSource {
                 } finally {
                     screen.release();
                 }
-            }, () -> CColorfulHearts.LOGGER.debug("Texture not found: {}", screenLocation));
+            }, () -> CColorfulHearts.LOGGER.debug("Screen blend texture not found: {}", screenLocation));
             overlayOptional.ifPresentOrElse(overlay -> {
                 try {
                     ImageUtils.blendOverlay(image, overlay.get());
@@ -168,13 +173,13 @@ public class ColoredHearts implements SpriteSource {
                 } finally {
                     overlay.release();
                 }
-            }, () -> CColorfulHearts.LOGGER.debug("Texture not found: {}", overlayLocation));
+            }, () -> CColorfulHearts.LOGGER.debug("Overlay blend texture not found: {}", overlayLocation));
         };
     }
 
     @Override
     public @NotNull SpriteSourceType type() {
-        return ColoredHearts.COLORED_HEARTS;
+        return ColoredHearts.TYPE;
     }
 
     private record ColoredHeartsSupplier(

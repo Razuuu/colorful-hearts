@@ -1,4 +1,4 @@
-package terrails.colorfulhearts.neoforge.compat;
+package terrails.colorfulhearts.forge.compat;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
@@ -6,25 +6,25 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.common.MinecraftForge;
 import squeek.appleskin.ModConfig;
 import squeek.appleskin.api.event.FoodValuesEvent;
 import squeek.appleskin.api.event.HUDOverlayEvent;
 import squeek.appleskin.api.food.FoodValues;
 import squeek.appleskin.client.HUDOverlayHandler;
 import squeek.appleskin.helpers.FoodHelper;
-import terrails.colorfulhearts.compat.AppleSkinCompat;
-import terrails.colorfulhearts.heart.CHeartType;
-import terrails.colorfulhearts.neoforge.api.event.ForgeHeartChangeEvent;
-import terrails.colorfulhearts.neoforge.api.event.ForgeHeartRenderEvent;
-import terrails.colorfulhearts.neoforge.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
+import terrails.colorfulhearts.compat.AppleSkinCommonCompat;
+import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
+import terrails.colorfulhearts.forge.api.event.ForgeHeartUpdateEvent;
+import terrails.colorfulhearts.forge.api.event.ForgeHeartRenderEvent;
+import terrails.colorfulhearts.forge.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
-public class AppleSkinForgeCompat extends AppleSkinCompat {
+public class AppleSkinCompat extends AppleSkinCommonCompat {
 
-    public AppleSkinForgeCompat() {
-        NeoForge.EVENT_BUS.addListener(this::onDefaultRender);
-        NeoForge.EVENT_BUS.addListener(this::onPostRender);
-        NeoForge.EVENT_BUS.addListener(this::heartChanged);
+    public AppleSkinCompat() {
+        MinecraftForge.EVENT_BUS.addListener(this::onDefaultRender);
+        MinecraftForge.EVENT_BUS.addListener(this::onPostRender);
+        MinecraftForge.EVENT_BUS.addListener(this::heartChanged);
     }
 
     /**
@@ -43,7 +43,7 @@ public class AppleSkinForgeCompat extends AppleSkinCompat {
         Player player = client.player;
         assert player != null;
 
-        if (!shouldDrawOverlay(event.getHealthType(), player)) {
+        if (!shouldDrawOverlay(event.getEffectHeart().orElse(null), player)) {
             return;
         }
 
@@ -63,7 +63,7 @@ public class AppleSkinForgeCompat extends AppleSkinCompat {
 
         FoodValues modifiedFoodValues = FoodHelper.getModifiedFoodValues(heldItem, player);
         FoodValuesEvent foodValuesEvent = new FoodValuesEvent(player, heldItem, FoodHelper.getDefaultFoodValues(heldItem, player), modifiedFoodValues);
-        NeoForge.EVENT_BUS.post(foodValuesEvent);
+        MinecraftForge.EVENT_BUS.post(foodValuesEvent);
         modifiedFoodValues = foodValuesEvent.modifiedFoodValues;
 
         float foodHealthIncrement = FoodHelper.getEstimatedHealthIncrement(heldItem, modifiedFoodValues, player);
@@ -73,21 +73,19 @@ public class AppleSkinForgeCompat extends AppleSkinCompat {
             return;
         }
 
-        int absorbing = Mth.ceil(player.getAbsorptionAmount());
-
         // this value never reaches 1.0, so the health colors will always be somewhat mixed
         // I'll leave this behaviour as is at it makes the differentiation easier
         float alpha = HUDOverlayHandlerAccessor.getFlashAlpha();
 
-        drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), absorbing, health, modifiedHealth, alpha, event.isHardcore());
+        drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), Mth.ceil(player.getAbsorptionAmount()), health, modifiedHealth, alpha, event.isHardcore());
     }
 
-    private void heartChanged(ForgeHeartChangeEvent event) {
+    private void heartChanged(ForgeHeartUpdateEvent event) {
         this.lastHealth = 0;
     }
 
-    public boolean shouldDrawOverlay(CHeartType heartType, Player player) {
-        if (heartType != CHeartType.HEALTH) {
+    public boolean shouldDrawOverlay(StatusEffectHeart effectHeart, Player player) {
+        if (effectHeart != null) {
             return false; // AppleSkin usually checks the effect, but we'll do it this way
         }
 

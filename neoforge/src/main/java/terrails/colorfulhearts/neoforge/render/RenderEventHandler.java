@@ -1,4 +1,4 @@
-package terrails.colorfulhearts.neoforge;
+package terrails.colorfulhearts.neoforge.render;
 
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;

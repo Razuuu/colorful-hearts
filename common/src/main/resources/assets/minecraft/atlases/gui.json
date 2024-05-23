@@ -18,35 +18,11 @@
     },
     {
       "type": "colorfulhearts:colored_hearts",
-      "heart": "HEALTH"
+      "heart": "health"
     },
     {
       "type": "colorfulhearts:colored_hearts",
-      "heart": "HEALTH_POISONED"
-    },
-    {
-      "type": "colorfulhearts:colored_hearts",
-      "heart": "HEALTH_WITHERED"
-    },
-    {
-      "type": "colorfulhearts:colored_hearts",
-      "heart": "HEALTH_FROZEN"
-    },
-    {
-      "type": "colorfulhearts:colored_hearts",
-      "heart": "ABSORBING"
-    },
-    {
-      "type": "colorfulhearts:colored_hearts",
-      "heart": "ABSORBING_POISONED"
-    },
-    {
-      "type": "colorfulhearts:colored_hearts",
-      "heart": "ABSORBING_WITHERED"
-    },
-    {
-      "type": "colorfulhearts:colored_hearts",
-      "heart": "ABSORBING_FROZEN"
+      "heart": "absorption"
     }
   ]
 }

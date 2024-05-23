@@ -1,5 +1,6 @@
 package terrails.colorfulhearts.forge;
 
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLLoader;
 import terrails.colorfulhearts.CColorfulHearts;
@@ -8,7 +9,7 @@ import terrails.colorfulhearts.CColorfulHearts;
 public class ColorfulHeartsCommon {
 
     public ColorfulHeartsCommon() {
-        if (FMLLoader.getDist().isClient()) {
+        if (FMLLoader.getDist() == Dist.CLIENT) {
             new ColorfulHearts();
         }
     }

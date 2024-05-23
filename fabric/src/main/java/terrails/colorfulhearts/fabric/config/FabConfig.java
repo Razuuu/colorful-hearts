@@ -1,4 +1,4 @@
-package terrails.colorfulhearts.fabric;
+package terrails.colorfulhearts.fabric.config;
 
 import com.electronwill.nightconfig.core.ConfigSpec;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
@@ -12,6 +12,7 @@ import com.electronwill.nightconfig.toml.TomlFormat;
 import net.fabricmc.loader.api.FabricLoader;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.config.ConfigOption;
+import terrails.colorfulhearts.config.ConfigUtils;
 import terrails.colorfulhearts.config.Configuration;
 
 import java.io.File;
@@ -38,11 +39,11 @@ public class FabConfig extends CommentedConfigWrapper<CommentedFileConfig> imple
 
     public FabConfig() {
         super(CommentedFileConfig
-                      .builder(FabricLoader.getInstance().getConfigDir().resolve(CColorfulHearts.MOD_ID + ".toml"), TomlFormat.instance())
-                      .onFileNotFound(FileNotFoundAction.CREATE_EMPTY)
-                      .writingMode(WritingMode.REPLACE)
-                      .sync()
-                      .build()
+                .builder(FabricLoader.getInstance().getConfigDir().resolve(CColorfulHearts.MOD_ID + ".toml"), TomlFormat.instance())
+                .onFileNotFound(FileNotFoundAction.CREATE_EMPTY)
+                .writingMode(WritingMode.REPLACE)
+                .sync()
+                .build()
         );
 
         for (Object instance : new Object[]{Configuration.HEALTH, Configuration.ABSORPTION}) {
@@ -157,11 +158,15 @@ public class FabConfig extends CommentedConfigWrapper<CommentedFileConfig> imple
         } else {
             this.options.forEach(ConfigOption::reload);
         }
+
+        ConfigUtils.loadColoredHearts();
+        ConfigUtils.loadStatusEffectHearts();
     }
 
     public void reload() {
         LOGGER.info("Reloading {} config file", getFile().getName());
         this.load();
+        LOGGER.debug("Reloaded {} config file", getFile().getName());
     }
 
     @Override

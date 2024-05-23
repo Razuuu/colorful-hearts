@@ -1,6 +1,7 @@
 plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.5-SNAPSHOT" apply false
+    id 'architectury-plugin' version '3.4-SNAPSHOT'
+    id 'dev.architectury.loom' version '1.6-SNAPSHOT' apply false
+    id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
     id "com.modrinth.minotaur" version "2.+" apply false
     id 'net.darkhax.curseforgegradle' version '1.1.+' apply false
 }
@@ -9,15 +10,18 @@ architectury {
     minecraft = rootProject.minecraft_version
 }
 
+allprojects {
+    group = "terrails.colorfulhearts"
+    version = rootProject.mod_version
+}
+
 subprojects {
-    apply plugin: "dev.architectury.loom"
+    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'architectury-plugin'
 
-    loom {
-        silentMojangMappingsLicense()
-
-        mixin {
-            useLegacyMixinAp = false
-        }
+    base {
+        // colorfulhearts-loader-version
+        archivesBaseName = "colorfulhearts-${project.name}-${rootProject.minecraft_version}"
     }
 
     repositories {
@@ -41,61 +45,49 @@ subprojects {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
         mappings loom.layered() {
             officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-${rootProject.parchment_version}@zip" as String)
-        }        
-    }
-}
-
-allprojects {
-    apply plugin: "java"
-    apply plugin: "architectury-plugin"
-
-    base {
-        // in "colorfulhearts-loader-mc_version" format
-        archivesName = "colorfulhearts-${project.name}-${rootProject.minecraft_version}"
-    }
-
-    version = rootProject.mod_version
-    group = "terrails.colorfulhearts"
-
-    tasks.withType(JavaCompile) {
-        options.encoding = "UTF-8"
-        options.release = 17
-    }
-
-    java {
-        withSourcesJar()
-    }
-
-    task printChangelog {
-        doLast {
-            println(fetchChangelog())
+            parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip" as String)
         }
     }
 
-    ext {
-        fetchChangelog = {
-            def branch = "git rev-parse --abbrev-ref HEAD".execute().in.text.trim()
-            if (branch.isBlank() || branch == "HEAD") {
-                throw new GradleException("Branch name could not be fetched.")
-            }
+    java {
+        // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+        // if it is present.
+        // If you remove this line, sources will not be generated.
+        withSourcesJar()
 
-            def repoUrl = "https://github.com/terrails/colorful-hearts"
-            def changes = new StringBuilder("Latest changes ([See all](${repoUrl}/commits/${branch}))\n---")
-            def log = "git log --max-count=30 --no-merges --pretty=format:\"* %s ([%h](${repoUrl}/commit/%H))\"".execute()
-            log.in.eachLine { line ->
-                if (!line.containsIgnoreCase("version")
-                        && !line.containsIgnoreCase("bump")
-                        && !line.containsIgnoreCase("update")) { // version change commits should be ignored
-                    changes << "\n${line}"
-                }
-            }
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 
-            if (log.waitFor() == 0) {
-                return changes.toString()
-            } else {
-                throw new GradleException("Received an error while executing git log.")
+    tasks.withType(JavaCompile).configureEach {
+        it.options.release = 17
+    }
+
+    tasks.register('printChangelog') {
+        println(fetchChangelog())
+    }
+
+    ext.fetchChangelog = {
+        def branch = "git rev-parse --abbrev-ref HEAD".execute().in.text.trim()
+        if (branch.isBlank() || branch == "HEAD") {
+            throw new GradleException("Branch name could not be fetched.")
+        }
+
+        def repoUrl = "https://github.com/terrails/colorful-hearts"
+        def changes = new StringBuilder("Latest changes ([See all](${repoUrl}/commits/${branch}))\n---")
+        def log = "git log --max-count=30 --no-merges --pretty=format:\"* %s ([%h](${repoUrl}/commit/%H))\"".execute()
+        log.in.eachLine { line ->
+            if (!line.containsIgnoreCase("version")
+                    && !line.containsIgnoreCase("bump")
+                    && !line.containsIgnoreCase("update")) { // version change commits should be ignored
+                changes << "\n${line}"
             }
+        }
+
+        if (log.waitFor() == 0) {
+            return changes.toString()
+        } else {
+            throw new GradleException("Received an error while executing git log.")
         }
     }
 }

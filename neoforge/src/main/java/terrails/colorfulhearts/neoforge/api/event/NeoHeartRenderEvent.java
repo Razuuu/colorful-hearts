@@ -1,15 +1,15 @@
-package terrails.colorfulhearts.forge.api.event;
+package terrails.colorfulhearts.neoforge.api.event;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
 
 import java.util.Optional;
 
-public class ForgeHeartRenderEvent<E extends HeartRenderEvent> extends Event {
+public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
 
-    public static class Pre extends ForgeHeartRenderEvent<HeartRenderEvent.Pre> {
+    public static class Pre extends NeoHeartRenderEvent<HeartRenderEvent.Pre> {
 
         public Pre(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
             super(new HeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, effectHeart));
@@ -40,7 +40,7 @@ public class ForgeHeartRenderEvent<E extends HeartRenderEvent> extends Event {
         }
     }
 
-    public static class Post extends ForgeHeartRenderEvent<HeartRenderEvent.Post> {
+    public static class Post extends NeoHeartRenderEvent<HeartRenderEvent.Post> {
 
         public Post(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
             super(new HeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, effectHeart));
@@ -49,7 +49,7 @@ public class ForgeHeartRenderEvent<E extends HeartRenderEvent> extends Event {
 
     final E event;
 
-    public ForgeHeartRenderEvent(E event) {
+    public NeoHeartRenderEvent(E event) {
         this.event = event;
     }
 

@@ -20,9 +20,7 @@
   "entrypoints": {
     "client": [ "terrails.colorfulhearts.fabric.ColorfulHearts" ],
     "modmenu": [ "terrails.colorfulhearts.fabric.compat.ModMenuCompat" ],
-    "appleskin": [
-      "terrails.colorfulhearts.fabric.compat.AppleSkinFabCompat"
-    ]
+    "appleskin":  ["terrails.colorfulhearts.fabric.compat.AppleSkinCompat" ]
   },
 
   "mixins": [
