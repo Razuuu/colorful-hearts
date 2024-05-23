@@ -9,8 +9,8 @@ public class SpriteHeartDrawing extends HeartDrawing {
     final ResourceLocation full, fullBlinking, half, halfBlinking, hardcoreFull, hardcoreFullBlinking, hardcoreHalf, hardcoreHalfBlinking;
 
     SpriteHeartDrawing(ResourceLocation id,
-                              ResourceLocation full, ResourceLocation fullBlinking, ResourceLocation half, ResourceLocation halfBlinking,
-                              ResourceLocation hardcoreFull, ResourceLocation hardcoreFullBlinking, ResourceLocation hardcoreHalf, ResourceLocation hardcoreHalfBlinking) {
+                       ResourceLocation full, ResourceLocation fullBlinking, ResourceLocation half, ResourceLocation halfBlinking,
+                       ResourceLocation hardcoreFull, ResourceLocation hardcoreFullBlinking, ResourceLocation hardcoreHalf, ResourceLocation hardcoreHalfBlinking) {
         this.id = id;
         this.full = full;
         this.fullBlinking = fullBlinking;
@@ -59,7 +59,7 @@ public class SpriteHeartDrawing extends HeartDrawing {
         }
 
         public SpriteHeartDrawing finish(ResourceLocation full, ResourceLocation fullBlinking, ResourceLocation half, ResourceLocation halfBlinking,
-                    ResourceLocation hardcoreFull, ResourceLocation hardcoreFullBlinking, ResourceLocation hardcoreHalf, ResourceLocation hardcoreHalfBlinking) {
+                                         ResourceLocation hardcoreFull, ResourceLocation hardcoreFullBlinking, ResourceLocation hardcoreHalf, ResourceLocation hardcoreHalfBlinking) {
             return new SpriteHeartDrawing(this.id, full, fullBlinking, half, halfBlinking, hardcoreFull, hardcoreFullBlinking, hardcoreHalf, hardcoreHalfBlinking);
         }
     }

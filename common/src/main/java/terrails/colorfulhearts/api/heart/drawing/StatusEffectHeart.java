@@ -1,7 +1,5 @@
 package terrails.colorfulhearts.api.heart.drawing;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.opengl.GL11;
@@ -81,25 +79,8 @@ public class StatusEffectHeart {
          * Uses the provided {@link HeartDrawing} object for the first heart color and colors the same texture using the provided rgba values and blending modes
          */
         public Builder addHealth(HeartDrawing drawing, float r, float g, float b, float alpha, int sourceFactor, int destinationFactor) {
-            ResourceLocation secondId = drawing.getId().withSuffix("_2");
-            HeartDrawing second = new HeartDrawing() {
-                @Override
-                public void draw(GuiGraphics guiGraphics, int x, int y, boolean half, boolean hardcore, boolean highlight) {
-                    RenderSystem.enableBlend();
-                    RenderSystem.setShaderColor(r, g, b, alpha);
-                    RenderSystem.blendFunc(sourceFactor, destinationFactor);
-                    drawing.draw(guiGraphics, x, y, half, hardcore, highlight);
-                    RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-                    RenderSystem.disableBlend();
-                }
-
-                @Override
-                public ResourceLocation getId() {
-                    return secondId;
-                }
-            };
             this.healthFirst = drawing;
-            this.healthSecond = second;
+            this.healthSecond = HeartDrawing.colorBlend(drawing, drawing.getId().withSuffix("_2"), r, g, b, alpha, sourceFactor, destinationFactor);;
             return this;
         }
 
@@ -123,25 +104,8 @@ public class StatusEffectHeart {
          * Uses the provided {@link HeartDrawing} object for the first heart color and colors the same texture using the provided rgba values and blending modes
          */
         public Builder addAbsorption(HeartDrawing drawing, float r, float g, float b, float alpha, int sourceFactor, int destinationFactor) {
-            ResourceLocation secondId = drawing.getId().withSuffix("_2");
-            HeartDrawing second = new HeartDrawing() {
-                @Override
-                public void draw(GuiGraphics guiGraphics, int x, int y, boolean half, boolean hardcore, boolean highlight) {
-                    RenderSystem.enableBlend();
-                    RenderSystem.setShaderColor(r, g, b, alpha);
-                    RenderSystem.blendFunc(sourceFactor, destinationFactor);
-                    drawing.draw(guiGraphics, x, y, half, hardcore, highlight);
-                    RenderSystem.disableBlend();
-                    RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-                }
-
-                @Override
-                public ResourceLocation getId() {
-                    return secondId;
-                }
-            };
             this.absorptionFirst = drawing;
-            this.absorptionSecond = second;
+            this.absorptionSecond = HeartDrawing.colorBlend(drawing, drawing.getId().withSuffix("_2"), r, g, b, alpha, sourceFactor, destinationFactor);
             return this;
         }
 

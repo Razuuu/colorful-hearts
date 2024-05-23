@@ -46,8 +46,7 @@ public class ColorfulHearts {
     private static final List<ConfigOption<?, ?>> CONFIG_OPTIONS = new ArrayList<>();
 
     private static final Map<String, String> COMPAT = Map.of(
-            "appleskin", "AppleSkinCompat",
-            "undergarden", "UndergardenCompat"
+            "appleskin", "AppleSkinCompat"
     );
 
     public ColorfulHearts(final IEventBus bus, final ModContainer container) {
