@@ -1,4 +1,4 @@
-package terrails.colorfulhearts.forge;
+package terrails.colorfulhearts.forge.render;
 
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;

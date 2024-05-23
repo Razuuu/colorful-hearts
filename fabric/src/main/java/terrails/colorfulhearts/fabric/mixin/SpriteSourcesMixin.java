@@ -13,6 +13,6 @@ public class SpriteSourcesMixin {
 
     @Inject(method = "<clinit>", at = @At("RETURN"))
     private static void colorfulhearts_spriteRegistration(CallbackInfo info) {
-        ColoredHearts.COLORED_HEARTS = SpriteSources.register(CColorfulHearts.SPRITE_NAME.toString(), ColoredHearts.CODEC);
+        ColoredHearts.TYPE = SpriteSources.register(CColorfulHearts.SPRITE_NAME.toString(), ColoredHearts.CODEC);
     }
 }

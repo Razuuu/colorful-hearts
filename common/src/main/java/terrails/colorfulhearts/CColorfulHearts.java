@@ -11,4 +11,8 @@ public class CColorfulHearts {
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
     public static final ResourceLocation SPRITE_NAME = new ResourceLocation(CColorfulHearts.MOD_ID, "colored_hearts");
+
+    public static ResourceLocation location(String name) {
+        return new ResourceLocation(MOD_ID, name);
+    }
 }
