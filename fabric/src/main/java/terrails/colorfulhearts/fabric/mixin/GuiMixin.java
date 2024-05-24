@@ -8,7 +8,9 @@ import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import terrails.colorfulhearts.render.HeartRenderer;
 
 /**
@@ -22,16 +24,15 @@ public abstract class GuiMixin {
     @Shadow private int displayHealth;
 
     /**
-     * Disables the default heart renderer by setting for-loop index to -1 resulting in it never executing
-     * Also injects own heart render
+     * Disable the default heart renderer and inject own
      */
-    @ModifyVariable(method = "renderHearts", at = @At("STORE"), ordinal = 11)
-    private int cancelLoopAndRender(
-            int defaultIndexVal, GuiGraphics guiGraphics, Player player,
+    @Inject(method = "renderHearts", at = @At("HEAD"), cancellable = true)
+    private void colorfulhearts_renderHearts(
+            GuiGraphics guiGraphics, Player player,
             int x, int y, int height, int regenIndex, float maxHealth,
-            int currentHealth, int displayHealth, int absorptionAmount, boolean blinking) {
+            int currentHealth, int displayHealth, int absorptionAmount, boolean blinking, CallbackInfo ci) {
         HeartRenderer.INSTANCE.renderPlayerHearts(guiGraphics, player, x, y, Mth.ceil(maxHealth), currentHealth, displayHealth, absorptionAmount, blinking);
-        return -1;
+        ci.cancel();
     }
 
     /**

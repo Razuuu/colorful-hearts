@@ -41,17 +41,19 @@ configurations {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
+    forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')
 
     // Optional Dependencies
-    modImplementation "curse.maven:farmers-delight-398521:${rootProject.forge_farmersdelight_version}"
-    modImplementation("maven.modrinth:appleskin:${forge_appleskin_version}")
-    modRuntimeOnly("maven.modrinth:the-undergarden:${forge_undergarden_version}")
-    modRuntimeOnly("maven.modrinth:raised:${forge_raised_version}")
-    modRuntimeOnly("maven.modrinth:cloth-config:${forge_clothconfig_version}")
+    modImplementation "maven.modrinth:farmers-delight:${forge_farmersdelight_version}-forge"
+    modImplementation("maven.modrinth:appleskin:${forge_appleskin_version}-forge")
+    modRuntimeOnly("maven.modrinth:the-undergarden:${forge_undergarden_version}-forge")
+    modRuntimeOnly("maven.modrinth:raised:${forge_raised_version}-forge")
+    modRuntimeOnly("maven.modrinth:overflowing-bars:${forge_overflowingbars_version}-forge")
+    modRuntimeOnly("maven.modrinth:puzzles-lib:${forge_puzzleslib_version}-forge")
+    modRuntimeOnly("me.shedaniel.cloth:cloth-config-forge:${forge_clothconfig_version}")
 }
 
 processResources {

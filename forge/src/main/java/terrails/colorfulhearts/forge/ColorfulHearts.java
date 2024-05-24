@@ -7,6 +7,7 @@ import com.electronwill.nightconfig.core.io.WritingMode;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -38,7 +39,8 @@ public class ColorfulHearts {
     private static final Map<String, String> COMPAT = Map.of(
             "appleskin", "AppleSkinCompat",
             "undergarden", "UndergardenCompat",
-            "farmersdelight", "FarmersDelightCompat"
+            "farmersdelight", "FarmersDelightCompat",
+            "overflowingbars", "OverflowingBarsCompat"
     );
 
     public ColorfulHearts() {
@@ -58,7 +60,7 @@ public class ColorfulHearts {
     }
 
     private void setup(final FMLClientSetupEvent event) {
-        MinecraftForge.EVENT_BUS.addListener(RenderEventHandler.INSTANCE::renderHearts);
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, RenderEventHandler.INSTANCE::renderHearts);
     }
 
     private void loadConfig(final ModConfigEvent.Loading event) {
