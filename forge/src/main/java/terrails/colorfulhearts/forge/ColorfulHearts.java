@@ -41,6 +41,7 @@ public class ColorfulHearts {
             "undergarden", "UndergardenCompat",
             "farmersdelight", "FarmersDelightCompat",
             "overflowingbars", "OverflowingBarsCompat"
+//            "eidolon", "EidolonRepraisedCompat"
     );
 
     public ColorfulHearts() {
