@@ -11,7 +11,7 @@ import terrails.colorfulhearts.api.event.HeartRegistry;
 import terrails.colorfulhearts.api.heart.Hearts;
 import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
 import terrails.colorfulhearts.api.heart.drawing.SpriteHeartDrawing;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -77,11 +77,11 @@ public class ConfigUtils {
         LoaderExpectPlatform.heartRegistryEvent(registry);
     }
 
-    private static StatusEffectHeart buildEffectHearts(List<String> healthColors, List<String> absorptionColors, String effectName, Holder<MobEffect> effect, ResourceLocation id) {
+    private static OverlayHeart buildEffectHearts(List<String> healthColors, List<String> absorptionColors, String effectName, Holder<MobEffect> effect, ResourceLocation id) {
         return buildEffectHearts(healthColors, absorptionColors, effectName, player -> player.hasEffect(effect), id);
     }
 
-    private static StatusEffectHeart buildEffectHearts(List<String> healthColors, List<String> absorptionColors, String effectName, Predicate<Player> condition, ResourceLocation id) {
+    private static OverlayHeart buildEffectHearts(List<String> healthColors, List<String> absorptionColors, String effectName, Predicate<Player> condition, ResourceLocation id) {
         List<HeartDrawing> drawings = new ArrayList<>();
 
         Iterator<Integer> colors = healthColors.stream().map(s -> Integer.decode(s) & 0xFFFFFF).iterator();
@@ -115,6 +115,6 @@ public class ConfigUtils {
             ));
         }
 
-        return StatusEffectHeart.build(id, condition).addHealth(drawings.get(0), drawings.get(1)).addAbsorption(drawings.get(2), drawings.get(3)).finish();
+        return OverlayHeart.build(id, condition).addHealth(drawings.get(0), drawings.get(1)).addAbsorption(drawings.get(2), drawings.get(3)).finish();
     }
 }

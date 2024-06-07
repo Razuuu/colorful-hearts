@@ -3,7 +3,7 @@ package terrails.colorfulhearts.neoforge.api.event;
 import net.minecraft.client.gui.GuiGraphics;
 import net.neoforged.bus.api.Event;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 
 import java.util.Optional;
 
@@ -11,7 +11,7 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
 
     public static class Pre extends NeoHeartRenderEvent<HeartRenderEvent.Pre> {
 
-        public Pre(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
+        public Pre(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
             super(new HeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, effectHeart));
         }
 
@@ -35,14 +35,14 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
         public void setHardcore(boolean hardcore) {
             event.setHardcore(hardcore);
         }
-        public void setEffectHeart(StatusEffectHeart heart) {
+        public void setEffectHeart(OverlayHeart heart) {
             event.setEffectHeart(heart);
         }
     }
 
     public static class Post extends NeoHeartRenderEvent<HeartRenderEvent.Post> {
 
-        public Post(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
+        public Post(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
             super(new HeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, effectHeart));
         }
     }
@@ -75,7 +75,7 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
         return event.isHardcore();
     }
 
-    public Optional<StatusEffectHeart> getEffectHeart() {
-        return event.getEffectHeart();
+    public Optional<OverlayHeart> getOverlayHeart() {
+        return event.getOverlayHeart();
     }
 }

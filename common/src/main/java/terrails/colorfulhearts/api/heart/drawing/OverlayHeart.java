@@ -8,13 +8,13 @@ import terrails.colorfulhearts.api.heart.Hearts;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class StatusEffectHeart {
+public class OverlayHeart {
 
     private final ResourceLocation id;
     private final Predicate<Player> condition;
     private final List<HeartDrawing> healthDrawings, absorptionDrawings;
 
-    StatusEffectHeart(ResourceLocation id, Predicate<Player> condition, HeartDrawing h1, HeartDrawing h2, HeartDrawing a1, HeartDrawing a2) {
+    OverlayHeart(ResourceLocation id, Predicate<Player> condition, HeartDrawing h1, HeartDrawing h2, HeartDrawing a1, HeartDrawing a2) {
         this.id = id;
         this.condition = condition;
         this.healthDrawings = List.of(h1, h2);
@@ -39,7 +39,7 @@ public class StatusEffectHeart {
 
     @Override
     public String toString() {
-        return "StatusEffectHeart{" +
+        return "OverlayHeart{" +
                 "id=" + id +
                 ", healthDrawings=" + healthDrawings +
                 ", absorptionDrawings=" + absorptionDrawings +
@@ -47,7 +47,7 @@ public class StatusEffectHeart {
     }
 
     /**
-     * Creates an instance of {@link Builder} to create an instance of {@link StatusEffectHeart}
+     * Creates an instance of {@link Builder} to create an instance of {@link OverlayHeart}
      * @param id easily distinguishable ID useful for debugging
      * @param condition for this heart type to be active
      */
@@ -130,7 +130,7 @@ public class StatusEffectHeart {
         /**
          * Finishes building the final effect heart
          */
-        public StatusEffectHeart finish() {
+        public OverlayHeart finish() {
             if (this.healthFirst == null || this.healthSecond == null) {
                 throw new IllegalArgumentException("Health hearts were not defined");
             }
@@ -139,7 +139,7 @@ public class StatusEffectHeart {
                 throw new IllegalArgumentException("Absorption hearts were not defined");
             }
 
-            return new StatusEffectHeart(this.id, this.condition, this.healthFirst, this.healthSecond, this.absorptionFirst, this.absorptionSecond);
+            return new OverlayHeart(this.id, this.condition, this.healthFirst, this.healthSecond, this.absorptionFirst, this.absorptionSecond);
         }
     }
 }
