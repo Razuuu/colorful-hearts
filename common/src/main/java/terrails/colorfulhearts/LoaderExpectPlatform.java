@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.Contract;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.event.HeartRegistry;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 
 public class LoaderExpectPlatform {
 
@@ -51,12 +51,12 @@ public class LoaderExpectPlatform {
      * @param y position of the hearts
      * @param blinking eligible hearts should blink
      * @param hardcore hearts should be of hardcore type
-     * @param effectHeart type of effect heart, null otherwise
+     * @param overlayHeart type of overlay heart, null otherwise
      * @return the event with modified values
      */
     @Contract
     @ExpectPlatform
-    public static HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
+    public static HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
         throw new AssertionError();
     }
 
@@ -67,11 +67,11 @@ public class LoaderExpectPlatform {
      * @param y final position of the hearts
      * @param blinking eligible hearts blink
      * @param hardcore hearts are of hardcore type
-     * @param effectHeart type of effect heart, null otherwise
+     * @param overlayHeart type of overlay heart, null otherwise
      */
     @Contract
     @ExpectPlatform
-    public static void postRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
+    public static void postRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
         throw new AssertionError();
     }
 

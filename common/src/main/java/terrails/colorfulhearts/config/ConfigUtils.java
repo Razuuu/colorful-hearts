@@ -9,8 +9,8 @@ import terrails.colorfulhearts.LoaderExpectPlatform;
 import terrails.colorfulhearts.api.event.HeartRegistry;
 import terrails.colorfulhearts.api.heart.Hearts;
 import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 import terrails.colorfulhearts.api.heart.drawing.SpriteHeartDrawing;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -70,17 +70,17 @@ public class ConfigUtils {
 
     public static void loadStatusEffectHearts() {
         HeartRegistry registry = new HeartRegistry();
-        registry.registerStatusEffectHeart(buildEffectHearts(Configuration.HEALTH.poisonedColors.get(), Configuration.ABSORPTION.poisonedColors.get(), "poisoned", MobEffects.POISON, new ResourceLocation("poison")));
-        registry.registerStatusEffectHeart(buildEffectHearts(Configuration.HEALTH.witheredColors.get(), Configuration.ABSORPTION.witheredColors.get(), "withered", MobEffects.WITHER, new ResourceLocation("wither")));
-        registry.registerStatusEffectHeart(buildEffectHearts(Configuration.HEALTH.frozenColors.get(), Configuration.ABSORPTION.frozenColors.get(), "frozen", Player::isFullyFrozen, new ResourceLocation("frozen")));
+        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.poisonedColors.get(), Configuration.ABSORPTION.poisonedColors.get(), "poisoned", MobEffects.POISON, new ResourceLocation("poison")));
+        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.witheredColors.get(), Configuration.ABSORPTION.witheredColors.get(), "withered", MobEffects.WITHER, new ResourceLocation("wither")));
+        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.frozenColors.get(), Configuration.ABSORPTION.frozenColors.get(), "frozen", Player::isFullyFrozen, new ResourceLocation("frozen")));
         LoaderExpectPlatform.heartRegistryEvent(registry);
     }
 
-    private static StatusEffectHeart buildEffectHearts(List<String> healthColors, List<String> absorptionColors, String effectName, MobEffect effect, ResourceLocation id) {
+    private static OverlayHeart buildEffectHearts(List<String> healthColors, List<String> absorptionColors, String effectName, MobEffect effect, ResourceLocation id) {
         return buildEffectHearts(healthColors, absorptionColors, effectName, player -> player.hasEffect(effect), id);
     }
 
-    private static StatusEffectHeart buildEffectHearts(List<String> healthColors, List<String> absorptionColors, String effectName, Predicate<Player> condition, ResourceLocation id) {
+    private static OverlayHeart buildEffectHearts(List<String> healthColors, List<String> absorptionColors, String effectName, Predicate<Player> condition, ResourceLocation id) {
         List<HeartDrawing> drawings = new ArrayList<>();
 
         Iterator<Integer> colors = healthColors.stream().map(s -> Integer.decode(s) & 0xFFFFFF).iterator();
@@ -114,6 +114,6 @@ public class ConfigUtils {
             ));
         }
 
-        return StatusEffectHeart.build(id, condition).addHealth(drawings.get(0), drawings.get(1)).addAbsorption(drawings.get(2), drawings.get(3)).finish();
+        return OverlayHeart.build(id, condition).addHealth(drawings.get(0), drawings.get(1)).addAbsorption(drawings.get(2), drawings.get(3)).finish();
     }
 }

@@ -9,8 +9,8 @@ import org.lwjgl.opengl.GL11;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
 import terrails.colorfulhearts.api.heart.drawing.SpriteHeartDrawing;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
-import terrails.colorfulhearts.neoforge.api.event.NeoHeartRegistryEvent;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
+import terrails.colorfulhearts.api.neoforge.event.NeoHeartRegistryEvent;
 
 public class UndergardenCompat {
 
@@ -43,7 +43,7 @@ public class UndergardenCompat {
                     new ResourceLocation("undergarden", "virulence_hearts/hardcore_half_blinking")
             );
 
-            event.registerStatusEffectHeart(StatusEffectHeart.build(new ResourceLocation(CColorfulHearts.MOD_ID, "virulence"), player -> player.hasEffect(effect))
+            event.registerOverlayHeart(OverlayHeart.build(new ResourceLocation(CColorfulHearts.MOD_ID, "virulence"), player -> player.hasEffect(effect))
                     .addHealth(vanilla, 0.45f, 0.4f, 0.4f)
                     .addAbsorption(
                             HeartDrawing.colorBlend(vanilla, heartId.withSuffix("_absorption"), 1.0f, 1.0f, 1.0f, 0.15f, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA),

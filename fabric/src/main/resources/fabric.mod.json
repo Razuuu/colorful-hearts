@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Colorful Hearts",
-  "description": "A client side mod that replaces vanilla multiple heart rows with a single row using colored hearts",
+  "description": "A client side mod that replaces multiple vanilla heart rows with a single row using colored hearts",
   "authors": [ "Terrails" ],
 
   "license": "MIT",
