@@ -1,7 +1,7 @@
 package terrails.colorfulhearts.api.event;
 
 import net.minecraft.client.gui.GuiGraphics;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 
 import java.util.Optional;
 
@@ -18,7 +18,7 @@ public class HeartRenderEvent {
 
         private boolean cancelled = false;
 
-        public Pre(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
+        public Pre(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
             super(guiGraphics, x, y, blinking, hardcore, effectHeart);
         }
 
@@ -42,8 +42,8 @@ public class HeartRenderEvent {
         public void setHardcore(boolean hardcore) {
             this.hardcore = hardcore;
         }
-        public void setEffectHeart(StatusEffectHeart heart) {
-            this.effectHeart = heart;
+        public void setOverlayHeart(OverlayHeart heart) {
+            this.overlayHeart = heart;
         }
     }
 
@@ -53,7 +53,7 @@ public class HeartRenderEvent {
      */
     public static class Post extends HeartRenderEvent {
 
-        public Post(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
+        public Post(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
             super(guiGraphics, x, y, blinking, hardcore, effectHeart);
         }
     }
@@ -61,15 +61,15 @@ public class HeartRenderEvent {
     protected final GuiGraphics guiGraphics;
     protected int x, y;
     protected boolean blinking, hardcore;
-    protected StatusEffectHeart effectHeart;
+    protected OverlayHeart overlayHeart;
 
-    public HeartRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
+    public HeartRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
         this.guiGraphics = guiGraphics;
         this.x = x;
         this.y = y;
         this.blinking = blinking;
         this.hardcore = hardcore;
-        this.effectHeart = effectHeart;
+        this.overlayHeart = overlayHeart;
     }
 
     public GuiGraphics getGuiGraphics() {
@@ -90,7 +90,7 @@ public class HeartRenderEvent {
         return hardcore;
     }
 
-    public Optional<StatusEffectHeart> getEffectHeart() {
-        return Optional.ofNullable(effectHeart);
+    public Optional<OverlayHeart> getOverlayHeart() {
+        return Optional.ofNullable(overlayHeart);
     }
 }

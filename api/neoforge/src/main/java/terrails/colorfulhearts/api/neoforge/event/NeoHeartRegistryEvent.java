@@ -1,9 +1,9 @@
-package terrails.colorfulhearts.neoforge.api.event;
+package terrails.colorfulhearts.api.neoforge.event;
 
 import net.neoforged.bus.api.Event;
 import net.neoforged.fml.event.IModBusEvent;
 import terrails.colorfulhearts.api.event.HeartRegistry;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 
 /**
  * Used to register custom heart types. Currently, it can only be used to register status effect type hearts.
@@ -18,7 +18,7 @@ public class NeoHeartRegistryEvent extends Event implements IModBusEvent {
         this.registry = registry;
     }
 
-    public <T extends StatusEffectHeart> T registerStatusEffectHeart(T heart) {
-        return this.registry.registerStatusEffectHeart(heart);
+    public <T extends OverlayHeart> T registerStatusEffectHeart(T heart) {
+        return this.registry.registerOverlayHeart(heart);
     }
 }

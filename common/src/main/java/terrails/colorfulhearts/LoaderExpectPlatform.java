@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.Contract;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.event.HeartRegistry;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 
 public class LoaderExpectPlatform {
 
@@ -56,7 +56,7 @@ public class LoaderExpectPlatform {
      */
     @Contract
     @ExpectPlatform
-    public static HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
+    public static HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
         throw new AssertionError();
     }
 
@@ -71,7 +71,7 @@ public class LoaderExpectPlatform {
      */
     @Contract
     @ExpectPlatform
-    public static void postRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
+    public static void postRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
         throw new AssertionError();
     }
 

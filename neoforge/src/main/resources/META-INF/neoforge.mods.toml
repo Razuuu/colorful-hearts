@@ -9,7 +9,7 @@ version = "${version}"
 
 displayName = "Colorful Hearts"
 authors = "Terrails"
-description = ''' A simple renderer for colored hearts '''
+description = ''' A client side mod that replaces multiple vanilla heart rows with a single row using colored hearts '''
 
 logoFile = "icon.png"
 displayTest = "IGNORE_ALL_VERSION" # ignore everything since it's a client only mod
