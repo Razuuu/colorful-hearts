@@ -10,8 +10,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.lwjgl.opengl.GL11;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
-import terrails.colorfulhearts.forge.api.event.ForgeHeartRegistryEvent;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
+import terrails.colorfulhearts.api.forge.event.ForgeHeartRegistryEvent;
 
 public class EidolonRepraisedCompat {
 
@@ -51,7 +51,7 @@ public class EidolonRepraisedCompat {
                 }
             };
 
-            event.registerStatusEffectHeart(StatusEffectHeart.build(new ResourceLocation(CColorfulHearts.MOD_ID, "chilled"), player -> player.hasEffect(effectHolder.get()))
+            event.registerOverlayHeart(OverlayHeart.build(new ResourceLocation(CColorfulHearts.MOD_ID, "chilled"), player -> player.hasEffect(effectHolder.get()))
                     .addHealth(vanilla, 0.4f, 0.4f, 0.45f)
                     .addAbsorption(
                             HeartDrawing.colorBlend(vanilla, heartId.withSuffix("_absorption"), 1.0f, 1.0f, 1.0f, 0.15f, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA),

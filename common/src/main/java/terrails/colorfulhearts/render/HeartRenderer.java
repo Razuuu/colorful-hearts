@@ -10,9 +10,9 @@ import net.minecraft.world.entity.player.Player;
 import terrails.colorfulhearts.LoaderExpectPlatform;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.heart.Hearts;
-import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
+import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class HeartRenderer {
 
     private boolean lastHardcore;
     public int lastHealth, lastMaxHealth, lastAbsorption;
-    private StatusEffectHeart lastHeartType;
+    private OverlayHeart lastHeartType;
     private Heart[] hearts;
 
     public void renderPlayerHearts(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking) {
@@ -43,7 +43,7 @@ public class HeartRenderer {
             regenIndex = (int) tickCount % Mth.ceil(Math.min(maxHealth, 20) + 5);
         }
 
-        StatusEffectHeart heartType = Hearts.getEffectHeartForPlayer(player).orElse(null);
+        OverlayHeart heartType = Hearts.getOverlayHeartForPlayer(player).orElse(null);
 
         HeartRenderEvent.Pre event = LoaderExpectPlatform.preRenderEvent(guiGraphics, x, y, blinking, hardcore, heartType);
         if (event.isCancelled()) {
@@ -54,7 +54,7 @@ public class HeartRenderer {
         y = event.getY();
         blinking = event.isBlinking();
         hardcore = event.isHardcore();
-        heartType = event.getEffectHeart().orElse(null);
+        heartType = event.getOverlayHeart().orElse(null);
 
         if (this.lastHardcore != hardcore || this.lastHealth != currentHealth || this.lastMaxHealth != maxHealth || this.lastAbsorption != absorption
                 || this.lastHeartType != heartType || this.hearts == null) {

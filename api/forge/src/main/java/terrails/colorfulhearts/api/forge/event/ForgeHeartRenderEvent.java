@@ -1,9 +1,9 @@
-package terrails.colorfulhearts.forge.api.event;
+package terrails.colorfulhearts.api.forge.event;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.eventbus.api.Event;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 
 import java.util.Optional;
 
@@ -11,8 +11,8 @@ public class ForgeHeartRenderEvent<E extends HeartRenderEvent> extends Event {
 
     public static class Pre extends ForgeHeartRenderEvent<HeartRenderEvent.Pre> {
 
-        public Pre(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
-            super(new HeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, effectHeart));
+        public Pre(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+            super(new HeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, overlayHeart));
         }
 
         public void setCancelled(boolean cancel) {
@@ -35,15 +35,15 @@ public class ForgeHeartRenderEvent<E extends HeartRenderEvent> extends Event {
         public void setHardcore(boolean hardcore) {
             event.setHardcore(hardcore);
         }
-        public void setEffectHeart(StatusEffectHeart heart) {
-            event.setEffectHeart(heart);
+        public void setOverlayHeart(OverlayHeart heart) {
+            event.setOverlayHeart(heart);
         }
     }
 
     public static class Post extends ForgeHeartRenderEvent<HeartRenderEvent.Post> {
 
-        public Post(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
-            super(new HeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, effectHeart));
+        public Post(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+            super(new HeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, overlayHeart));
         }
     }
 
@@ -75,7 +75,7 @@ public class ForgeHeartRenderEvent<E extends HeartRenderEvent> extends Event {
         return event.isHardcore();
     }
 
-    public Optional<StatusEffectHeart> getEffectHeart() {
-        return event.getEffectHeart();
+    public Optional<OverlayHeart> getOverlayHeart() {
+        return event.getOverlayHeart();
     }
 }

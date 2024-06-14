@@ -15,9 +15,14 @@ allprojects {
     version = rootProject.mod_version
 }
 
-subprojects {
+// all subprojects
+configure(subprojects.findAll { it.name != "api" }) {
     apply plugin: 'dev.architectury.loom'
     apply plugin: 'architectury-plugin'
+
+    loom {
+        accessWidenerPath = project(":common").file("src/main/resources/colorfulhearts.accesswidener")
+    }
 
     base {
         // colorfulhearts-loader-version
@@ -26,6 +31,29 @@ subprojects {
 
     repositories {
         maven { url = "https://maven.parchmentmc.org" }
+    }
+
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        mappings loom.layered() {
+            officialMojangMappings()
+            parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip" as String)
+        }
+    }
+
+    java {
+        withSourcesJar()
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        it.options.encoding = "UTF-8"
+        it.options.release = 17
+    }
+}
+
+// all non-api subprojects
+configure(subprojects.findAll { !it.path.startsWith(":api") }) {
+    repositories {
         maven { url "https://maven.shedaniel.me/" }
         exclusiveContent {
             forRepository {
@@ -40,32 +68,13 @@ subprojects {
         }
     }
 
-    dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        mappings loom.layered() {
-            officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip" as String)
+    tasks.register('printChangelog') {
+        doLast {
+            println(fetchChangelog())
         }
     }
 
-    java {
-        // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-        // if it is present.
-        // If you remove this line, sources will not be generated.
-        withSourcesJar()
-
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    tasks.withType(JavaCompile).configureEach {
-        it.options.release = 17
-    }
-
-    tasks.register('printChangelog') {
-        println(fetchChangelog())
-    }
-
+    // From https://github.com/architectury/architectury-api/blob/7f76087ffb453a7b1c65ce53a8e0ed05745575aa/build.gradle#L93
     ext.fetchChangelog = {
         def branch = "git rev-parse --abbrev-ref HEAD".execute().in.text.trim()
         if (branch.isBlank() || branch == "HEAD") {
@@ -87,6 +96,64 @@ subprojects {
             return changes.toString()
         } else {
             throw new GradleException("Received an error while executing git log.")
+        }
+    }
+}
+
+// all non-common subprojects
+configure(subprojects.findAll { it.name != "common" && it.name != "api" }) {
+    apply plugin: 'maven-publish'
+
+    tasks.withType(GenerateModuleMetadata).configureEach {
+        enabled = false
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = rootProject.group
+                artifactId = "colorfulhearts-${project.name}${project.path.startsWith(':api') ? "-api" : ""}"
+                from components.java
+                // From https://github.com/Fuzss/modresources/blob/d40b8125cadb6ab1b56d90c03eb0c09a666d949a/gradle/v2/main.gradle#L235-L260
+                pom {
+                    name = "Colorful Hearts"
+                    description = "A client side mod that replaces multiple vanilla heart rows with a single row using colored hearts"
+                    url = "https://github.com/Terrails/colorful-hearts"
+                    scm {
+                        url = "https://github.com/Terrails/colorful-hearts"
+                        connection = "scm:git:git://github.com/Terrails/colorful-hearts.git"
+                        developerConnection = "scm:git:git@github.com:Terrails/colorful-hearts.git"
+                    }
+                    issueManagement {
+                        system = "github"
+                        url = "https://github.com/Terrails/colorful-hearts/issues"
+                    }
+                    licenses {
+                        license {
+                            name = "MIT"
+                            url = "https://spdx.org/licenses/MIT.html"
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = "terrails"
+                            name = "Terrails"
+                        }
+                    }
+                }
+            }
+        }
+
+        if (System.getenv("MODMAVEN_PATH")) {
+            def mavenPath = System.getenv("MODMAVEN_PATH")
+            if (file(mavenPath).exists()) {
+                repositories {
+                    maven {
+                        name = "ModMaven"
+                        url "file://" + System.getenv("MODMAVEN_PATH")
+                    }
+                }
+            }
         }
     }
 }

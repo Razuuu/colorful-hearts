@@ -3,7 +3,7 @@ package terrails.colorfulhearts.forge.compat;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.common.MinecraftForge;
-import terrails.colorfulhearts.forge.api.event.ForgeHeartRenderEvent;
+import terrails.colorfulhearts.api.forge.event.ForgeHeartRenderEvent;
 import vectorwing.farmersdelight.client.gui.ComfortHealthOverlay;
 
 public class FarmersDelightCompat {

@@ -11,7 +11,7 @@ import terrails.colorfulhearts.LoaderExpectPlatform;
 import terrails.colorfulhearts.api.event.HeartRegistry;
 import terrails.colorfulhearts.api.heart.Hearts;
 import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 import terrails.colorfulhearts.render.RenderUtils;
 
 import java.util.ArrayList;
@@ -158,13 +158,13 @@ public class ConfigUtils {
 
     public static void loadStatusEffectHearts() {
         HeartRegistry registry = new HeartRegistry();
-        registry.registerStatusEffectHeart(buildEffectHeart(Configuration.HEALTH.poisonedColors.get(), Configuration.ABSORPTION.poisonedColors.get(), Gui.HeartType.POISIONED));
-        registry.registerStatusEffectHeart(buildEffectHeart(Configuration.HEALTH.witheredColors.get(), Configuration.ABSORPTION.witheredColors.get(), Gui.HeartType.WITHERED));
-        registry.registerStatusEffectHeart(buildEffectHeart(Configuration.HEALTH.frozenColors.get(), Configuration.ABSORPTION.frozenColors.get(), Gui.HeartType.FROZEN));
+        registry.registerOverlayHeart(buildEffectHeart(Configuration.HEALTH.poisonedColors.get(), Configuration.ABSORPTION.poisonedColors.get(), Gui.HeartType.POISIONED));
+        registry.registerOverlayHeart(buildEffectHeart(Configuration.HEALTH.witheredColors.get(), Configuration.ABSORPTION.witheredColors.get(), Gui.HeartType.WITHERED));
+        registry.registerOverlayHeart(buildEffectHeart(Configuration.HEALTH.frozenColors.get(), Configuration.ABSORPTION.frozenColors.get(), Gui.HeartType.FROZEN));
         LoaderExpectPlatform.heartRegistryEvent(registry);
     }
 
-    private static StatusEffectHeart buildEffectHeart(List<String> healthColors, List<String> absorptionColors, Gui.HeartType type) {
+    private static OverlayHeart buildEffectHeart(List<String> healthColors, List<String> absorptionColors, Gui.HeartType type) {
         List<HeartDrawing> drawings = new ArrayList<>();
 
         String effectName;
@@ -291,6 +291,6 @@ public class ConfigUtils {
                 }
             });
         }
-        return StatusEffectHeart.build(new ResourceLocation(effectName), predicate).addHealth(drawings.get(0), drawings.get(1)).addAbsorption(drawings.get(2), drawings.get(3)).finish();
+        return OverlayHeart.build(new ResourceLocation(effectName), predicate).addHealth(drawings.get(0), drawings.get(1)).addAbsorption(drawings.get(2), drawings.get(3)).finish();
     }
 }

@@ -1,9 +1,9 @@
-package terrails.colorfulhearts.fabric.api.event;
+package terrails.colorfulhearts.api.fabric.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import terrails.colorfulhearts.api.event.HeartRegistry;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
+import terrails.colorfulhearts.api.event.HeartRegistry;
 
 import java.util.function.Consumer;
 

@@ -3,7 +3,7 @@ package terrails.colorfulhearts.forge.compat;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import terrails.colorfulhearts.compat.OverflowingBarsCommonCompat;
-import terrails.colorfulhearts.forge.api.event.ForgeHeartRenderEvent;
+import terrails.colorfulhearts.api.forge.event.ForgeHeartRenderEvent;
 
 public class OverflowingBarsCompat extends OverflowingBarsCommonCompat {
 

@@ -1,7 +1,7 @@
 package terrails.colorfulhearts.fabric.compat;
 
 import terrails.colorfulhearts.compat.OverflowingBarsCommonCompat;
-import terrails.colorfulhearts.fabric.api.event.FabHeartEvents;
+import terrails.colorfulhearts.api.fabric.event.FabHeartEvents;
 
 public class OverflowingBarsCompat extends OverflowingBarsCommonCompat {
 

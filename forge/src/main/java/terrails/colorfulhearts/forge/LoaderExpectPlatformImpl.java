@@ -4,12 +4,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoader;
 import terrails.colorfulhearts.CColorfulHearts;
-import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.event.HeartRegistry;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
-import terrails.colorfulhearts.forge.api.event.ForgeHeartUpdateEvent;
-import terrails.colorfulhearts.forge.api.event.ForgeHeartRegistryEvent;
-import terrails.colorfulhearts.forge.api.event.ForgeHeartRenderEvent;
+import terrails.colorfulhearts.api.event.HeartRenderEvent;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
+import terrails.colorfulhearts.api.forge.event.ForgeHeartUpdateEvent;
+import terrails.colorfulhearts.api.forge.event.ForgeHeartRegistryEvent;
+import terrails.colorfulhearts.api.forge.event.ForgeHeartRenderEvent;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
 
@@ -28,14 +28,14 @@ public class LoaderExpectPlatformImpl {
         return false;
     }
 
-    public static HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
-        ForgeHeartRenderEvent.Pre event = new ForgeHeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, effectHeart);
+    public static HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        ForgeHeartRenderEvent.Pre event = new ForgeHeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, overlayHeart);
         MinecraftForge.EVENT_BUS.post(event);
         return event.getEvent();
     }
 
-    public static void postRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
-        MinecraftForge.EVENT_BUS.post(new ForgeHeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, effectHeart));
+    public static void postRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        MinecraftForge.EVENT_BUS.post(new ForgeHeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, overlayHeart));
     }
 
     public static void heartRegistryEvent(HeartRegistry registry) {

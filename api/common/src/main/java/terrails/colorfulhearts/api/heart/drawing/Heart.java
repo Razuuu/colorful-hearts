@@ -93,7 +93,7 @@ public class Heart {
         if (hasBackground) {
             this.backgroundHeart.draw(guiGraphics, x, y, hardcore, highlightContainer, highlightHeart);
             // skip rendering HALF background on top of FULL background
-            // special case for when hearts are set as blank in StatusEffectHeart
+            // special case for when hearts are set as blank in OverlayHeart
             if (this.drawing == Hearts.CONTAINER && this.half) return;
         }
         boolean highlight = this.isContainer() ? highlightContainer : highlightHeart;

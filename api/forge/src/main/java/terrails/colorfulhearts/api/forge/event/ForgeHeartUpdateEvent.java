@@ -1,4 +1,4 @@
-package terrails.colorfulhearts.forge.api.event;
+package terrails.colorfulhearts.api.forge.event;
 
 import net.minecraftforge.eventbus.api.Event;
 
