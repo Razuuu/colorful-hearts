@@ -9,11 +9,8 @@ import net.minecraft.world.entity.player.Player;
 import terrails.colorfulhearts.LoaderExpectPlatform;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.heart.Hearts;
-import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
-
-import java.util.List;
 
 public class HeartRenderer {
 
@@ -25,7 +22,7 @@ public class HeartRenderer {
     private boolean lastHardcore;
     public int lastHealth, lastMaxHealth, lastAbsorption;
     private OverlayHeart lastOverlayType;
-    private Heart[] hearts;
+    private Heart[] hearts, overlayHearts;
 
     public void renderPlayerHearts(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking) {
         long tickCount = this.client.gui.getGuiTicks();
@@ -58,16 +55,13 @@ public class HeartRenderer {
         if (this.lastHardcore != hardcore || this.lastHealth != currentHealth || this.lastMaxHealth != maxHealth || this.lastAbsorption != absorption
                 || this.lastOverlayType != heartType || this.hearts == null) {
 
-            final List<HeartDrawing> healthDrawings, absorptionDrawings;
             if (heartType == null) {
-                healthDrawings = Hearts.COLORED_HEALTH_HEARTS;
-                absorptionDrawings = Hearts.COLORED_ABSORPTION_HEARTS;
+                this.overlayHearts = null;
             } else {
-                healthDrawings = heartType.getHealthDrawings();
-                absorptionDrawings = heartType.getAbsorptionDrawings();
+                this.overlayHearts = HeartUtils.calculateHearts(heartType.getHealthDrawings(), heartType.getAbsorptionDrawings(), currentHealth, maxHealth, absorption);
             }
 
-            this.hearts = HeartUtils.calculateHearts(healthDrawings, absorptionDrawings, currentHealth, maxHealth, absorption);
+            this.hearts = HeartUtils.calculateHearts(Hearts.COLORED_HEALTH_HEARTS, Hearts.COLORED_ABSORPTION_HEARTS, currentHealth, maxHealth, absorption);
             this.lastHardcore = hardcore;
             this.lastHealth = currentHealth;
             this.lastMaxHealth = maxHealth;
@@ -97,6 +91,12 @@ public class HeartRenderer {
             boolean blinkingHeart = blinking && index < displayHealthHearts;
 
             heart.draw(guiGraphics, xPos, yPos, hardcore, blinking, blinkingHeart);
+            if (this.overlayHearts != null && index < this.overlayHearts.length) {
+                Heart overlayHeart = this.overlayHearts[index];
+                if (overlayHeart != null) {
+                    overlayHeart.draw(guiGraphics, xPos, yPos, hardcore, blinking, blinkingHeart);
+                }
+            }
         }
 
         LoaderExpectPlatform.postRenderEvent(guiGraphics, x, y, blinking, hardcore, heartType);
