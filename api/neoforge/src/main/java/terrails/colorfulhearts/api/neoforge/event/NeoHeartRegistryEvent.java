@@ -6,7 +6,7 @@ import terrails.colorfulhearts.api.event.HeartRegistry;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 
 /**
- * Used to register custom heart types. Currently, it can only be used to register status effect type hearts.
+ * Used to register custom heart types. Currently, it can only be used to register overlay hearts.
  * IMPORTANT: Make sure to register an event listener on the mod-loader bus and not on the regular Neo bus
  *              as the event is run before the regular event bus is initialized
  */

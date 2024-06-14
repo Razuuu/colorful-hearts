@@ -14,6 +14,9 @@ public class FabHeartEvents {
     public static final Event<Consumer<HeartRenderEvent.Pre>> PRE_RENDER = createEvent();
     public static final Event<Consumer<HeartRenderEvent.Post>> POST_RENDER = createEvent();
 
+    /**
+     * Just an empty event used to notify about in-game changes from the Config Screen
+     */
     public static final Event<Runnable> UPDATE = EventFactory.createArrayBacked(Runnable.class, listeners -> () -> {
         for (Runnable listener : listeners) {
             listener.run();

@@ -9,7 +9,7 @@ import terrails.colorfulhearts.api.event.HeartRegistry;
 public interface ColorfulHeartsApi {
 
     /**
-     *  Used to register custom heart types. Currently, it can only be used to register status effect type hearts.
+     *  Used to register custom heart types. Currently, it can only be used to register overlay hearts.
      */
     void registerHearts(HeartRegistry registry);
 }
