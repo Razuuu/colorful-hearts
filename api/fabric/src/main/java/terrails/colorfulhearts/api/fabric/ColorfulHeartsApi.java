@@ -11,5 +11,5 @@ public interface ColorfulHeartsApi {
     /**
      *  Used to register custom heart types. Currently, it can only be used to register overlay hearts.
      */
-    void registerHearts(HeartRegistry registry);
+    default void registerHearts(HeartRegistry registry) {}
 }
