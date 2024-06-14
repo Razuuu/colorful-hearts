@@ -86,8 +86,8 @@ public class AppleSkinCompat extends AppleSkinCommonCompat {
         this.lastHealth = 0;
     }
 
-    public boolean shouldDrawOverlay(OverlayHeart effectHeart, Player player) {
-        if (effectHeart != null) {
+    public boolean shouldDrawOverlay(OverlayHeart overlayHeart, Player player) {
+        if (overlayHeart != null) {
             return false; // AppleSkin usually checks the effect, but we'll do it this way
         }
 
