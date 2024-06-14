@@ -18,8 +18,8 @@ public class HeartRenderEvent {
 
         private boolean cancelled = false;
 
-        public Pre(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
-            super(guiGraphics, x, y, blinking, hardcore, effectHeart);
+        public Pre(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+            super(guiGraphics, x, y, blinking, hardcore, overlayHeart);
         }
 
         public void setCancelled(boolean cancel) {
@@ -53,8 +53,8 @@ public class HeartRenderEvent {
      */
     public static class Post extends HeartRenderEvent {
 
-        public Post(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
-            super(guiGraphics, x, y, blinking, hardcore, effectHeart);
+        public Post(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+            super(guiGraphics, x, y, blinking, hardcore, overlayHeart);
         }
     }
 

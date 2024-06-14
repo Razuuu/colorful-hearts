@@ -25,14 +25,14 @@ public class LoaderExpectPlatformImpl {
         } else return false;
     }
 
-    public static HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
-        HeartRenderEvent.Pre event = new HeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, effectHeart);
+    public static HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        HeartRenderEvent.Pre event = new HeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, overlayHeart);
         FabHeartEvents.PRE_RENDER.invoker().accept(event);
         return event;
     }
 
-    public static void postRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
-        HeartRenderEvent.Post event = new HeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, effectHeart);
+    public static void postRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        HeartRenderEvent.Post event = new HeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, overlayHeart);
         FabHeartEvents.POST_RENDER.invoker().accept(event);
     }
 

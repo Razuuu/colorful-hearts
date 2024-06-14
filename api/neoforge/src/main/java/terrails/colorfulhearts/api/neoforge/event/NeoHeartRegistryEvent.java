@@ -18,7 +18,7 @@ public class NeoHeartRegistryEvent extends Event implements IModBusEvent {
         this.registry = registry;
     }
 
-    public <T extends OverlayHeart> T registerStatusEffectHeart(T heart) {
+    public <T extends OverlayHeart> T registerOverlayHeart(T heart) {
         return this.registry.registerOverlayHeart(heart);
     }
 }
