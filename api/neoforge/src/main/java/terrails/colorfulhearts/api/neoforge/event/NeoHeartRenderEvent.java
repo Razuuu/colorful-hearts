@@ -11,8 +11,8 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
 
     public static class Pre extends NeoHeartRenderEvent<HeartRenderEvent.Pre> {
 
-        public Pre(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
-            super(new HeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, effectHeart));
+        public Pre(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+            super(new HeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, overlayHeart));
         }
 
         public void setCancelled(boolean cancel) {
@@ -42,8 +42,8 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
 
     public static class Post extends NeoHeartRenderEvent<HeartRenderEvent.Post> {
 
-        public Post(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
-            super(new HeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, effectHeart));
+        public Post(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+            super(new HeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, overlayHeart));
         }
     }
 

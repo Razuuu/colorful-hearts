@@ -28,14 +28,14 @@ public class LoaderExpectPlatformImpl {
         return false;
     }
 
-    public static HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
-        NeoHeartRenderEvent.Pre event = new NeoHeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, effectHeart);
+    public static HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        NeoHeartRenderEvent.Pre event = new NeoHeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, overlayHeart);
         NeoForge.EVENT_BUS.post(event);
         return event.getEvent();
     }
 
-    public static void postRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
-        NeoForge.EVENT_BUS.post(new NeoHeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, effectHeart));
+    public static void postRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        NeoForge.EVENT_BUS.post(new NeoHeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, overlayHeart));
     }
 
     public static void heartRegistryEvent(HeartRegistry registry) {

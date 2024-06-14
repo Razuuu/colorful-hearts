@@ -43,7 +43,7 @@ public class UndergardenCompat {
                     new ResourceLocation("undergarden", "virulence_hearts/hardcore_half_blinking")
             );
 
-            event.registerStatusEffectHeart(OverlayHeart.build(new ResourceLocation(CColorfulHearts.MOD_ID, "virulence"), player -> player.hasEffect(effectHolder))
+            event.registerOverlayHeart(OverlayHeart.build(new ResourceLocation(CColorfulHearts.MOD_ID, "virulence"), player -> player.hasEffect(effectHolder))
                     .addHealth(vanilla, 0.45f, 0.4f, 0.4f)
                     .addAbsorption(
                             HeartDrawing.colorBlend(vanilla, heartId.withSuffix("_absorption"), 1.0f, 1.0f, 1.0f, 0.15f, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA),
