@@ -119,7 +119,7 @@ public class OverlayHeart {
         }
 
         /**
-         * Makes it so that absorption is replaced by empty containers when under effect
+         * Makes it so that absorption is replaced by empty containers when active
          */
         public Builder blankAbsorption() {
             this.absorptionFirst = Hearts.CONTAINER;
@@ -128,7 +128,7 @@ public class OverlayHeart {
         }
 
         /**
-         * Finishes building the final effect heart
+         * Finishes building the final overlay heart
          */
         public OverlayHeart finish() {
             if (this.healthFirst == null || this.healthSecond == null) {
