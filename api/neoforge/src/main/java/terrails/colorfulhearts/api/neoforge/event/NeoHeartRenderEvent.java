@@ -35,8 +35,8 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
         public void setHardcore(boolean hardcore) {
             event.setHardcore(hardcore);
         }
-        public void setEffectHeart(OverlayHeart heart) {
-            event.setEffectHeart(heart);
+        public void setOverlayHeart(OverlayHeart heart) {
+            event.setOverlayHeart(heart);
         }
     }
 

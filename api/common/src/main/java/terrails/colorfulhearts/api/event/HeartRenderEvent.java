@@ -42,7 +42,7 @@ public class HeartRenderEvent {
         public void setHardcore(boolean hardcore) {
             this.hardcore = hardcore;
         }
-        public void setEffectHeart(OverlayHeart heart) {
+        public void setOverlayHeart(OverlayHeart heart) {
             this.overlayHeart = heart;
         }
     }
@@ -63,13 +63,13 @@ public class HeartRenderEvent {
     protected boolean blinking, hardcore;
     protected OverlayHeart overlayHeart;
 
-    public HeartRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart effectHeart) {
+    public HeartRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
         this.guiGraphics = guiGraphics;
         this.x = x;
         this.y = y;
         this.blinking = blinking;
         this.hardcore = hardcore;
-        this.overlayHeart = effectHeart;
+        this.overlayHeart = overlayHeart;
     }
 
     public GuiGraphics getGuiGraphics() {
