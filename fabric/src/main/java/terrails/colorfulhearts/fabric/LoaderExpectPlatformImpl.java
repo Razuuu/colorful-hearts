@@ -5,9 +5,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.api.event.HeartRegistry;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
-import terrails.colorfulhearts.fabric.api.ColorfulHeartsApi;
-import terrails.colorfulhearts.fabric.api.event.FabHeartEvents;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
+import terrails.colorfulhearts.api.fabric.ColorfulHeartsApi;
+import terrails.colorfulhearts.api.fabric.event.FabHeartEvents;
 
 public class LoaderExpectPlatformImpl {
 
@@ -25,14 +25,14 @@ public class LoaderExpectPlatformImpl {
         } else return false;
     }
 
-    public static HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
-        HeartRenderEvent.Pre event = new HeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, effectHeart);
+    public static HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        HeartRenderEvent.Pre event = new HeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, overlayHeart);
         FabHeartEvents.PRE_RENDER.invoker().accept(event);
         return event;
     }
 
-    public static void postRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, StatusEffectHeart effectHeart) {
-        HeartRenderEvent.Post event = new HeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, effectHeart);
+    public static void postRenderEvent(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        HeartRenderEvent.Post event = new HeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, overlayHeart);
         FabHeartEvents.POST_RENDER.invoker().accept(event);
     }
 
