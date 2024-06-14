@@ -1,6 +1,6 @@
 architectury {
     injectInjectables(false)
-    common("fabric", "neoforge")
+    common("fabric", "forge")
 }
 
 dependencies {
