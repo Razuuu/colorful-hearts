@@ -14,9 +14,9 @@ import squeek.appleskin.api.food.FoodValues;
 import squeek.appleskin.client.HUDOverlayHandler;
 import squeek.appleskin.helpers.FoodHelper;
 import terrails.colorfulhearts.compat.AppleSkinCommonCompat;
-import terrails.colorfulhearts.api.heart.drawing.StatusEffectHeart;
-import terrails.colorfulhearts.neoforge.api.event.NeoHeartUpdateEvent;
-import terrails.colorfulhearts.neoforge.api.event.NeoHeartRenderEvent;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
+import terrails.colorfulhearts.api.neoforge.event.NeoHeartUpdateEvent;
+import terrails.colorfulhearts.api.neoforge.event.NeoHeartRenderEvent;
 import terrails.colorfulhearts.neoforge.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
 public class AppleSkinCompat extends AppleSkinCommonCompat {
@@ -43,7 +43,7 @@ public class AppleSkinCompat extends AppleSkinCommonCompat {
         Player player = client.player;
         assert player != null;
 
-        if (!shouldDrawOverlay(event.getEffectHeart().orElse(null), player)) {
+        if (!shouldDrawOverlay(event.getOverlayHeart().orElse(null), player)) {
             return;
         }
 
@@ -84,8 +84,8 @@ public class AppleSkinCompat extends AppleSkinCommonCompat {
         this.lastHealth = 0;
     }
 
-    public boolean shouldDrawOverlay(StatusEffectHeart effectHeart, Player player) {
-        if (effectHeart != null) {
+    public boolean shouldDrawOverlay(OverlayHeart overlayHeart, Player player) {
+        if (overlayHeart != null) {
             return false; // AppleSkin usually checks the effect, but we'll do it this way
         }
 
