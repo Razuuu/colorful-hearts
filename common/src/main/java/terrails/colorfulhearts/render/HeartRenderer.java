@@ -25,7 +25,7 @@ public class HeartRenderer {
 
     private boolean lastHardcore;
     public int lastHealth, lastMaxHealth, lastAbsorption;
-    private OverlayHeart lastHeartType;
+    private OverlayHeart lastOverlayType;
     private Heart[] hearts;
 
     public void renderPlayerHearts(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking) {
@@ -57,7 +57,7 @@ public class HeartRenderer {
         heartType = event.getOverlayHeart().orElse(null);
 
         if (this.lastHardcore != hardcore || this.lastHealth != currentHealth || this.lastMaxHealth != maxHealth || this.lastAbsorption != absorption
-                || this.lastHeartType != heartType || this.hearts == null) {
+                || this.lastOverlayType != heartType || this.hearts == null) {
 
             final List<HeartDrawing> healthDrawings, absorptionDrawings;
             if (heartType == null) {
@@ -73,7 +73,7 @@ public class HeartRenderer {
             this.lastHealth = currentHealth;
             this.lastMaxHealth = maxHealth;
             this.lastAbsorption = absorption;
-            this.lastHeartType = heartType;
+            this.lastOverlayType = heartType;
         }
 
         for (int index = 0; index < this.hearts.length; index++) {
