@@ -10,7 +10,7 @@ import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
 import terrails.colorfulhearts.api.heart.drawing.SpriteHeartDrawing;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
-import terrails.colorfulhearts.neoforge.api.event.NeoHeartRegistryEvent;
+import terrails.colorfulhearts.api.neoforge.event.NeoHeartRegistryEvent;
 
 public class UndergardenCompat {
 

@@ -8,7 +8,7 @@ import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
  */
 public class HeartRegistry {
 
-    public <T extends OverlayHeart> T registerStatusEffectHeart(T heart) {
+    public <T extends OverlayHeart> T registerOverlayHeart(T heart) {
         Hearts.OVERLAY_HEARTS.put(heart.getId(), heart);
         return heart;
     }

@@ -1,4 +1,4 @@
-package terrails.colorfulhearts.neoforge.api.event;
+package terrails.colorfulhearts.api.neoforge.event;
 
 import net.neoforged.bus.api.Event;
 import net.neoforged.fml.event.IModBusEvent;
@@ -19,6 +19,6 @@ public class NeoHeartRegistryEvent extends Event implements IModBusEvent {
     }
 
     public <T extends OverlayHeart> T registerStatusEffectHeart(T heart) {
-        return this.registry.registerStatusEffectHeart(heart);
+        return this.registry.registerOverlayHeart(heart);
     }
 }

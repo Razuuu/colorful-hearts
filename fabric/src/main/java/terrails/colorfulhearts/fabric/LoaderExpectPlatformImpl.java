@@ -6,8 +6,8 @@ import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.event.HeartRegistry;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
-import terrails.colorfulhearts.fabric.api.ColorfulHeartsApi;
-import terrails.colorfulhearts.fabric.api.event.FabHeartEvents;
+import terrails.colorfulhearts.api.fabric.ColorfulHeartsApi;
+import terrails.colorfulhearts.api.fabric.event.FabHeartEvents;
 
 public class LoaderExpectPlatformImpl {
 

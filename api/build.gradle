@@ -1,0 +1,11 @@
+allprojects {
+    group = "terrails.colorfulhearts.api" // required to prevent circular dependency
+    version = project.mod_api_version
+}
+
+subprojects {
+    base {
+        // colorfulhearts-loader-version
+        archivesBaseName = "colorfulhearts-${project.name}-api"
+    }
+}

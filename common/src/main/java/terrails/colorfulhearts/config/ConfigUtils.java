@@ -71,9 +71,9 @@ public class ConfigUtils {
 
     public static void loadStatusEffectHearts() {
         HeartRegistry registry = new HeartRegistry();
-        registry.registerStatusEffectHeart(buildEffectHearts(Configuration.HEALTH.poisonedColors.get(), Configuration.ABSORPTION.poisonedColors.get(), "poisoned", MobEffects.POISON, new ResourceLocation("poison")));
-        registry.registerStatusEffectHeart(buildEffectHearts(Configuration.HEALTH.witheredColors.get(), Configuration.ABSORPTION.witheredColors.get(), "withered", MobEffects.WITHER, new ResourceLocation("wither")));
-        registry.registerStatusEffectHeart(buildEffectHearts(Configuration.HEALTH.frozenColors.get(), Configuration.ABSORPTION.frozenColors.get(), "frozen", Player::isFullyFrozen, new ResourceLocation("frozen")));
+        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.poisonedColors.get(), Configuration.ABSORPTION.poisonedColors.get(), "poisoned", MobEffects.POISON, new ResourceLocation("poison")));
+        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.witheredColors.get(), Configuration.ABSORPTION.witheredColors.get(), "withered", MobEffects.WITHER, new ResourceLocation("wither")));
+        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.frozenColors.get(), Configuration.ABSORPTION.frozenColors.get(), "frozen", Player::isFullyFrozen, new ResourceLocation("frozen")));
         LoaderExpectPlatform.heartRegistryEvent(registry);
     }
 

@@ -6,7 +6,7 @@ import squeek.appleskin.api.AppleSkinApi;
 import squeek.appleskin.api.event.HUDOverlayEvent;
 import squeek.appleskin.client.HUDOverlayHandler;
 import terrails.colorfulhearts.compat.AppleSkinCommonCompat;
-import terrails.colorfulhearts.fabric.api.event.FabHeartEvents;
+import terrails.colorfulhearts.api.fabric.event.FabHeartEvents;
 import terrails.colorfulhearts.fabric.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
 public class AppleSkinCompat extends AppleSkinCommonCompat implements AppleSkinApi {

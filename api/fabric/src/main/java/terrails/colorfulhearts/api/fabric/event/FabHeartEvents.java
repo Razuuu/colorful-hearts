@@ -1,4 +1,4 @@
-package terrails.colorfulhearts.fabric.api.event;
+package terrails.colorfulhearts.api.fabric.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;

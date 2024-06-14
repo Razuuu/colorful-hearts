@@ -12,8 +12,8 @@ import squeek.appleskin.client.HUDOverlayHandler;
 import squeek.appleskin.helpers.FoodHelper;
 import terrails.colorfulhearts.compat.AppleSkinCommonCompat;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
-import terrails.colorfulhearts.neoforge.api.event.NeoHeartUpdateEvent;
-import terrails.colorfulhearts.neoforge.api.event.NeoHeartRenderEvent;
+import terrails.colorfulhearts.api.neoforge.event.NeoHeartUpdateEvent;
+import terrails.colorfulhearts.api.neoforge.event.NeoHeartRenderEvent;
 import terrails.colorfulhearts.neoforge.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
 public class AppleSkinCompat extends AppleSkinCommonCompat {

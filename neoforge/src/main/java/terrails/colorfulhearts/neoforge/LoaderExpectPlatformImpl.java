@@ -7,9 +7,9 @@ import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.event.HeartRegistry;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
-import terrails.colorfulhearts.neoforge.api.event.NeoHeartUpdateEvent;
-import terrails.colorfulhearts.neoforge.api.event.NeoHeartRegistryEvent;
-import terrails.colorfulhearts.neoforge.api.event.NeoHeartRenderEvent;
+import terrails.colorfulhearts.api.neoforge.event.NeoHeartUpdateEvent;
+import terrails.colorfulhearts.api.neoforge.event.NeoHeartRegistryEvent;
+import terrails.colorfulhearts.api.neoforge.event.NeoHeartRenderEvent;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
 

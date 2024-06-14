@@ -1,4 +1,4 @@
-package terrails.colorfulhearts.neoforge.api.event;
+package terrails.colorfulhearts.api.neoforge.event;
 
 import net.neoforged.bus.api.Event;
 
