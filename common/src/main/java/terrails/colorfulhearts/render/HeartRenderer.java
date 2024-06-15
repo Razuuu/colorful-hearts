@@ -41,7 +41,7 @@ public class HeartRenderer {
 
         OverlayHeart heartType = Hearts.getOverlayHeartForPlayer(player).orElse(null);
 
-        HeartRenderEvent.Pre event = LoaderExpectPlatform.preRenderEvent(guiGraphics, x, y, blinking, hardcore, heartType);
+        HeartRenderEvent.Pre event = LoaderExpectPlatform.preRenderEvent(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, heartType);
         if (event.isCancelled()) {
             return;
         }
@@ -97,8 +97,9 @@ public class HeartRenderer {
                     overlayHeart.draw(guiGraphics, xPos, yPos, hardcore, blinking, blinkingHeart);
                 }
             }
+            LoaderExpectPlatform.singleRenderEvent(heart, guiGraphics, index, xPos, yPos, hardcore, blinking, blinkingHeart);
         }
 
-        LoaderExpectPlatform.postRenderEvent(guiGraphics, x, y, blinking, hardcore, heartType);
+        LoaderExpectPlatform.postRenderEvent(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, heartType);
     }
 }
