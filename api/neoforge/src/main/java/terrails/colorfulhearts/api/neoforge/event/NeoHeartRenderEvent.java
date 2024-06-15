@@ -1,6 +1,7 @@
 package terrails.colorfulhearts.api.neoforge.event;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.Event;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
@@ -11,8 +12,8 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
 
     public static class Pre extends NeoHeartRenderEvent<HeartRenderEvent.Pre> {
 
-        public Pre(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
-            super(new HeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, overlayHeart));
+        public Pre(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+            super(new HeartRenderEvent.Pre(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart));
         }
 
         public void setCancelled(boolean cancel) {
@@ -42,8 +43,8 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
 
     public static class Post extends NeoHeartRenderEvent<HeartRenderEvent.Post> {
 
-        public Post(GuiGraphics guiGraphics, int x, int y, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
-            super(new HeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, overlayHeart));
+        public Post(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+            super(new HeartRenderEvent.Post(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart));
         }
     }
 
@@ -61,11 +62,28 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
         return event.getGuiGraphics();
     }
 
+    public Player getPlayer() {
+        return event.getPlayer();
+    }
+
     public int getX() {
         return event.getX();
     }
     public int getY() {
         return event.getY();
+    }
+
+    public int getMaxHealth() {
+        return event.getMaxHealth();
+    }
+    public int getHealth() {
+        return event.getHealth();
+    }
+    public int getDisplayHealth() {
+        return event.getDisplayHealth();
+    }
+    public int getAbsorption() {
+        return event.getAbsorption();
     }
 
     public boolean isBlinking() {
