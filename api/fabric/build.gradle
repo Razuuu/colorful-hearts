@@ -38,6 +38,11 @@ dependencies {
     shadowBundle(project(path: ':api:common', configuration: 'transformProductionFabric')) { transitive false }
 }
 
+tasks.withType(Jar).configureEach {
+    // forces loom to remap when used as a dependency even if there's no fabric.mod.json
+    it.manifest.attributes("Fabric-Loom-Remap": true)
+}
+
 remapJar {
     input.set shadowJar.archiveFile
     injectAccessWidener = false
