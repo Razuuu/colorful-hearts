@@ -25,10 +25,10 @@ public class ConfigUtils {
 
         if (Configuration.HEALTH.vanillaHearts.get()) {
             hearts.add(SpriteHeartDrawing.build(CColorfulHearts.location("health_vanilla")).finish(
-                    new ResourceLocation("hud/heart/full"), new ResourceLocation("hud/heart/full_blinking"),
-                    new ResourceLocation("hud/heart/half"), new ResourceLocation("hud/heart/half_blinking"),
-                    new ResourceLocation("hud/heart/hardcore_full"), new ResourceLocation("hud/heart/hardcore_full_blinking"),
-                    new ResourceLocation("hud/heart/hardcore_half"), new ResourceLocation("hud/heart/hardcore_half_blinking")
+                    ResourceLocation.withDefaultNamespace("hud/heart/full"), ResourceLocation.withDefaultNamespace("hud/heart/full_blinking"),
+                    ResourceLocation.withDefaultNamespace("hud/heart/half"), ResourceLocation.withDefaultNamespace("hud/heart/half_blinking"),
+                    ResourceLocation.withDefaultNamespace("hud/heart/hardcore_full"), ResourceLocation.withDefaultNamespace("hud/heart/hardcore_full_blinking"),
+                    ResourceLocation.withDefaultNamespace("hud/heart/hardcore_half"), ResourceLocation.withDefaultNamespace("hud/heart/hardcore_half_blinking")
             ));
         }
 
@@ -48,10 +48,10 @@ public class ConfigUtils {
 
         if (Configuration.ABSORPTION.vanillaHearts.get()) {
             hearts.add(SpriteHeartDrawing.build(CColorfulHearts.location("absorbing_vanilla")).finish(
-                    new ResourceLocation("hud/heart/absorbing_full"), new ResourceLocation("hud/heart/absorbing_full_blinking"),
-                    new ResourceLocation("hud/heart/absorbing_half"), new ResourceLocation("hud/heart/absorbing_half_blinking"),
-                    new ResourceLocation("hud/heart/absorbing_hardcore_full"), new ResourceLocation("hud/heart/absorbing_hardcore_full_blinking"),
-                    new ResourceLocation("hud/heart/absorbing_hardcore_half"), new ResourceLocation("hud/heart/absorbing_hardcore_half_blinking")
+                    ResourceLocation.withDefaultNamespace("hud/heart/absorbing_full"), ResourceLocation.withDefaultNamespace("hud/heart/absorbing_full_blinking"),
+                    ResourceLocation.withDefaultNamespace("hud/heart/absorbing_half"), ResourceLocation.withDefaultNamespace("hud/heart/absorbing_half_blinking"),
+                    ResourceLocation.withDefaultNamespace("hud/heart/absorbing_hardcore_full"), ResourceLocation.withDefaultNamespace("hud/heart/absorbing_hardcore_full_blinking"),
+                    ResourceLocation.withDefaultNamespace("hud/heart/absorbing_hardcore_half"), ResourceLocation.withDefaultNamespace("hud/heart/absorbing_hardcore_half_blinking")
             ));
         }
 
@@ -71,9 +71,9 @@ public class ConfigUtils {
 
     public static void loadStatusEffectHearts() {
         HeartRegistry registry = new HeartRegistry();
-        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.poisonedColors.get(), Configuration.ABSORPTION.poisonedColors.get(), "poisoned", MobEffects.POISON, new ResourceLocation("poison")));
-        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.witheredColors.get(), Configuration.ABSORPTION.witheredColors.get(), "withered", MobEffects.WITHER, new ResourceLocation("wither")));
-        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.frozenColors.get(), Configuration.ABSORPTION.frozenColors.get(), "frozen", Player::isFullyFrozen, new ResourceLocation("frozen")));
+        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.poisonedColors.get(), Configuration.ABSORPTION.poisonedColors.get(), "poisoned", MobEffects.POISON, ResourceLocation.withDefaultNamespace("poison")));
+        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.witheredColors.get(), Configuration.ABSORPTION.witheredColors.get(), "withered", MobEffects.WITHER, ResourceLocation.withDefaultNamespace("wither")));
+        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.frozenColors.get(), Configuration.ABSORPTION.frozenColors.get(), "frozen", Player::isFullyFrozen, ResourceLocation.withDefaultNamespace("frozen")));
         LoaderExpectPlatform.heartRegistryEvent(registry);
     }
 
@@ -97,10 +97,10 @@ public class ConfigUtils {
 
         if (drawings.size() == 1) {
             drawings.add(0, SpriteHeartDrawing.build(CColorfulHearts.location(effectName + "_vanilla")).finish(
-                    new ResourceLocation("hud/heart/" + effectName + "_full"), new ResourceLocation("hud/heart/" + effectName + "_full_blinking"),
-                    new ResourceLocation("hud/heart/" + effectName + "_half"), new ResourceLocation("hud/heart/" + effectName + "_half_blinking"),
-                    new ResourceLocation("hud/heart/" + effectName + "_hardcore_full"), new ResourceLocation("hud/heart/" + effectName + "_hardcore_full_blinking"),
-                    new ResourceLocation("hud/heart/" + effectName + "_hardcore_half"), new ResourceLocation("hud/heart/" + effectName + "_hardcore_half_blinking")
+                    ResourceLocation.withDefaultNamespace("hud/heart/" + effectName + "_full"), ResourceLocation.withDefaultNamespace("hud/heart/" + effectName + "_full_blinking"),
+                    ResourceLocation.withDefaultNamespace("hud/heart/" + effectName + "_half"), ResourceLocation.withDefaultNamespace("hud/heart/" + effectName + "_half_blinking"),
+                    ResourceLocation.withDefaultNamespace("hud/heart/" + effectName + "_hardcore_full"), ResourceLocation.withDefaultNamespace("hud/heart/" + effectName + "_hardcore_full_blinking"),
+                    ResourceLocation.withDefaultNamespace("hud/heart/" + effectName + "_hardcore_half"), ResourceLocation.withDefaultNamespace("hud/heart/" + effectName + "_hardcore_half_blinking")
             ));
         }
 

@@ -23,7 +23,7 @@ public class ColorfulHearts implements ClientModInitializer {
 
     private void setupSpriteSource() {
         ColoredHearts.TYPE = new SpriteSourceType(ColoredHearts.CODEC);
-        AtlasSourceTypeRegistry.register(new ResourceLocation(CColorfulHearts.MOD_ID, "colored_hearts"), ColoredHearts.TYPE);
+        AtlasSourceTypeRegistry.register(CColorfulHearts.location("colored_hearts"), ColoredHearts.TYPE);
     }
 
     private void setupObjectShare() {

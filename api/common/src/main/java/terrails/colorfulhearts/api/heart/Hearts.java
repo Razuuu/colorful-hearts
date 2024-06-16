@@ -13,11 +13,11 @@ import java.util.Optional;
 
 public class Hearts {
 
-    public static final HeartDrawing CONTAINER = SpriteHeartDrawing.build(new ResourceLocation("colorfulhearts", "container")).finish(
-            new ResourceLocation("hud/heart/container"), new ResourceLocation("hud/heart/container_blinking"),
-            new ResourceLocation("colorfulhearts", "heart/container_half"), new ResourceLocation("colorfulhearts", "heart/container_half_blinking"),
-            new ResourceLocation("hud/heart/container_hardcore"), new ResourceLocation("hud/heart/container_hardcore_blinking"),
-            new ResourceLocation("colorfulhearts", "heart/container_hardcore_half"), new ResourceLocation("colorfulhearts", "heart/container_hardcore_half_blinking")
+    public static final HeartDrawing CONTAINER = SpriteHeartDrawing.build(ResourceLocation.fromNamespaceAndPath("colorfulhearts", "container")).finish(
+            ResourceLocation.withDefaultNamespace("hud/heart/container"), ResourceLocation.withDefaultNamespace("hud/heart/container_blinking"),
+            ResourceLocation.fromNamespaceAndPath("colorfulhearts", "heart/container_half"), ResourceLocation.fromNamespaceAndPath("colorfulhearts", "heart/container_half_blinking"),
+            ResourceLocation.withDefaultNamespace("hud/heart/container_hardcore"), ResourceLocation.withDefaultNamespace("hud/heart/container_hardcore_blinking"),
+            ResourceLocation.fromNamespaceAndPath("colorfulhearts", "heart/container_hardcore_half"), ResourceLocation.fromNamespaceAndPath("colorfulhearts", "heart/container_hardcore_half_blinking")
     );
 
     public static List<HeartDrawing> COLORED_HEALTH_HEARTS;

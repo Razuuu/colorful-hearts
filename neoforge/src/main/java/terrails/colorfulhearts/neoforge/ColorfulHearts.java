@@ -65,7 +65,7 @@ public class ColorfulHearts {
     }
 
     private void registerSprite(final RegisterSpriteSourceTypesEvent event) {
-        ColoredHearts.TYPE = event.register(new ResourceLocation(CColorfulHearts.MOD_ID, "colored_hearts"), ColoredHearts.CODEC);
+        ColoredHearts.TYPE = event.register(ResourceLocation.fromNamespaceAndPath(CColorfulHearts.MOD_ID, "colored_hearts"), ColoredHearts.CODEC);
     }
 
     private void loadConfig(final ModConfigEvent.Loading event) {

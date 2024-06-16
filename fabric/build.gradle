@@ -56,8 +56,9 @@ dependencies {
 
     // Optional Dependencies
     modImplementation("maven.modrinth:modmenu:${fabric_modmenu_version}-fabric")
-    modImplementation("maven.modrinth:appleskin:${fabric_appleskin_version}-fabric")
-    modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${fabric_clothconfig_version}")
+//    modImplementation("maven.modrinth:appleskin:${fabric_appleskin_version}-fabric")
+    modImplementation("squeek.appleskin:appleskin-fabric:${fabric_appleskin_version}")
+//    modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${fabric_clothconfig_version}")
 }
 
 processResources {

@@ -14,7 +14,7 @@ import terrails.colorfulhearts.api.neoforge.event.NeoHeartRegistryEvent;
 
 public class UndergardenCompat {
 
-    private static final ResourceLocation VIRULENCE_OVERLAY = new ResourceLocation("undergarden", "virulence_hearts");
+    private static final ResourceLocation VIRULENCE_OVERLAY = ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts");
 
     public UndergardenCompat(IEventBus bus) {
         NeoForge.EVENT_BUS.addListener(this::cancelOverlay);
@@ -28,22 +28,22 @@ public class UndergardenCompat {
     }
 
     public void registerEffectHeart(final NeoHeartRegistryEvent event) {
-        BuiltInRegistries.MOB_EFFECT.getHolder(new ResourceLocation("undergarden", "virulence")).ifPresent(effectHolder -> {
+        BuiltInRegistries.MOB_EFFECT.getHolder( ResourceLocation.fromNamespaceAndPath("undergarden", "virulence")).ifPresent(effectHolder -> {
             CColorfulHearts.LOGGER.info("Registering custom hearts for virulence from mod undergarden");
 
-            final ResourceLocation heartId = new ResourceLocation(CColorfulHearts.MOD_ID, "virulence_vanilla");
-            HeartDrawing vanilla = SpriteHeartDrawing.build(new ResourceLocation("undergarden", "virulence_hearts")).finish(
-                    new ResourceLocation("undergarden", "virulence_hearts/normal"),
-                    new ResourceLocation("undergarden", "virulence_hearts/normal_blinking"),
-                    new ResourceLocation("undergarden", "virulence_hearts/half"),
-                    new ResourceLocation("undergarden", "virulence_hearts/half_blinking"),
-                    new ResourceLocation("undergarden", "virulence_hearts/hardcore"),
-                    new ResourceLocation("undergarden", "virulence_hearts/hardcore_blinking"),
-                    new ResourceLocation("undergarden", "virulence_hearts/hardcore_half"),
-                    new ResourceLocation("undergarden", "virulence_hearts/hardcore_half_blinking")
+            final ResourceLocation heartId = CColorfulHearts.location("virulence_vanilla");
+            HeartDrawing vanilla = SpriteHeartDrawing.build( ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts")).finish(
+                    ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts/normal"),
+                    ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts/normal_blinking"),
+                    ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts/half"),
+                    ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts/half_blinking"),
+                    ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts/hardcore"),
+                    ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts/hardcore_blinking"),
+                    ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts/hardcore_half"),
+                    ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts/hardcore_half_blinking")
             );
 
-            event.registerOverlayHeart(OverlayHeart.build(new ResourceLocation(CColorfulHearts.MOD_ID, "virulence"), player -> player.hasEffect(effectHolder))
+            event.registerOverlayHeart(OverlayHeart.build(CColorfulHearts.location("virulence"), player -> player.hasEffect(effectHolder))
                     .addHealth(vanilla, 0.45f, 0.4f, 0.4f)
                     .addAbsorption(
                             HeartDrawing.colorBlend(vanilla, heartId.withSuffix("_absorption"), 1.0f, 1.0f, 1.0f, 0.15f, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA),
