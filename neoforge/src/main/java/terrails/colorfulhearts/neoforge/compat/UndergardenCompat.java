@@ -28,11 +28,11 @@ public class UndergardenCompat {
     }
 
     public void registerEffectHeart(final NeoHeartRegistryEvent event) {
-        BuiltInRegistries.MOB_EFFECT.getHolder( ResourceLocation.fromNamespaceAndPath("undergarden", "virulence")).ifPresent(effectHolder -> {
+        BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("undergarden", "virulence")).ifPresent(effectHolder -> {
             CColorfulHearts.LOGGER.info("Registering custom hearts for virulence from mod undergarden");
 
             final ResourceLocation heartId = CColorfulHearts.location("virulence_vanilla");
-            HeartDrawing vanilla = SpriteHeartDrawing.build( ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts")).finish(
+            HeartDrawing vanilla = SpriteHeartDrawing.build(ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts")).finish(
                     ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts/normal"),
                     ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts/normal_blinking"),
                     ResourceLocation.fromNamespaceAndPath("undergarden", "virulence_hearts/half"),
