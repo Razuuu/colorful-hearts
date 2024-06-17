@@ -52,6 +52,7 @@ public class ConfigUtils {
                 @Override
                 public void draw(GuiGraphics guiGraphics, int x, int y, boolean half, boolean hardcore, boolean highlight) {
                     RenderSystem.setShaderTexture(0, CColorfulHearts.HEALTH_ICONS_LOCATION);
+                    RenderSystem.enableBlend();
 
                     int texX = 0;
                     if (half) {
@@ -77,6 +78,7 @@ public class ConfigUtils {
                         RenderUtils.drawTexture(guiGraphics.pose(), x, y, texX, texY, 127);
                     }
 
+                    RenderSystem.disableBlend();
                     RenderSystem.setShaderTexture(0, CColorfulHearts.GUI_ICONS_LOCATION);
                 }
 
@@ -118,6 +120,7 @@ public class ConfigUtils {
                 @Override
                 public void draw(GuiGraphics guiGraphics, int x, int y, boolean half, boolean hardcore, boolean highlight) {
                     RenderSystem.setShaderTexture(0, CColorfulHearts.ABSORPTION_ICONS_LOCATION);
+                    RenderSystem.enableBlend();
 
                     int texX = 0;
                     if (half) {
@@ -143,6 +146,7 @@ public class ConfigUtils {
                         RenderUtils.drawTexture(guiGraphics.pose(), x, y, texX, texY, 127);
                     }
 
+                    RenderSystem.disableBlend();
                     RenderSystem.setShaderTexture(0, CColorfulHearts.GUI_ICONS_LOCATION);
                 }
 
