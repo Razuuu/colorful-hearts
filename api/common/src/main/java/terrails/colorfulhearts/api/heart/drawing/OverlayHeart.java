@@ -13,12 +13,14 @@ public class OverlayHeart {
     private final ResourceLocation id;
     private final Predicate<Player> condition;
     private final List<HeartDrawing> healthDrawings, absorptionDrawings;
+    private final boolean opaque;
 
-    OverlayHeart(ResourceLocation id, Predicate<Player> condition, HeartDrawing h1, HeartDrawing h2, HeartDrawing a1, HeartDrawing a2) {
+    OverlayHeart(ResourceLocation id, Predicate<Player> condition, HeartDrawing h1, HeartDrawing h2, HeartDrawing a1, HeartDrawing a2, boolean opaque) {
         this.id = id;
         this.condition = condition;
         this.healthDrawings = List.of(h1, h2);
         this.absorptionDrawings = List.of(a1, a2);
+        this.opaque = opaque;
     }
 
     public boolean shouldDraw(Player player) {
@@ -35,6 +37,10 @@ public class OverlayHeart {
 
     public ResourceLocation getId() {
         return this.id;
+    }
+
+    public boolean isOpaque() {
+        return this.opaque;
     }
 
     @Override
@@ -62,10 +68,12 @@ public class OverlayHeart {
 
         HeartDrawing healthFirst, healthSecond;
         HeartDrawing absorptionFirst, absorptionSecond;
+        boolean opaque;
 
         Builder(ResourceLocation id, Predicate<Player> condition) {
             this.id = id;
             this.condition = condition;
+            this.opaque = true;
         }
 
         /**
@@ -128,6 +136,14 @@ public class OverlayHeart {
         }
 
         /**
+         * The given overlay is transparent and colored hearts below it should render normally
+         */
+        public Builder transparent() {
+            this.opaque = false;
+            return this;
+        }
+
+        /**
          * Finishes building the final overlay heart
          */
         public OverlayHeart finish() {
@@ -139,7 +155,7 @@ public class OverlayHeart {
                 throw new IllegalArgumentException("Absorption hearts were not defined");
             }
 
-            return new OverlayHeart(this.id, this.condition, this.healthFirst, this.healthSecond, this.absorptionFirst, this.absorptionSecond);
+            return new OverlayHeart(this.id, this.condition, this.healthFirst, this.healthSecond, this.absorptionFirst, this.absorptionSecond, this.opaque);
         }
     }
 }
