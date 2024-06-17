@@ -1,14 +1,25 @@
 package terrails.colorfulhearts.render;
 
 import net.minecraft.util.Mth;
+import terrails.colorfulhearts.api.heart.Hearts;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
 import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 
 import java.util.List;
 
 public class HeartUtils {
 
-    public static Heart[] calculateHearts(List<HeartDrawing> healthDrawings, List<HeartDrawing> absorptionDrawings, int health, int maxHealth, int absorbing) {
+    public static Heart[] calculateHearts(OverlayHeart overlayHeart, int health, int maxHealth, int absorbing) {
+        List<HeartDrawing> healthDrawings, absorptionDrawings;
+        if (overlayHeart != null && overlayHeart.isOpaque()) {
+            healthDrawings = overlayHeart.getHealthDrawings();
+            absorptionDrawings = overlayHeart.getAbsorptionDrawings();
+        } else {
+            healthDrawings = Hearts.COLORED_HEALTH_HEARTS;
+            absorptionDrawings = Hearts.COLORED_ABSORPTION_HEARTS;
+        }
+
         final int topHealth = health > 20 ? health % 20 : 0;
         final int bottomHealthRow = Math.max(0, Mth.floor(health / 20.0f) - 1);
         final int healthColorIndex = bottomHealthRow % healthDrawings.size();
@@ -84,6 +95,65 @@ public class HeartUtils {
                 }
             }
         }
+
+        if (overlayHeart != null && !overlayHeart.isOpaque()) {
+            healthDrawings = overlayHeart.getHealthDrawings();
+            healthDrawings = List.of(
+                    healthDrawings.get((healthColorIndex + 1) % healthDrawings.size()),
+                    healthDrawings.get(healthColorIndex)
+            );
+
+            absorptionDrawings = overlayHeart.getAbsorptionDrawings();
+            absorptionDrawings = List.of(
+                    absorptionDrawings.get((absorptionColorIndex + 1) % absorptionDrawings.size()),
+                    absorptionDrawings.get(absorptionColorIndex)
+            );
+
+            // Makes regular colored hearts the background of overlay hearts
+            for (int i = 0; i < Math.max(maxHealthHearts, maxAbsorbingHearts); i++) {
+                int value = i * 2;
+
+                if (value < topHealth) {
+                    boolean half = value + 1 == topHealth;
+
+                    if (half) {
+                        hearts[i] = Heart.full(healthDrawings.get(0), Heart.full(healthDrawings.get(1), false, hearts[i]));
+                    } else {
+                        hearts[i] = Heart.full(healthDrawings.get(0), false, hearts[i]);
+                    }
+                } else if (value < health) {
+                    boolean halfBackground = value + 1 == maxHealth;
+                    boolean half = value + 1 == health;
+
+                    if (halfBackground) {
+                        hearts[i] = Heart.full(healthDrawings.get(1), hearts[i]);
+                    } else if (half) {
+                        hearts[i] = Heart.full(healthDrawings.get(1), hearts[i]);
+                    } else {
+                        hearts[i] = Heart.full(healthDrawings.get(1), false, hearts[i]);
+                    }
+                }
+
+                if (value < topAbsorbing) {
+                    boolean half = value + 1 == topAbsorbing;
+
+                    if (half) {
+                        hearts[i + absorbingOffset] = Heart.full(absorptionDrawings.get(0), Heart.full(absorptionDrawings.get(1), false, hearts[i + absorbingOffset]));
+                    } else {
+                        hearts[i + absorbingOffset] = Heart.full(absorptionDrawings.get(0), false, hearts[i + absorbingOffset]);
+                    }
+                } else if (value < absorbing) {
+                    boolean half = value + 1 == absorbing;
+
+                    if (half) {
+                        hearts[i + absorbingOffset] = Heart.full(absorptionDrawings.get(1), hearts[i  + absorbingOffset]);
+                    } else {
+                        hearts[i + absorbingOffset] = Heart.full(absorptionDrawings.get(1), false, hearts[i + absorbingOffset]);
+                    }
+                }
+            }
+        }
+
         return hearts;
     }
 }
