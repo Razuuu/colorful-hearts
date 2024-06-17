@@ -40,8 +40,8 @@ public class ColorfulHearts {
             "appleskin", "AppleSkinCompat",
             "undergarden", "UndergardenCompat",
             "farmersdelight", "FarmersDelightCompat",
-            "overflowingbars", "OverflowingBarsCompat"
-//            "eidolon", "EidolonRepraisedCompat"
+            "overflowingbars", "OverflowingBarsCompat",
+            "eidolon", "EidolonRepraisedCompat"
     );
 
     public ColorfulHearts() {
