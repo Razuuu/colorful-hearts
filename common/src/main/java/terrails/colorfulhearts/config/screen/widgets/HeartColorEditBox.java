@@ -27,6 +27,7 @@ public class HeartColorEditBox extends EditBox {
 
     public HeartColorEditBox(Font font, int x, int y, int width, int height, @Nullable EditBox editBox, HeartType type) {
         super(font, x, y, width, height, editBox, Component.empty());
+        this.invalidHex = true;
         this.type = type;
         this.setResponder((str) -> {});
         this.setFilter((str) -> HEX_FORMAT.matcher(str).matches());
