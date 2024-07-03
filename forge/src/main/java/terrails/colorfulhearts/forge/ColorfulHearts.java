@@ -1,9 +1,6 @@
 package terrails.colorfulhearts.forge;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.file.FileNotFoundAction;
-import com.electronwill.nightconfig.core.io.WritingMode;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,7 +12,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.config.ConfigOption;
 import terrails.colorfulhearts.config.ConfigUtils;
@@ -106,17 +102,7 @@ public class ColorfulHearts {
             }
         }
 
-        ForgeConfigSpec spec = specBuilder.build();
-
-        spec.setConfig(CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(fileName))
-                .onFileNotFound(FileNotFoundAction.CREATE_EMPTY)
-                .writingMode(WritingMode.REPLACE)
-                .autoreload()
-                .sync()
-                .build()
-        );
-
-        return spec;
+        return specBuilder.build();
     }
 
     private void setupCompat(final IEventBus bus) {
