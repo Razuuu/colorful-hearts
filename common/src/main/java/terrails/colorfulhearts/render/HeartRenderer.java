@@ -22,7 +22,7 @@ public class HeartRenderer {
     private boolean lastHardcore;
     public int lastHealth, lastMaxHealth, lastAbsorption;
     private OverlayHeart lastOverlayType;
-    private Heart[] hearts, overlayHearts;
+    private Heart[] hearts;
 
     public void renderPlayerHearts(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking) {
         long tickCount = this.client.gui.getGuiTicks();
@@ -55,13 +55,7 @@ public class HeartRenderer {
         if (this.lastHardcore != hardcore || this.lastHealth != currentHealth || this.lastMaxHealth != maxHealth || this.lastAbsorption != absorption
                 || this.lastOverlayType != heartType || this.hearts == null) {
 
-            if (heartType == null) {
-                this.overlayHearts = null;
-            } else {
-                this.overlayHearts = HeartUtils.calculateHearts(heartType.getHealthDrawings(), heartType.getAbsorptionDrawings(), currentHealth, maxHealth, absorption);
-            }
-
-            this.hearts = HeartUtils.calculateHearts(Hearts.COLORED_HEALTH_HEARTS, Hearts.COLORED_ABSORPTION_HEARTS, currentHealth, maxHealth, absorption);
+            this.hearts = HeartUtils.calculateHearts(heartType, currentHealth, maxHealth, absorption);
             this.lastHardcore = hardcore;
             this.lastHealth = currentHealth;
             this.lastMaxHealth = maxHealth;
@@ -91,12 +85,6 @@ public class HeartRenderer {
             boolean blinkingHeart = blinking && index < displayHealthHearts;
 
             heart.draw(guiGraphics, xPos, yPos, hardcore, blinking, blinkingHeart);
-            if (this.overlayHearts != null && index < this.overlayHearts.length) {
-                Heart overlayHeart = this.overlayHearts[index];
-                if (overlayHeart != null) {
-                    overlayHeart.draw(guiGraphics, xPos, yPos, hardcore, blinking, blinkingHeart);
-                }
-            }
             LoaderExpectPlatform.singleRenderEvent(heart, guiGraphics, index, xPos, yPos, hardcore, blinking, blinkingHeart);
         }
 
