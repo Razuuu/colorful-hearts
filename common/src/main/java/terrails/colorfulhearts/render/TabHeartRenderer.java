@@ -5,7 +5,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
 import net.minecraft.util.Mth;
 import terrails.colorfulhearts.LoaderExpectPlatform;
-import terrails.colorfulhearts.api.heart.Hearts;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
 
 import java.util.Arrays;
@@ -26,7 +25,7 @@ public class TabHeartRenderer {
             // Use higher value to calculate hearts
             int value = Math.max(health, healthState.displayedValue());
             // Fixed maxHealth value as it is not possible to attain it via the leaderboard.
-            this.hearts = HeartUtils.calculateHearts(Hearts.COLORED_HEALTH_HEARTS, Hearts.COLORED_ABSORPTION_HEARTS, value, value, 0);
+            this.hearts = HeartUtils.calculateHearts(null, value, value, 0);
             this.lastHealth = health;
             this.lastDisplayHealth = healthState.displayedValue();
             LOGGER.debug("Successfully updated tab hearts.\n{}", Arrays.toString(this.hearts));
