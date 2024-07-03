@@ -22,7 +22,7 @@ public class HeartUtils {
 
         final int topHealth = health > 20 ? health % 20 : 0;
         final int bottomHealthRow = Math.max(0, Mth.floor(health / 20.0f) - 1);
-        final int healthColorIndex = bottomHealthRow % healthDrawings.size();
+        int healthColorIndex = bottomHealthRow % healthDrawings.size();
         healthDrawings = List.of(
                 healthDrawings.get((healthColorIndex + 1) % healthDrawings.size()),
                 healthDrawings.get(healthColorIndex)
@@ -33,7 +33,7 @@ public class HeartUtils {
 
         final int topAbsorbing = absorbing > maxAbsorbing ? absorbing % maxAbsorbing : 0;
         final int bottomAbsorptionRow = Math.max(0, Mth.floor(absorbing / (float) maxAbsorbing) - 1);
-        final int absorptionColorIndex = bottomAbsorptionRow % absorptionDrawings.size();
+        int absorptionColorIndex = bottomAbsorptionRow % absorptionDrawings.size();
         absorptionDrawings = List.of(
                 absorptionDrawings.get((absorptionColorIndex + 1) % absorptionDrawings.size()),
                 absorptionDrawings.get(absorptionColorIndex)
@@ -98,57 +98,67 @@ public class HeartUtils {
 
         if (overlayHeart != null && !overlayHeart.isOpaque()) {
             healthDrawings = overlayHeart.getHealthDrawings();
-            healthDrawings = List.of(
-                    healthDrawings.get((healthColorIndex + 1) % healthDrawings.size()),
-                    healthDrawings.get(healthColorIndex)
-            );
+            if (!healthDrawings.isEmpty()) {
+                healthColorIndex = bottomHealthRow % healthDrawings.size();
+                healthDrawings = List.of(
+                        healthDrawings.get((healthColorIndex + 1) % healthDrawings.size()),
+                        healthDrawings.get(healthColorIndex)
+                );
+            }
 
             absorptionDrawings = overlayHeart.getAbsorptionDrawings();
-            absorptionDrawings = List.of(
-                    absorptionDrawings.get((absorptionColorIndex + 1) % absorptionDrawings.size()),
-                    absorptionDrawings.get(absorptionColorIndex)
-            );
+            if (!absorptionDrawings.isEmpty()) {
+                absorptionColorIndex = bottomAbsorptionRow % absorptionDrawings.size();
+                absorptionDrawings = List.of(
+                        absorptionDrawings.get((absorptionColorIndex + 1) % absorptionDrawings.size()),
+                        absorptionDrawings.get(absorptionColorIndex)
+                );
+            }
 
             // Makes regular colored hearts the background of overlay hearts
             for (int i = 0; i < Math.max(maxHealthHearts, maxAbsorbingHearts); i++) {
                 int value = i * 2;
 
-                if (value < topHealth) {
-                    boolean half = value + 1 == topHealth;
+                if (!healthDrawings.isEmpty()) {
+                    if (value < topHealth) {
+                        boolean half = value + 1 == topHealth;
 
-                    if (half) {
-                        hearts[i] = Heart.full(healthDrawings.get(0), Heart.full(healthDrawings.get(1), false, hearts[i]));
-                    } else {
-                        hearts[i] = Heart.full(healthDrawings.get(0), false, hearts[i]);
-                    }
-                } else if (value < health) {
-                    boolean halfBackground = value + 1 == maxHealth;
-                    boolean half = value + 1 == health;
+                        if (half) {
+                            hearts[i] = Heart.full(healthDrawings.get(0), Heart.full(healthDrawings.get(1), false, hearts[i]));
+                        } else {
+                            hearts[i] = Heart.full(healthDrawings.get(0), false, hearts[i]);
+                        }
+                    } else if (value < health) {
+                        boolean halfBackground = value + 1 == maxHealth;
+                        boolean half = value + 1 == health;
 
-                    if (halfBackground) {
-                        hearts[i] = Heart.full(healthDrawings.get(1), hearts[i]);
-                    } else if (half) {
-                        hearts[i] = Heart.full(healthDrawings.get(1), hearts[i]);
-                    } else {
-                        hearts[i] = Heart.full(healthDrawings.get(1), false, hearts[i]);
+                        if (halfBackground) {
+                            hearts[i] = Heart.full(healthDrawings.get(1), hearts[i]);
+                        } else if (half) {
+                            hearts[i] = Heart.full(healthDrawings.get(1), hearts[i]);
+                        } else {
+                            hearts[i] = Heart.full(healthDrawings.get(1), false, hearts[i]);
+                        }
                     }
                 }
 
-                if (value < topAbsorbing) {
-                    boolean half = value + 1 == topAbsorbing;
+                if (!absorptionDrawings.isEmpty()) {
+                    if (value < topAbsorbing) {
+                        boolean half = value + 1 == topAbsorbing;
 
-                    if (half) {
-                        hearts[i + absorbingOffset] = Heart.full(absorptionDrawings.get(0), Heart.full(absorptionDrawings.get(1), false, hearts[i + absorbingOffset]));
-                    } else {
-                        hearts[i + absorbingOffset] = Heart.full(absorptionDrawings.get(0), false, hearts[i + absorbingOffset]);
-                    }
-                } else if (value < absorbing) {
-                    boolean half = value + 1 == absorbing;
+                        if (half) {
+                            hearts[i + absorbingOffset] = Heart.full(absorptionDrawings.get(0), Heart.full(absorptionDrawings.get(1), false, hearts[i + absorbingOffset]));
+                        } else {
+                            hearts[i + absorbingOffset] = Heart.full(absorptionDrawings.get(0), false, hearts[i + absorbingOffset]);
+                        }
+                    } else if (value < absorbing) {
+                        boolean half = value + 1 == absorbing;
 
-                    if (half) {
-                        hearts[i + absorbingOffset] = Heart.full(absorptionDrawings.get(1), hearts[i  + absorbingOffset]);
-                    } else {
-                        hearts[i + absorbingOffset] = Heart.full(absorptionDrawings.get(1), false, hearts[i + absorbingOffset]);
+                        if (half) {
+                            hearts[i + absorbingOffset] = Heart.full(absorptionDrawings.get(1), hearts[i + absorbingOffset]);
+                        } else {
+                            hearts[i + absorbingOffset] = Heart.full(absorptionDrawings.get(1), false, hearts[i + absorbingOffset]);
+                        }
                     }
                 }
             }
