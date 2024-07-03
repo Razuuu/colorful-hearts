@@ -18,8 +18,8 @@ public class OverlayHeart {
     OverlayHeart(ResourceLocation id, Predicate<Player> condition, HeartDrawing h1, HeartDrawing h2, HeartDrawing a1, HeartDrawing a2, boolean opaque) {
         this.id = id;
         this.condition = condition;
-        this.healthDrawings = List.of(h1, h2);
-        this.absorptionDrawings = List.of(a1, a2);
+        this.healthDrawings = h1 == null || h2 == null ? List.of() : List.of(h1, h2);
+        this.absorptionDrawings = a1 == null || a2 == null ? List.of() : List.of(a1, a2);
         this.opaque = opaque;
     }
 
@@ -102,6 +102,14 @@ public class OverlayHeart {
         }
 
         /**
+         * Uses the provided {@link HeartDrawing} object for health
+         */
+        public Builder addHealth(HeartDrawing drawing) {
+            this.healthFirst = this.healthSecond = drawing;
+            return this;
+        }
+
+        /**
          * Uses the provided {@link HeartDrawing} object for the first heart color and colors the same texture using the provided rgb values for the second heart color
          */
         public Builder addAbsorption(HeartDrawing drawing, float r, float g, float b) {
@@ -127,6 +135,14 @@ public class OverlayHeart {
         }
 
         /**
+         * Uses the provided {@link HeartDrawing} object for absorption
+         */
+        public Builder addAbsorption(HeartDrawing drawing) {
+            this.absorptionFirst = this.absorptionSecond = drawing;
+            return this;
+        }
+
+        /**
          * Makes it so that absorption is replaced by empty containers when active
          */
         public Builder blankAbsorption() {
@@ -147,12 +163,8 @@ public class OverlayHeart {
          * Finishes building the final overlay heart
          */
         public OverlayHeart finish() {
-            if (this.healthFirst == null || this.healthSecond == null) {
-                throw new IllegalArgumentException("Health hearts were not defined");
-            }
-
-            if (this.absorptionFirst == null || this.absorptionSecond == null) {
-                throw new IllegalArgumentException("Absorption hearts were not defined");
+            if (this.healthFirst == null || this.healthSecond == null || this.absorptionFirst == null || this.absorptionSecond == null) {
+                this.opaque = false;
             }
 
             return new OverlayHeart(this.id, this.condition, this.healthFirst, this.healthSecond, this.absorptionFirst, this.absorptionSecond, this.opaque);
