@@ -105,9 +105,6 @@ modrinth {
     uploadFile = remapJar
     gameVersions = ["1.20", rootProject.minecraft_version]
     loaders = ["forge", "neoforge"]
-    dependencies {
-        incompatible.project "overflowing-bars"
-    }
     changelog = fetchChangelog()
     additionalFiles = [tasks.sourcesJar]
 }
@@ -124,6 +121,5 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
     mainFile.changelogType = "markdown"
     mainFile.addGameVersion("Client", "1.20", rootProject.minecraft_version)
     mainFile.addModLoader("forge", "neoforge")
-    mainFile.addIncompatibility("overflowing-bars")
     mainFile.withAdditionalFile(tasks.sourcesJar)
 }
