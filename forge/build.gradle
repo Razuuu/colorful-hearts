@@ -51,9 +51,9 @@ dependencies {
     // Optional Dependencies
     modImplementation "maven.modrinth:farmers-delight:${forge_farmersdelight_version}-forge"
     modImplementation("maven.modrinth:appleskin:${forge_appleskin_version}-forge")
+    modImplementation("maven.modrinth:eidolonrepraised:${forge_eidolonrepraised_version}-forge")
     modRuntimeOnly("maven.modrinth:the-undergarden:${forge_undergarden_version}-forge")
     modRuntimeOnly("maven.modrinth:raised:${forge_raised_version}-forge")
-    modRuntimeOnly("maven.modrinth:eidolonrepraised:${forge_eidolonrepraised_version}-forge")
     modRuntimeOnly("maven.modrinth:curios:${forge_curios_version}-forge")
     modRuntimeOnly("maven.modrinth:overflowing-bars:${forge_overflowingbars_version}-forge")
     modRuntimeOnly("maven.modrinth:puzzles-lib:${forge_puzzleslib_version}-forge")
