@@ -1,9 +1,6 @@
 package terrails.colorfulhearts.neoforge;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.file.FileNotFoundAction;
-import com.electronwill.nightconfig.core.io.WritingMode;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
@@ -12,7 +9,6 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.ConfigScreenHandler;
 import net.neoforged.neoforge.client.event.RegisterSpriteSourceTypesEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -43,6 +39,7 @@ public class ColorfulHearts {
     );
 
     public ColorfulHearts() {
+        CColorfulHearts.setup(new PlatformProxyImpl());
         final ModLoadingContext context = ModLoadingContext.get();
 
         CONFIG_SPEC = this.setupConfig();

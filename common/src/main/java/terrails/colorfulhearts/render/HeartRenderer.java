@@ -6,7 +6,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
-import terrails.colorfulhearts.LoaderExpectPlatform;
+import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.heart.Hearts;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
@@ -32,7 +32,7 @@ public class HeartRenderer {
         int healthHearts = Mth.ceil(Math.min(maxHealth, 20) / 2.0);
         int displayHealthHearts = Mth.ceil(Math.min(displayHealth, 20) / 2.0);
 
-        boolean hardcore = LoaderExpectPlatform.forcedHardcoreHearts() || player.level().getLevelData().isHardcore();
+        boolean hardcore = CColorfulHearts.PROXY.forcedHardcoreHearts() || player.level().getLevelData().isHardcore();
 
         int regenIndex = -1;
         if (player.hasEffect(MobEffects.REGENERATION)) {
@@ -41,7 +41,7 @@ public class HeartRenderer {
 
         OverlayHeart heartType = Hearts.getOverlayHeartForPlayer(player).orElse(null);
 
-        HeartRenderEvent.Pre event = LoaderExpectPlatform.preRenderEvent(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, heartType);
+        HeartRenderEvent.Pre event = CColorfulHearts.PROXY.preRenderEvent(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, heartType);
         if (event.isCancelled()) {
             return;
         }
@@ -85,9 +85,9 @@ public class HeartRenderer {
             boolean blinkingHeart = blinking && index < displayHealthHearts;
 
             heart.draw(guiGraphics, xPos, yPos, hardcore, blinking, blinkingHeart);
-            LoaderExpectPlatform.singleRenderEvent(heart, guiGraphics, index, xPos, yPos, hardcore, blinking, blinkingHeart);
+            CColorfulHearts.PROXY.singleRenderEvent(heart, guiGraphics, index, xPos, yPos, hardcore, blinking, blinkingHeart);
         }
 
-        LoaderExpectPlatform.postRenderEvent(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, heartType);
+        CColorfulHearts.PROXY.postRenderEvent(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, heartType);
     }
 }

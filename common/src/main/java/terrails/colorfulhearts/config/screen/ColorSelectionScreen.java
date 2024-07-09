@@ -6,7 +6,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import terrails.colorfulhearts.LoaderExpectPlatform;
+import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.config.ConfigUtils;
 import terrails.colorfulhearts.config.SimpleConfigOption;
 import terrails.colorfulhearts.config.Configuration;
@@ -154,13 +154,13 @@ public class ColorSelectionScreen extends Screen {
             ConfigUtils.loadStatusEffectHearts();
             HeartRenderer.INSTANCE.lastHealth = 0;
             TabHeartRenderer.INSTANCE.lastHealth = 0;
-            LoaderExpectPlatform.heartUpdateEvent();
+            CColorfulHearts.PROXY.heartUpdateEvent();
         } else if (this.vanillaChanged) {
             ConfigUtils.loadColoredHearts();
             ConfigUtils.loadStatusEffectHearts();
             HeartRenderer.INSTANCE.lastHealth = 0;
             TabHeartRenderer.INSTANCE.lastHealth = 0;
-            LoaderExpectPlatform.heartUpdateEvent();
+            CColorfulHearts.PROXY.heartUpdateEvent();
         }
     }
 
@@ -363,6 +363,6 @@ public class ColorSelectionScreen extends Screen {
             }
         }
 
-        LoaderExpectPlatform.applyConfig();
+        CColorfulHearts.PROXY.applyConfig();
     }
 }
