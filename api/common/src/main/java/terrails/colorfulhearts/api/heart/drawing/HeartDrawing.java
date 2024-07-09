@@ -34,8 +34,9 @@ public abstract class HeartDrawing {
                 RenderSystem.setShaderColor(r, g, b, a);
                 RenderSystem.blendFunc(sourceFactor, destinationFactor);
                 drawing.draw(guiGraphics, x, y, half, hardcore, highlight);
-                RenderSystem.disableBlend();
+                RenderSystem.defaultBlendFunc();
                 RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+                RenderSystem.disableBlend();
             }
 
             @Override
