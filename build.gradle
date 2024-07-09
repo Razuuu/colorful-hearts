@@ -37,8 +37,7 @@ configure(subprojects.findAll { it.name != "api" }) {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
         mappings loom.layered() {
             officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-1.20.6:${rootProject.parchment_version}@zip" as String)
-//            parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip" as String)
+            parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip" as String)
         }
     }
 
@@ -87,7 +86,7 @@ configure(subprojects.findAll { !it.path.startsWith(":api") }) {
         def changes = new StringBuilder("Latest changes ([See all](${repoUrl}/commits/${branch}))\n---")
         def log = "git log --max-count=30 --no-merges --pretty=format:\"* %s ([%h](${repoUrl}/commit/%H))\"".execute()
         log.in.eachLine { line ->
-            if (!line.startsWithIgnoreCase("bump")) { // version change commits should be ignored
+            if (!line.startsWithIgnoreCase("* bump")) { // version change commits should be ignored
                 changes << "\n${line}"
             }
         }
