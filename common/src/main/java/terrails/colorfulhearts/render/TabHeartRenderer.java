@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
 import net.minecraft.util.Mth;
-import terrails.colorfulhearts.LoaderExpectPlatform;
+import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
 
 import java.util.Arrays;
@@ -41,7 +41,7 @@ public class TabHeartRenderer {
         // Adds space between hearts when there are less than 10
         int spacingMultiplier = Mth.floor(Math.min((float) (offset - x - 4) / (float) spacingDivisor, 9.0F));
 
-        boolean hardcore = LoaderExpectPlatform.forcedHardcoreHearts() || (this.client.level != null && this.client.level.getLevelData().isHardcore());
+        boolean hardcore = CColorfulHearts.PROXY.forcedHardcoreHearts() || (this.client.level != null && this.client.level.getLevelData().isHardcore());
 
         for (int i = 0; i < this.hearts.length; i++) {
             Heart heart = this.hearts[i];

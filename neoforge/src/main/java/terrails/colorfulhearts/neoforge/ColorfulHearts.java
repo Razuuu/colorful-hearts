@@ -44,6 +44,7 @@ public class ColorfulHearts {
     );
 
     public ColorfulHearts(final IEventBus bus, final ModContainer container) {
+        CColorfulHearts.setup(new PlatformProxyImpl());
         CONFIG_SPEC = this.setupConfig();
         container.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, CColorfulHearts.MOD_ID + ".toml");
         container.registerExtensionPoint(IConfigScreenFactory.class, (Supplier<IConfigScreenFactory>) () -> (mc, lastScreen) -> new ConfigurationScreen(lastScreen));
