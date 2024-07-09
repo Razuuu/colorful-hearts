@@ -107,7 +107,6 @@ modrinth {
     loaders = ["fabric", "quilt"]
     dependencies {
         required.project "fabric-api"
-        incompatible.project "overflowing-bars"
     }
     changelog = fetchChangelog()
     additionalFiles = [tasks.sourcesJar]
@@ -126,6 +125,5 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
     mainFile.addGameVersion("Client", rootProject.minecraft_version)
     mainFile.addRequirement("fabric-api")
     mainFile.addModLoader("fabric", "quilt")
-    mainFile.addIncompatibility("overflowing-bars")
     mainFile.withAdditionalFile(tasks.sourcesJar)
 }
