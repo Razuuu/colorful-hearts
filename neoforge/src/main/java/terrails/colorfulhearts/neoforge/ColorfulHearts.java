@@ -1,10 +1,6 @@
 package terrails.colorfulhearts.neoforge;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.file.FileNotFoundAction;
-import com.electronwill.nightconfig.core.io.ParsingException;
-import com.electronwill.nightconfig.core.io.WritingMode;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
@@ -13,7 +9,6 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.event.RegisterSpriteSourceTypesEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -26,13 +21,8 @@ import terrails.colorfulhearts.config.screen.ConfigurationScreen;
 import terrails.colorfulhearts.neoforge.render.RenderEventHandler;
 import terrails.colorfulhearts.render.atlas.sources.ColoredHearts;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,9 +40,8 @@ public class ColorfulHearts {
     );
 
     public ColorfulHearts(final IEventBus bus, final ModContainer container) {
-        final String fileName = CColorfulHearts.MOD_ID + ".toml";
-        CONFIG_SPEC = this.setupConfig(fileName);
-        container.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, fileName);
+        CONFIG_SPEC = this.setupConfig();
+        container.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, CColorfulHearts.MOD_ID + ".toml");
         container.registerExtensionPoint(IConfigScreenFactory.class, (Supplier<IConfigScreenFactory>) () -> (mc, lastScreen) -> new ConfigurationScreen(lastScreen));
 
         bus.addListener(this::setup);
@@ -90,7 +79,7 @@ public class ColorfulHearts {
         LOGGER.debug("Reloaded {} config file", event.getConfig().getFileName());
     }
 
-    private ModConfigSpec setupConfig(String fileName) {
+    private ModConfigSpec setupConfig() {
         ModConfigSpec.Builder specBuilder = new ModConfigSpec.Builder();
         for (Object instance : new Object[]{Configuration.HEALTH, Configuration.ABSORPTION}) {
             for (Field field : instance.getClass().getDeclaredFields()) {
@@ -111,37 +100,7 @@ public class ColorfulHearts {
                 }
             }
         }
-
-        ModConfigSpec spec = specBuilder.build();
-
-        Path filePath = FMLPaths.CONFIGDIR.get().resolve(fileName);
-        CommentedFileConfig config = CommentedFileConfig.builder(filePath)
-                .onFileNotFound(FileNotFoundAction.CREATE_EMPTY)
-                .writingMode(WritingMode.REPLACE)
-                .autoreload()
-                .sync()
-                .build();
-
-        while (true) {
-            try {
-                LOGGER.info("Loading {} config file", config.getFile().getName());
-                config.load();
-                break;
-            } catch (ParsingException e) {
-                LOGGER.error("Failed to load {} due to a parsing error", config.getFile().getName(), e);
-                String deformedFile = CColorfulHearts.MOD_ID + "-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss")) + "-deformed.toml";
-                try {
-                    Files.move(config.getNioPath(), FMLPaths.CONFIGDIR.get().resolve(deformedFile));
-                    LOGGER.error("Deformed config file renamed to {}", deformedFile);
-                } catch (IOException ee) {
-                    LOGGER.error("Moving deformed config file failed", ee);
-                    throw new RuntimeException("Moving deformed config file failed: " + e);
-                }
-            }
-        }
-        spec.setConfig(config);
-
-        return spec;
+        return specBuilder.build();
     }
 
     private void setupCompat(final IEventBus bus) {
