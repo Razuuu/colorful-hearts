@@ -45,9 +45,8 @@ public class ColorfulHearts {
     public ColorfulHearts() {
         final ModLoadingContext context = ModLoadingContext.get();
 
-        final String fileName = CColorfulHearts.MOD_ID + ".toml";
-        CONFIG_SPEC = this.setupConfig(fileName);
-        context.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, fileName);
+        CONFIG_SPEC = this.setupConfig();
+        context.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, CColorfulHearts.MOD_ID + ".toml");
         context.registerExtensionPoint(
                 ConfigScreenHandler.ConfigScreenFactory.class,
                 () -> new ConfigScreenHandler.ConfigScreenFactory((mc, lastScreen) -> new ConfigurationScreen(lastScreen))
@@ -89,7 +88,7 @@ public class ColorfulHearts {
         LOGGER.debug("Reloaded {} config file", event.getConfig().getFileName());
     }
 
-    private ModConfigSpec setupConfig(String fileName) {
+    private ModConfigSpec setupConfig() {
         ModConfigSpec.Builder specBuilder = new ModConfigSpec.Builder();
         for (Object instance : new Object[]{Configuration.HEALTH, Configuration.ABSORPTION}) {
             for (Field field : instance.getClass().getDeclaredFields()) {
@@ -110,18 +109,7 @@ public class ColorfulHearts {
                 }
             }
         }
-
-        ModConfigSpec spec = specBuilder.build();
-
-        spec.setConfig(CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(fileName))
-                .onFileNotFound(FileNotFoundAction.CREATE_EMPTY)
-                .writingMode(WritingMode.REPLACE)
-                .autoreload()
-                .sync()
-                .build()
-        );
-
-        return spec;
+        return specBuilder.build();
     }
 
     private void setupCompat(final IEventBus bus) {
