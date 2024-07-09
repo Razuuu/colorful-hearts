@@ -20,6 +20,9 @@ configure(subprojects.findAll { it.name != "api" }) {
     apply plugin: 'dev.architectury.loom'
     apply plugin: 'architectury-plugin'
 
+    // disable ExpectPlatform since it seems to randomly not get applied when building
+    architectury.injectInjectables = false
+
     loom {
         accessWidenerPath = project(":common").file("src/main/resources/colorfulhearts.accesswidener")
     }

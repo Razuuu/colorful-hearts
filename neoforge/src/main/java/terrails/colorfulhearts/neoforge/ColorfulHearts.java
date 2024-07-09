@@ -40,6 +40,7 @@ public class ColorfulHearts {
     );
 
     public ColorfulHearts(final IEventBus bus) {
+        CColorfulHearts.setup(new PlatformProxyImpl());
         CONFIG_SPEC = this.setupConfig();
         final ModLoadingContext context = ModLoadingContext.get();
         context.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, CColorfulHearts.MOD_ID + ".toml");

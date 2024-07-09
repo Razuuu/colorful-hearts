@@ -5,7 +5,6 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import terrails.colorfulhearts.CColorfulHearts;
-import terrails.colorfulhearts.LoaderExpectPlatform;
 import terrails.colorfulhearts.api.event.HeartRegistry;
 import terrails.colorfulhearts.api.heart.Hearts;
 import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
@@ -73,7 +72,7 @@ public class ConfigUtils {
         registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.poisonedColors.get(), Configuration.ABSORPTION.poisonedColors.get(), "poisoned", MobEffects.POISON, new ResourceLocation("poison")));
         registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.witheredColors.get(), Configuration.ABSORPTION.witheredColors.get(), "withered", MobEffects.WITHER, new ResourceLocation("wither")));
         registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.frozenColors.get(), Configuration.ABSORPTION.frozenColors.get(), "frozen", Player::isFullyFrozen, new ResourceLocation("frozen")));
-        LoaderExpectPlatform.heartRegistryEvent(registry);
+        CColorfulHearts.PROXY.heartRegistryEvent(registry);
     }
 
     private static OverlayHeart buildEffectHearts(List<String> healthColors, List<String> absorptionColors, String effectName, MobEffect effect, ResourceLocation id) {

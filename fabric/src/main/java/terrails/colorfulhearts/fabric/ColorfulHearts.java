@@ -3,6 +3,7 @@ package terrails.colorfulhearts.fabric;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ObjectShare;
+import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.fabric.config.FabConfig;
 
 public class ColorfulHearts implements ClientModInitializer {
@@ -11,6 +12,7 @@ public class ColorfulHearts implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        CColorfulHearts.setup(new PlatformProxyImpl());
         CONFIG = new FabConfig();
         this.setupObjectShare();
     }
