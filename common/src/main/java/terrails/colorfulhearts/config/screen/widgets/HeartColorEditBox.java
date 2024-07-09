@@ -41,6 +41,8 @@ public class HeartColorEditBox extends EditBox {
                 TextureAtlasSprite sprite = Minecraft.getInstance().getGuiSprites().getSprite(spriteLocation);
                 if (!sprite.contents().name().equals(MissingTextureAtlasSprite.getLocation())) {
                     this.spriteLocation = spriteLocation;
+                } else {
+                    this.spriteLocation = null;
                 }
             }
         };
