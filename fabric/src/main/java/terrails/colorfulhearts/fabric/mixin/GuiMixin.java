@@ -39,7 +39,7 @@ public abstract class GuiMixin {
      * Modifies the heart bar rows to 1 or 2, depending on if absorption is in the same row
      * Required for armor bar to render at correct height when there are multiple heart rows
      */
-    @ModifyVariable(method = "renderPlayerHealth", at = @At("STORE"), ordinal = 7)
+    @ModifyVariable(method = "renderPlayerHealth", at = @At("STORE"), ordinal = 6)
     private int colorfulhearts_renderPlayerHealth(int defaultValue) {
         int absorption = Mth.ceil(this.getCameraPlayer().getAbsorptionAmount());
         int health = Mth.ceil(this.getCameraPlayer().getHealth());
