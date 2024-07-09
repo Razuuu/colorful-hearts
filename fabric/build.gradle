@@ -10,8 +10,12 @@ architectury {
 }
 
 loom {
-    // change server run directory
-    runs.server.runDir("run/server")
+    runs {
+        // change server run directory
+        server.runDir("run/server")
+        // set window size to 720p
+        client.programArgs("--width", "1280", "--height", "720")
+    }
 }
 
 configurations {
