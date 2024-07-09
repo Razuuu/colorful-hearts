@@ -9,8 +9,13 @@ public class CColorfulHearts {
     public static final String MOD_ID = "colorfulhearts";
     public static final String MOD_NAME = "Colorful Hearts";
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
+    public static PlatformProxy PROXY;
 
     public static ResourceLocation location(String path) {
         return ResourceLocation.fromNamespaceAndPath(CColorfulHearts.MOD_ID, path);
+    }
+
+    public static void setup(PlatformProxy proxy) {
+        PROXY = proxy;
     }
 }
