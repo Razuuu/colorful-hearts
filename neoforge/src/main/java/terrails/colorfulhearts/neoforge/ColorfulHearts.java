@@ -1,9 +1,6 @@
 package terrails.colorfulhearts.neoforge;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.file.FileNotFoundAction;
-import com.electronwill.nightconfig.core.io.WritingMode;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
@@ -14,7 +11,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.event.RegisterSpriteSourceTypesEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -48,9 +44,8 @@ public class ColorfulHearts {
     );
 
     public ColorfulHearts(final IEventBus bus, final ModContainer container) {
-        final String fileName = CColorfulHearts.MOD_ID + ".toml";
-        CONFIG_SPEC = this.setupConfig(fileName);
-        container.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, fileName);
+        CONFIG_SPEC = this.setupConfig();
+        container.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, CColorfulHearts.MOD_ID + ".toml");
         container.registerExtensionPoint(IConfigScreenFactory.class, (Supplier<IConfigScreenFactory>) () -> (mc, lastScreen) -> new ConfigurationScreen(lastScreen));
 
         bus.addListener(this::setup);
@@ -88,7 +83,7 @@ public class ColorfulHearts {
         LOGGER.debug("Reloaded {} config file", event.getConfig().getFileName());
     }
 
-    private ModConfigSpec setupConfig(String fileName) {
+    private ModConfigSpec setupConfig() {
         ModConfigSpec.Builder specBuilder = new ModConfigSpec.Builder();
         for (Object instance : new Object[]{Configuration.HEALTH, Configuration.ABSORPTION}) {
             for (Field field : instance.getClass().getDeclaredFields()) {
@@ -109,18 +104,7 @@ public class ColorfulHearts {
                 }
             }
         }
-
-        ModConfigSpec spec = specBuilder.build();
-
-        spec.setConfig(CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(fileName))
-                .onFileNotFound(FileNotFoundAction.CREATE_EMPTY)
-                .writingMode(WritingMode.REPLACE)
-                .autoreload()
-                .sync()
-                .build()
-        );
-
-        return spec;
+        return specBuilder.build();
     }
 
     private void setupCompat(final IEventBus bus) {
