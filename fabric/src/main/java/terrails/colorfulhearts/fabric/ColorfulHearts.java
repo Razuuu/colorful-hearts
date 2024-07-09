@@ -16,6 +16,7 @@ public class ColorfulHearts implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        CColorfulHearts.setup(new PlatformProxyImpl());
         CONFIG = new FabConfig();
         this.setupSpriteSource();
         this.setupObjectShare();
