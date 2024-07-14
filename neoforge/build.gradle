@@ -50,9 +50,9 @@ dependencies {
     shadowBundle(project(path: ':common', configuration: 'transformProductionNeoForge')) { transitive false }
 
     // Optional Dependencies
-    modImplementation("maven.modrinth:appleskin:${neoforge_appleskin_version}-neoforge")
+    modCompileOnly("maven.modrinth:appleskin:${neoforge_appleskin_version}-neoforge")
     //modRuntimeOnly("maven.modrinth:the-undergarden:${neoforge_undergarden_version}-neoforge")
-    modRuntimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${rootProject.neoforge_clothconfig_version}")
+//    modRuntimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${rootProject.neoforge_clothconfig_version}")
 }
 
 processResources {

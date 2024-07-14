@@ -1,6 +1,5 @@
 package terrails.colorfulhearts.neoforge;
 
-import com.electronwill.nightconfig.core.CommentedConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
@@ -66,11 +65,7 @@ public class ColorfulHearts {
 
     private void loadConfig(final ModConfigEvent.Loading event) {
         LOGGER.info("Loading {} config file", event.getConfig().getFileName());
-        final CommentedConfig config = event.getConfig().getConfigData();
-        for (ConfigOption<?, ?> option : CONFIG_OPTIONS) {
-            option.initialize(() -> config.get(option.getPath()), v -> config.set(option.getPath(), v));
-            option.reload();
-        }
+        CONFIG_OPTIONS.forEach(ConfigOption::reload);
         ConfigUtils.loadColoredHearts();
         ConfigUtils.loadStatusEffectHearts();
         LOGGER.debug("Loaded {} config file", event.getConfig().getFileName());
@@ -84,19 +79,22 @@ public class ColorfulHearts {
         LOGGER.debug("Reloaded {} config file", event.getConfig().getFileName());
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private ModConfigSpec setupConfig() {
         ModConfigSpec.Builder specBuilder = new ModConfigSpec.Builder();
         for (Object instance : new Object[]{Configuration.HEALTH, Configuration.ABSORPTION}) {
             for (Field field : instance.getClass().getDeclaredFields()) {
                 try {
-                    if (field.get(instance) instanceof ConfigOption<?, ?> option) {
+                    if (field.get(instance) instanceof ConfigOption option) {
                         CONFIG_OPTIONS.add(option);
 
+                        ModConfigSpec.ConfigValue value;
                         if (option.getRawDefault() instanceof List<?> list) {
-                            specBuilder.comment(option.getComment()).defineList(option.getPath(), list, option.getOptionValidator());
+                            value = specBuilder.comment(option.getComment()).defineList(option.getPath(), list, option.getOptionValidator());
                         } else {
-                            specBuilder.comment(option.getComment()).define(option.getPath(), option.getRawDefault(), option.getOptionValidator());
+                            value = specBuilder.comment(option.getComment()).define(option.getPath(), option.getRawDefault(), option.getOptionValidator());
                         }
+                        option.initialize(value, value::set);
                     } else {
                         LOGGER.debug("Skipping {} field in {} as it is not a ConfigOption", field.getName(), instance.getClass().getName());
                     }
