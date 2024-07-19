@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.AtlasSourceTypeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ObjectShare;
 import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
-import net.minecraft.resources.ResourceLocation;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.fabric.config.FabConfig;
 import terrails.colorfulhearts.render.atlas.sources.ColoredHearts;
