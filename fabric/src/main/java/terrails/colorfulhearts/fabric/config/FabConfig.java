@@ -1,6 +1,6 @@
 package terrails.colorfulhearts.fabric.config;
 
-import com.electronwill.nightconfig.core.ConfigSpec;
+import com.electronwill.nightconfig.core.*;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.file.FileNotFoundAction;
 import com.electronwill.nightconfig.core.file.FileWatcher;
@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
 
@@ -188,8 +189,8 @@ public class FabConfig extends CommentedConfigWrapper<CommentedFileConfig> imple
 
     private void disableWatcher() {
         try {
-            this.watcher.setWatch(getNioPath(), NO_OP);
-        } catch (IOException e) {
+            this.watcher.setWatchFuture(getNioPath(), NO_OP).get();
+        } catch (Exception e) {
             this.config.close();
             throw new RuntimeException("Unable to disable a file watcher", e);
         }
@@ -197,10 +198,25 @@ public class FabConfig extends CommentedConfigWrapper<CommentedFileConfig> imple
 
     private void enableWatcher() {
         try {
-            this.watcher.setWatch(getNioPath(), CONFIG_RELOAD);
-        } catch (IOException e) {
+            this.watcher.setWatchFuture(getNioPath(), CONFIG_RELOAD).get();
+        } catch (Exception e) {
             this.config.close();
             throw new RuntimeException("Unable to add a file watcher", e);
         }
+    }
+
+    @Override
+    public CommentedFileConfig createSubConfig() {
+        return (CommentedFileConfig) config.createSubConfig();
+    }
+
+    @Override
+    public <R> R bulkCommentedUpdate(Function<? super CommentedConfig, R> action) {
+        return this.config.bulkCommentedUpdate(action);
+    }
+
+    @Override
+    public <R> R bulkCommentedRead(Function<? super UnmodifiableCommentedConfig, R> action) {
+        return this.config.bulkCommentedRead(action);
     }
 }
