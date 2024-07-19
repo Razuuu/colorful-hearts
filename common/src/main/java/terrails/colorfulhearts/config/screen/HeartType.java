@@ -2,8 +2,8 @@ package terrails.colorfulhearts.config.screen;
 
 import net.minecraft.resources.ResourceLocation;
 import terrails.colorfulhearts.CColorfulHearts;
+import terrails.colorfulhearts.config.ConfigOption;
 import terrails.colorfulhearts.config.Configuration;
-import terrails.colorfulhearts.config.SimpleConfigOption;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -19,10 +19,10 @@ public enum HeartType {
     ABSORBING_FROZEN(false, Configuration.ABSORPTION.frozenColors, () -> false);
 
     private final boolean isHealth;
-    private final SimpleConfigOption<List<String>> configColors;
+    private final ConfigOption<List<String>, List<Integer>> configColors;
     private final Supplier<Boolean> vanillaVariantPresent;
 
-    HeartType(boolean isHealth, SimpleConfigOption<List<String>> configOption, Supplier<Boolean> vanillaVariantPresent) {
+    HeartType(boolean isHealth, ConfigOption<List<String>, List<Integer>> configOption, Supplier<Boolean> vanillaVariantPresent) {
         this.isHealth = isHealth;
         this.configColors = configOption;
         this.vanillaVariantPresent = vanillaVariantPresent;
@@ -40,7 +40,7 @@ public enum HeartType {
         return this.vanillaVariantPresent.get();
     }
 
-    public SimpleConfigOption<List<String>> getRawColors() {
+    public ConfigOption<List<String>, List<Integer>> getConfigOption() {
         return this.configColors;
     }
 
@@ -62,7 +62,7 @@ public enum HeartType {
     }
 
     public List<Integer> getColors() {
-        return this.configColors.get().stream().map(s -> Integer.decode(s) & 0xFFFFFF).toList();
+        return this.configColors.get();
     }
 
     public ResourceLocation getBaseSprite(boolean hardcore, boolean highlight, boolean half) {

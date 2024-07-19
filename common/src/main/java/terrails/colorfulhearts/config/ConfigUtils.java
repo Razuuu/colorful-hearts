@@ -13,7 +13,6 @@ import terrails.colorfulhearts.api.heart.drawing.SpriteHeartDrawing;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -31,9 +30,7 @@ public class ConfigUtils {
             ));
         }
 
-        Iterator<Integer> colors = Configuration.HEALTH.colors.get().stream().map(s -> Integer.decode(s) & 0xFFFFFF).iterator();
-        while (colors.hasNext()) {
-            Integer color = colors.next();
+        for (Integer color : Configuration.HEALTH.colors.get()) {
             hearts.add(SpriteHeartDrawing.build(CColorfulHearts.location("health_" + color)).finish(
                     CColorfulHearts.location("heart/health/full_" + color), CColorfulHearts.location("heart/health/full_blinking_" + color),
                     CColorfulHearts.location("heart/health/half_" + color), CColorfulHearts.location("heart/health/half_blinking_" + color),
@@ -54,9 +51,7 @@ public class ConfigUtils {
             ));
         }
 
-        colors = Configuration.ABSORPTION.colors.get().stream().map(s -> Integer.decode(s) & 0xFFFFFF).iterator();
-        while (colors.hasNext()) {
-            Integer color = colors.next();
+        for (Integer color : Configuration.ABSORPTION.colors.get()) {
             hearts.add(SpriteHeartDrawing.build(CColorfulHearts.location("absorbing_" + color)).finish(
                     CColorfulHearts.location("heart/absorbing/full_" + color), CColorfulHearts.location("heart/absorbing/full_blinking_" + color),
                     CColorfulHearts.location("heart/absorbing/half_" + color), CColorfulHearts.location("heart/absorbing/half_blinking_" + color),
@@ -76,16 +71,14 @@ public class ConfigUtils {
         CColorfulHearts.PROXY.heartRegistryEvent(registry);
     }
 
-    private static OverlayHeart buildEffectHearts(List<String> healthColors, List<String> absorptionColors, String effectName, Holder<MobEffect> effect, ResourceLocation id) {
+    private static OverlayHeart buildEffectHearts(List<Integer> healthColors, List<Integer> absorptionColors, String effectName, Holder<MobEffect> effect, ResourceLocation id) {
         return buildEffectHearts(healthColors, absorptionColors, effectName, player -> player.hasEffect(effect), id);
     }
 
-    private static OverlayHeart buildEffectHearts(List<String> healthColors, List<String> absorptionColors, String effectName, Predicate<Player> condition, ResourceLocation id) {
+    private static OverlayHeart buildEffectHearts(List<Integer> healthColors, List<Integer> absorptionColors, String effectName, Predicate<Player> condition, ResourceLocation id) {
         List<HeartDrawing> drawings = new ArrayList<>();
 
-        Iterator<Integer> colors = healthColors.stream().map(s -> Integer.decode(s) & 0xFFFFFF).iterator();
-        while (colors.hasNext()) {
-            Integer color = colors.next();
+        for (Integer color : healthColors) {
             drawings.add(SpriteHeartDrawing.build(CColorfulHearts.location(effectName + "_" + color)).finish(
                     CColorfulHearts.location("heart/health/" + effectName + "/full_" + color), CColorfulHearts.location("heart/health/" + effectName + "/full_blinking_" + color),
                     CColorfulHearts.location("heart/health/" + effectName + "/half_" + color), CColorfulHearts.location("heart/health/" + effectName + "/half_blinking_" + color),
@@ -95,7 +88,7 @@ public class ConfigUtils {
         }
 
         if (drawings.size() == 1) {
-            drawings.add(0, SpriteHeartDrawing.build(CColorfulHearts.location(effectName + "_vanilla")).finish(
+            drawings.addFirst(SpriteHeartDrawing.build(CColorfulHearts.location(effectName + "_vanilla")).finish(
                     ResourceLocation.withDefaultNamespace("hud/heart/" + effectName + "_full"), ResourceLocation.withDefaultNamespace("hud/heart/" + effectName + "_full_blinking"),
                     ResourceLocation.withDefaultNamespace("hud/heart/" + effectName + "_half"), ResourceLocation.withDefaultNamespace("hud/heart/" + effectName + "_half_blinking"),
                     ResourceLocation.withDefaultNamespace("hud/heart/" + effectName + "_hardcore_full"), ResourceLocation.withDefaultNamespace("hud/heart/" + effectName + "_hardcore_full_blinking"),
@@ -103,9 +96,7 @@ public class ConfigUtils {
             ));
         }
 
-        colors = absorptionColors.stream().map(s -> Integer.decode(s) & 0xFFFFFF).iterator();
-        while (colors.hasNext()) {
-            Integer color = colors.next();
+        for (Integer color : absorptionColors) {
             drawings.add(SpriteHeartDrawing.build(CColorfulHearts.location(effectName + "_absorbing_" + color)).finish(
                     CColorfulHearts.location("heart/absorbing/" + effectName + "/full_" + color), CColorfulHearts.location("heart/absorbing/" + effectName + "/full_blinking_" + color),
                     CColorfulHearts.location("heart/absorbing/" + effectName + "/half_" + color), CColorfulHearts.location("heart/absorbing/" + effectName + "/half_blinking_" + color),

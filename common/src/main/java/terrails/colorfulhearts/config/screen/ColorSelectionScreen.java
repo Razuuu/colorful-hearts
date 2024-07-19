@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import terrails.colorfulhearts.CColorfulHearts;
+import terrails.colorfulhearts.config.ConfigOption;
 import terrails.colorfulhearts.config.ConfigUtils;
 import terrails.colorfulhearts.config.SimpleConfigOption;
 import terrails.colorfulhearts.config.Configuration;
@@ -204,13 +205,10 @@ public class ColorSelectionScreen extends Screen {
         }
 
         if (this.editBoxes == null) {
-            final List<Integer> colors = this.heartType.getColors();
-
             this.editBoxes = new LinkedList<>();
-            for (Integer color : colors) {
-                if (color == null) continue;
+            for (String color : this.heartType.getConfigOption().getRaw()) {
                 final HeartColorEditBox box = new HeartColorEditBox(this.font, 0, 0, 0, 0, this.heartType);
-                box.setValue("#" + HexFormat.of().toHexDigits(color, 6));
+                box.setValue(color);
                 this.editBoxes.add(box);
             }
         }
@@ -343,10 +341,10 @@ public class ColorSelectionScreen extends Screen {
             this.vanillaChanged = true;
         }
 
-        SimpleConfigOption<List<String>> configColors = this.heartType.getRawColors();
+        ConfigOption<List<String>, List<Integer>> configColors = this.heartType.getConfigOption();
 
-        List<String> currentColors = configColors.get().stream().map(String::toUpperCase).toList();
-        List<String> newColors = this.editBoxes.stream().map(HeartColorEditBox::getColor).map(i -> "#" + HexFormat.of().toHexDigits(i, 6).toUpperCase()).toList();
+        List<Integer> currentColors = configColors.get();
+        List<Integer> newColors = this.editBoxes.stream().map(HeartColorEditBox::getColor).toList();
 
         if (currentColors.size() != newColors.size()) {
             configColors.set(newColors);

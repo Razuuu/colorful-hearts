@@ -27,6 +27,7 @@ public class ConfigOption<C, O> implements Supplier<O> {
     private final Function<C, O> valueDeserializer;
 
     // updated on every config reload
+    private boolean dirty;
     protected O cachedValue;
 
     public ConfigOption(String path, String comment, C defaultValue, Function<O, C> serializer, Function<C, O> deserializer, Predicate<Object> optionValidator) {
@@ -35,6 +36,7 @@ public class ConfigOption<C, O> implements Supplier<O> {
         this.optionValidator = optionValidator;
         this.valueSerializer = serializer;
         this.valueDeserializer = deserializer;
+        this.dirty = true;
 
         if (!comment.isEmpty()) {
             comment += "\n";
@@ -75,7 +77,7 @@ public class ConfigOption<C, O> implements Supplier<O> {
     }
 
     public void reload() {
-        this.cachedValue = this.valueDeserializer.apply(this.getRaw());
+        this.dirty = true;
     }
 
     private boolean isInitialized() {
@@ -107,6 +109,11 @@ public class ConfigOption<C, O> implements Supplier<O> {
         if (!this.isInitialized()) {
             LOGGER.error("ConfigOption {} has not yet been initialized.", this.path);
             throw new RuntimeException("ConfigOption " + this.path + " has not yet been initialized");
+        }
+
+        if (this.dirty) {
+            this.cachedValue = this.valueDeserializer.apply(this.getRaw());
+            this.dirty = false;
         }
 
         return this.cachedValue;

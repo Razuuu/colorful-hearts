@@ -19,7 +19,7 @@ public class Configuration {
                 true
         );
 
-        public final SimpleConfigOption<List<String>> colors = new SimpleConfigOption<>(
+        public final ConfigOption<List<String>, List<Integer>> colors = new ConfigOption<>(
                 "health.colors",
                 """
                         Colors for every 10 hearts (not counting the default red)
@@ -27,28 +27,40 @@ public class Configuration {
                 Arrays.asList(
                         "#F06E14", "#F5DC23", "#2DB928", "#1EAFBE", "#7346E1",
                         "#FA7DEB", "#EB375A", "#FF8278", "#AAFFFA", "#EBEBFF"
-                ), HEX_COLOR_STRING
+                ),
+                integers -> integers.stream().map(val -> "#" + Integer.toHexString(val)).toList(),
+                strings -> strings.stream().map(Integer::decode).toList(),
+                HEX_COLOR_STRING
         );
-        public SimpleConfigOption<List<String>> poisonedColors = new SimpleConfigOption<>(
+        public final ConfigOption<List<String>, List<Integer>> poisonedColors = new ConfigOption<>(
                 "health.poisonedColors",
                 """
                         Two alternating colors while poisoned
                         There can be one color in case vanilla poisoned heart is wanted""",
-                List.of("#739B00"), HEX_COLOR_STRING
+                List.of("#739B00"),
+                integers -> integers.stream().map(val -> "#" + Integer.toHexString(val)).toList(),
+                strings -> strings.stream().map(Integer::decode).toList(),
+                HEX_COLOR_STRING
         );
-        public SimpleConfigOption<List<String>> witheredColors = new SimpleConfigOption<>(
+        public final ConfigOption<List<String>, List<Integer>> witheredColors = new ConfigOption<>(
                 "health.witheredColors",
                 """
                         Two alternating colors while withered
                         There can be one color in case vanilla withered heart is wanted""",
-                List.of("#0F0F0F"), HEX_COLOR_STRING
+                List.of("#0F0F0F"),
+                integers -> integers.stream().map(val -> "#" + Integer.toHexString(val)).toList(),
+                strings -> strings.stream().map(Integer::decode).toList(),
+                HEX_COLOR_STRING
         );
-        public SimpleConfigOption<List<String>> frozenColors = new SimpleConfigOption<>(
+        public final ConfigOption<List<String>, List<Integer>> frozenColors = new ConfigOption<>(
                 "health.frozenColors",
                 """
                         Two alternating colors while freezing
                         There can be one color in case vanilla frozen heart is wanted""",
-                List.of("#3E70E6"), HEX_COLOR_STRING
+                List.of("#3E70E6"),
+                integers -> integers.stream().map(val -> "#" + Integer.toHexString(val)).toList(),
+                strings -> strings.stream().map(Integer::decode).toList(),
+                HEX_COLOR_STRING
         );
     }
 
@@ -60,7 +72,7 @@ public class Configuration {
                 true
         );
 
-        public final SimpleConfigOption<List<String>> colors = new SimpleConfigOption<>(
+        public final ConfigOption<List<String>, List<Integer>> colors = new ConfigOption<>(
                 "absorption.colors",
                 """
                         Colors for every 10 hearts (not counting the default red)
@@ -68,22 +80,34 @@ public class Configuration {
                 Arrays.asList(
                         "#E1FA9B", "#A0FFAF", "#AAFFFA", "#AACDFF", "#D7B4FF",
                         "#FAA5FF", "#FFB4B4", "#FFAA7D", "#D7F0FF", "#EBFFFA"
-                ), HEX_COLOR_STRING
+                ),
+                integers -> integers.stream().map(val -> "#" + Integer.toHexString(val)).toList(),
+                strings -> strings.stream().map(Integer::decode).toList(),
+                HEX_COLOR_STRING
         );
-        public SimpleConfigOption<List<String>> poisonedColors = new SimpleConfigOption<>(
+        public final ConfigOption<List<String>, List<Integer>> poisonedColors = new ConfigOption<>(
                 "absorption.poisonedColors",
                 "Two alternating colors while poisoned",
-                Arrays.asList("#BFF230", "#7AA15A"), HEX_COLOR_STRING
+                Arrays.asList("#BFF230", "#7AA15A"),
+                integers -> integers.stream().map(val -> "#" + Integer.toHexString(val)).toList(),
+                strings -> strings.stream().map(Integer::decode).toList(),
+                HEX_COLOR_STRING
         );
-        public SimpleConfigOption<List<String>> witheredColors = new SimpleConfigOption<>(
+        public final ConfigOption<List<String>, List<Integer>> witheredColors = new ConfigOption<>(
                 "absorption.witheredColors",
                 "Two alternating colors while withered",
-                Arrays.asList("#787061", "#73625C"), HEX_COLOR_STRING
+                Arrays.asList("#787061", "#73625C"),
+                integers -> integers.stream().map(val -> "#" + Integer.toHexString(val)).toList(),
+                strings -> strings.stream().map(Integer::decode).toList(),
+                HEX_COLOR_STRING
         );
-        public SimpleConfigOption<List<String>> frozenColors = new SimpleConfigOption<>(
+        public final ConfigOption<List<String>, List<Integer>> frozenColors = new ConfigOption<>(
                 "absorption.frozenColors",
                 "Two alternating colors while freezing",
-                Arrays.asList("#90D136", "#36D183"), HEX_COLOR_STRING
+                Arrays.asList("#90D136", "#36D183"),
+                integers -> integers.stream().map(val -> "#" + Integer.toHexString(val)).toList(),
+                strings -> strings.stream().map(Integer::decode).toList(),
+                HEX_COLOR_STRING
         );
     }
 

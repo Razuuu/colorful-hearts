@@ -61,27 +61,20 @@ public class ColoredHearts implements SpriteSource {
     @Override
     public void run(ResourceManager resourceManager, Output output) {
         if (this.isHealth) {
-            this.processColors(resourceManager, output, Configuration.HEALTH.colors.get(), "health");
-            this.processColors(resourceManager, output, Configuration.HEALTH.poisonedColors.get(), "health/poisoned");
-            this.processColors(resourceManager, output, Configuration.HEALTH.witheredColors.get(), "health/withered");
-            this.processColors(resourceManager, output, Configuration.HEALTH.frozenColors.get(), "health/frozen");
+            this.processColors(resourceManager, output, Configuration.HEALTH.colors, "health");
+            this.processColors(resourceManager, output, Configuration.HEALTH.poisonedColors, "health/poisoned");
+            this.processColors(resourceManager, output, Configuration.HEALTH.witheredColors, "health/withered");
+            this.processColors(resourceManager, output, Configuration.HEALTH.frozenColors, "health/frozen");
         } else {
-            this.processColors(resourceManager, output, Configuration.ABSORPTION.colors.get(), "absorbing");
-            this.processColors(resourceManager, output, Configuration.ABSORPTION.poisonedColors.get(), "absorbing/poisoned");
-            this.processColors(resourceManager, output, Configuration.ABSORPTION.witheredColors.get(), "absorbing/withered");
-            this.processColors(resourceManager, output, Configuration.ABSORPTION.frozenColors.get(), "absorbing/frozen");
+            this.processColors(resourceManager, output, Configuration.ABSORPTION.colors, "absorbing");
+            this.processColors(resourceManager, output, Configuration.ABSORPTION.poisonedColors, "absorbing/poisoned");
+            this.processColors(resourceManager, output, Configuration.ABSORPTION.witheredColors, "absorbing/withered");
+            this.processColors(resourceManager, output, Configuration.ABSORPTION.frozenColors, "absorbing/frozen");
         }
     }
 
-    private void processColors(ResourceManager resMgr, Output out, List<String> colors, String prefix) {
-        final Map<Integer, IntUnaryOperator> map = colors.stream()
-                .map(s -> {
-                    int rgb = Integer.decode(s) & 0xFFFFFF;
-                    int r = (rgb >> 16) & 0xFF;
-                    int g = (rgb >> 8) & 0xFF;
-                    int b = rgb & 0xFF;
-                    return Map.entry(rgb, ImageUtils.getColorOverlayOperator(r, g, b));
-                }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    private void processColors(ResourceManager resMgr, Output out, Supplier<List<Integer>> colors, String prefix) {
+        Map<Integer, IntUnaryOperator> map = colors.get().stream().map(rgb -> Map.entry(rgb, ImageUtils.getColorOverlayOperator(rgb))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         this.processType(resMgr, out, map, prefix, false, false, false);
         this.processType(resMgr, out, map, prefix, false, true, false);

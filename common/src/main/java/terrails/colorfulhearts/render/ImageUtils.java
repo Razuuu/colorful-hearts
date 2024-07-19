@@ -247,4 +247,11 @@ public class ImageUtils {
             return FastColor.ABGR32.color(alphaBase, blue, green, red);
         };
     }
+
+    public static IntUnaryOperator getColorOverlayOperator(int rgb) {
+        int r = (rgb >> 16) & 0xFF;
+        int g = (rgb >> 8) & 0xFF;
+        int b = rgb & 0xFF;
+        return getColorOverlayOperator(r, g, b);
+    }
 }
