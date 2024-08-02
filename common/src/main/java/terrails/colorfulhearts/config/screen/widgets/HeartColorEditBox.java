@@ -22,6 +22,7 @@ public class HeartColorEditBox extends EditBox {
     private boolean invalidRGBHex;
 
     private ResourceLocation spriteLocation;
+    private Integer color;
 
     private final Consumer<String> defaultResponder;
 
@@ -36,8 +37,9 @@ public class HeartColorEditBox extends EditBox {
         this.setMaxLength(7);
         this.defaultResponder = (str) -> {
             this.invalidRGBHex = !HEX_MATCH.matcher(str).matches();
-            if (!this.invalidRGBHex) {
-                ResourceLocation spriteLocation = heartType.getSprite(false, false, false, this.getColor());
+            if (!this.isInvalid()) {
+                this.color = Integer.decode(this.getValue());
+                ResourceLocation spriteLocation = heartType.getSprite(false, false, false, this.color);
                 TextureAtlasSprite sprite = Minecraft.getInstance().getGuiSprites().getSprite(spriteLocation);
                 if (!sprite.contents().name().equals(MissingTextureAtlasSprite.getLocation())) {
                     this.spriteLocation = spriteLocation;
@@ -61,8 +63,8 @@ public class HeartColorEditBox extends EditBox {
         return this.invalidRGBHex;
     }
 
-    public int getColor() {
-        return Integer.decode(this.getValue()) & 0xFFFFFF;
+    public Integer getColor() {
+        return this.color;
     }
 
     @Override
