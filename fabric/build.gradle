@@ -107,7 +107,7 @@ modrinth {
     versionNumber = "${project.version}"
     versionName = "[Fabric] ${rootProject.minecraft_version}-v${project.version}"
     uploadFile = remapJar
-    gameVersions = [rootProject.minecraft_version]
+    gameVersions = ["1.21", rootProject.minecraft_version]
     loaders = ["fabric", "quilt"]
     dependencies {
         required.project "fabric-api"
@@ -126,7 +126,7 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
     mainFile.releaseType = "release"
     mainFile.changelog = fetchChangelog()
     mainFile.changelogType = "markdown"
-    mainFile.addGameVersion("Client", rootProject.minecraft_version)
+    mainFile.addGameVersion("Client", "1.21", rootProject.minecraft_version)
     mainFile.addRequirement("fabric-api")
     mainFile.addModLoader("fabric", "quilt")
     mainFile.withAdditionalFile(tasks.sourcesJar)

@@ -99,7 +99,7 @@ modrinth {
     versionNumber = "${project.version}"
     versionName = "[NeoForge] ${rootProject.minecraft_version}-v${project.version}"
     uploadFile = remapJar
-    gameVersions = [rootProject.minecraft_version]
+    gameVersions = ["1.21", rootProject.minecraft_version]
     loaders = ["neoforge"]
     changelog = fetchChangelog()
     additionalFiles = [tasks.sourcesJar]
@@ -115,7 +115,7 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
     mainFile.releaseType = "release"
     mainFile.changelog = fetchChangelog()
     mainFile.changelogType = "markdown"
-    mainFile.addGameVersion("Client", rootProject.minecraft_version)
+    mainFile.addGameVersion("Client", "1.21", rootProject.minecraft_version)
     mainFile.addModLoader("neoforge")
     mainFile.withAdditionalFile(tasks.sourcesJar)
 }
