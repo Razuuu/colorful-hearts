@@ -5,7 +5,8 @@
   "minVersion": "0.8",
   "plugin": "terrails.colorfulhearts.neoforge.NeoMixinPlugin",
   "client": [
-    "compat.appleskin.HUDOverlayHandlerAccessor"
+    "compat.appleskin.HUDOverlayHandlerAccessor",
+    "compat.farmersdelight.HUDOverlaysMixin"
   ],
   "injectors": {
     "defaultRequire": 1
