@@ -48,7 +48,7 @@ public class ColorfulHearts {
         context.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, fileName);
         context.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, lastScreen) -> new ConfigurationScreen(lastScreen)));
 
-        CColorfulHearts.setupCommon();
+        CColorfulHearts.setupCommon(new PlatformProxyImpl());
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::setup);
         bus.addListener(this::loadConfig);

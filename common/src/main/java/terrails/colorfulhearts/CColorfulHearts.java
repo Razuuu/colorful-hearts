@@ -14,13 +14,15 @@ public class CColorfulHearts {
     public static final String MOD_ID = "colorfulhearts";
     public static final String MOD_NAME = "Colorful Hearts";
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
+    public static PlatformProxy PROXY;
 
     public static final ResourceLocation HEALTH_ICONS_LOCATION = new ResourceLocation(MOD_ID, "textures/health.png");
     public static final ResourceLocation ABSORPTION_ICONS_LOCATION = new ResourceLocation(MOD_ID, "textures/absorption.png");
     public static final ResourceLocation HALF_HEART_ICONS_LOCATION = new ResourceLocation(MOD_ID, "textures/half_heart.png");
     public static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
 
-    public static void setupCommon() {
+    public static void setupCommon(PlatformProxy proxy) {
+        PROXY = proxy;
         Hearts.CONTAINER = new HeartDrawing() {
 
             private static final ResourceLocation ID = new ResourceLocation("colorfulhearts", "container");

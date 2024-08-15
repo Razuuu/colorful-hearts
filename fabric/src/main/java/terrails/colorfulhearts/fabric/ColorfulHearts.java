@@ -24,7 +24,7 @@ public class ColorfulHearts implements ClientModInitializer {
         CONFIG = new FabConfig();
         setupObjectShare();
         setupCompat();
-        CColorfulHearts.setupCommon();
+        CColorfulHearts.setupCommon(new PlatformProxyImpl());
     }
 
     private static void setupObjectShare() {

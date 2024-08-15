@@ -6,7 +6,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
-import terrails.colorfulhearts.LoaderExpectPlatform;
+import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.heart.Hearts;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
@@ -32,7 +32,7 @@ public class HeartRenderer {
         int healthHearts = Mth.ceil(Math.min(maxHealth, 20) / 2.0);
         int displayHealthHearts = Mth.ceil(Math.min(displayHealth, 20) / 2.0);
 
-        boolean hardcore = LoaderExpectPlatform.forcedHardcoreHearts() || player.level().getLevelData().isHardcore();
+        boolean hardcore = CColorfulHearts.PROXY.forcedHardcoreHearts() || player.level().getLevelData().isHardcore();
 
         int regenIndex = -1;
         if (player.hasEffect(MobEffects.REGENERATION)) {
@@ -41,7 +41,7 @@ public class HeartRenderer {
 
         OverlayHeart heartType = Hearts.getOverlayHeartForPlayer(player).orElse(null);
 
-        HeartRenderEvent.Pre event = LoaderExpectPlatform.preRenderEvent(guiGraphics, x, y, blinking, hardcore, heartType);
+        HeartRenderEvent.Pre event = CColorfulHearts.PROXY.preRenderEvent(guiGraphics, x, y, blinking, hardcore, heartType);
         if (event.isCancelled()) {
             return;
         }
@@ -86,6 +86,6 @@ public class HeartRenderer {
             heart.draw(guiGraphics, xPos, yPos, hardcore, blinking, blinkingHeart);
         }
 
-        LoaderExpectPlatform.postRenderEvent(guiGraphics, x, y, blinking, hardcore, heartType);
+        CColorfulHearts.PROXY.postRenderEvent(guiGraphics, x, y, blinking, hardcore, heartType);
     }
 }
