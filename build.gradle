@@ -89,7 +89,7 @@ configure(subprojects.findAll { !it.path.startsWith(":api") }) {
         def changes = new StringBuilder("Latest changes ([See all](${repoUrl}/commits/${branch}))\n---")
         def log = "git log --max-count=30 --pretty=format:\"* %s ([%h](${repoUrl}/commit/%H))\"".execute()
         log.in.eachLine { line ->
-            if (!line.startsWithIgnoreCase("bump")) { // version change commits should be ignored
+            if (!line.startsWithIgnoreCase("* bump")) { // version change commits should be ignored
                 changes << "\n${line}"
             }
         }
