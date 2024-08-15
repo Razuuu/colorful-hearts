@@ -41,6 +41,7 @@ public class ColorfulHearts {
     );
 
     public ColorfulHearts() {
+        CColorfulHearts.setupCommon(new PlatformProxyImpl());
         final ModLoadingContext context = ModLoadingContext.get();
 
         final String fileName = CColorfulHearts.MOD_ID + ".toml";
@@ -48,7 +49,6 @@ public class ColorfulHearts {
         context.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, fileName);
         context.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, lastScreen) -> new ConfigurationScreen(lastScreen)));
 
-        CColorfulHearts.setupCommon(new PlatformProxyImpl());
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::setup);
         bus.addListener(this::loadConfig);

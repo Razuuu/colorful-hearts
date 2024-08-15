@@ -21,10 +21,10 @@ public class ColorfulHearts implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        CColorfulHearts.setupCommon(new PlatformProxyImpl());
         CONFIG = new FabConfig();
         setupObjectShare();
         setupCompat();
-        CColorfulHearts.setupCommon(new PlatformProxyImpl());
     }
 
     private static void setupObjectShare() {
