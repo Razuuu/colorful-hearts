@@ -16,6 +16,8 @@ loom {
         // set window size to 720p
         client.programArgs("--width", "1280", "--height", "720")
     }
+
+    mixin.useLegacyMixinAp = false
 }
 
 configurations {
