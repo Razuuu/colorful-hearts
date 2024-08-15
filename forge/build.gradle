@@ -19,6 +19,7 @@ loom {
 
     // change server run directory
     runs.server.runDir("run/server")
+    mixin.useLegacyMixinAp = false
 }
 
 configurations {
