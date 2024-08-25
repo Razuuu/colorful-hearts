@@ -95,16 +95,22 @@ components.java {
     }
 }
 
+tasks.build.mustRunAfter(tasks.clean)
+tasks.register('publishProduction') {
+    dependsOn([tasks.clean, tasks.build])
+    finalizedBy([tasks.modrinth, tasks.publishCurseForge])
+}
+
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = "${rootProject.modrinth_id}"
     versionNumber = "${project.version}"
     versionName = "[NeoForge] ${rootProject.minecraft_version}-v${project.version}"
-    uploadFile = remapJar
+    uploadFile = tasks.remapJar.getArchiveFile().get()
     gameVersions = ["1.21", rootProject.minecraft_version]
     loaders = ["neoforge"]
     changelog = fetchChangelog()
-    additionalFiles = [tasks.sourcesJar]
+    additionalFiles = [tasks.sourcesJar.getArchiveFile().get()]
 }
 
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
@@ -112,12 +118,12 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
     disableVersionDetection()
 
-    def mainFile = upload(rootProject.curseforge_id, remapJar)
+    def mainFile = upload(rootProject.curseforge_id, tasks.remapJar.getArchiveFile().get())
     mainFile.displayName = "[NeoForge] ${rootProject.minecraft_version}-v${project.version}"
     mainFile.releaseType = "release"
     mainFile.changelog = fetchChangelog()
     mainFile.changelogType = "markdown"
     mainFile.addGameVersion("Client", "1.21", rootProject.minecraft_version)
     mainFile.addModLoader("neoforge")
-    mainFile.withAdditionalFile(tasks.sourcesJar)
+    mainFile.withAdditionalFile(tasks.sourcesJar.getArchiveFile().get())
 }
