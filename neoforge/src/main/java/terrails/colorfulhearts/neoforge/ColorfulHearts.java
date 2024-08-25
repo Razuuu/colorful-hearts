@@ -90,7 +90,7 @@ public class ColorfulHearts {
 
                         ModConfigSpec.ConfigValue value;
                         if (option.getRawDefault() instanceof List<?> list) {
-                            value = specBuilder.comment(option.getComment()).defineList(option.getPath(), list, option.getOptionValidator());
+                            value = specBuilder.comment(option.getComment()).defineList(option.getPath(), list, null, option.getOptionValidator());
                         } else {
                             value = specBuilder.comment(option.getComment()).define(option.getPath(), option.getRawDefault(), option.getOptionValidator());
                         }
